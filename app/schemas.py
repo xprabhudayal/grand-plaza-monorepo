@@ -1,7 +1,6 @@
 from pydantic import BaseModel, EmailStr
 from typing import Optional, List
 from datetime import datetime
-from decimal import Decimal
 from enum import Enum
 
 class OrderStatus(str, Enum):
@@ -81,11 +80,11 @@ class Category(CategoryBase):
 class MenuItemBase(BaseModel):
     name: str
     description: Optional[str] = None
-    price: Decimal
+    price: float
     category_id: str
     is_available: bool = True
     preparation_time: int = 15
-    dietary: List[str] = []
+    dietary: Optional[str] = None  # Comma-separated string for SQLite
     image_url: Optional[str] = None
 
 class MenuItemCreate(MenuItemBase):
@@ -94,11 +93,11 @@ class MenuItemCreate(MenuItemBase):
 class MenuItemUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
-    price: Optional[Decimal] = None
+    price: Optional[float] = None
     category_id: Optional[str] = None
     is_available: Optional[bool] = None
     preparation_time: Optional[int] = None
-    dietary: Optional[List[str]] = None
+    dietary: Optional[str] = None  # Comma-separated string for SQLite
     image_url: Optional[str] = None
 
 class MenuItem(MenuItemBase):
@@ -113,8 +112,8 @@ class MenuItem(MenuItemBase):
 class OrderItemBase(BaseModel):
     menu_item_id: str
     quantity: int = 1
-    unit_price: Decimal
-    total_price: Decimal
+    unit_price: float
+    total_price: float
     special_notes: Optional[str] = None
 
 class OrderItemCreate(BaseModel):
@@ -135,7 +134,7 @@ class OrderItem(OrderItemBase):
 class OrderBase(BaseModel):
     guest_id: str
     status: OrderStatus = OrderStatus.PENDING
-    total_amount: Decimal
+    total_amount: float
     special_requests: Optional[str] = None
     delivery_notes: Optional[str] = None
     estimated_delivery_time: Optional[datetime] = None
