@@ -16,7 +16,7 @@ HOTEL_MENU_DATA = {
                     "description": "Fresh croissants, seasonal fruit, yogurt, orange juice, and coffee",
                     "price": 18.50,
                     "preparation_time": 15,
-                    "dietary": ["vegetarian"],
+                    "dietary": "vegetarian",
                     "is_available": True
                 },
                 {
@@ -24,7 +24,7 @@ HOTEL_MENU_DATA = {
                     "description": "Two eggs your way, bacon or sausage, hash browns, toast, and coffee",
                     "price": 22.00,
                     "preparation_time": 20,
-                    "dietary": [],
+                    "dietary": None,
                     "is_available": True
                 },
                 {
@@ -32,7 +32,7 @@ HOTEL_MENU_DATA = {
                     "description": "Smashed avocado on sourdough bread with cherry tomatoes and feta cheese",
                     "price": 16.00,
                     "preparation_time": 10,
-                    "dietary": ["vegetarian"],
+                    "dietary": "vegetarian",
                     "is_available": True
                 },
                 {
@@ -40,7 +40,7 @@ HOTEL_MENU_DATA = {
                     "description": "Three fluffy pancakes with maple syrup and butter",
                     "price": 14.50,
                     "preparation_time": 15,
-                    "dietary": ["vegetarian"],
+                    "dietary": "vegetarian",
                     "is_available": True
                 },
                 {
@@ -48,7 +48,7 @@ HOTEL_MENU_DATA = {
                     "description": "Steel-cut oats with berries, nuts, and honey",
                     "price": 12.00,
                     "preparation_time": 10,
-                    "dietary": ["vegetarian", "gluten-free"],
+                    "dietary": "vegetarian,gluten-free",
                     "is_available": True
                 }
             ]
@@ -64,7 +64,7 @@ HOTEL_MENU_DATA = {
                     "description": "Five jumbo shrimp with cocktail sauce and lemon",
                     "price": 19.00,
                     "preparation_time": 10,
-                    "dietary": ["gluten-free"],
+                    "dietary": "gluten-free",
                     "is_available": True
                 },
                 {
@@ -72,7 +72,7 @@ HOTEL_MENU_DATA = {
                     "description": "Eight crispy wings with buffalo sauce and blue cheese dip",
                     "price": 16.50,
                     "preparation_time": 20,
-                    "dietary": ["gluten-free"],
+                    "dietary": "gluten-free",
                     "is_available": True
                 },
                 {
@@ -80,7 +80,7 @@ HOTEL_MENU_DATA = {
                     "description": "House-made hummus with fresh vegetables and pita bread",
                     "price": 13.00,
                     "preparation_time": 5,
-                    "dietary": ["vegetarian", "vegan"],
+                    "dietary": "vegetarian,vegan",
                     "is_available": True
                 },
                 {
@@ -88,7 +88,7 @@ HOTEL_MENU_DATA = {
                     "description": "Tortilla chips with cheese, jalapeños, sour cream, and guacamole",
                     "price": 15.50,
                     "preparation_time": 12,
-                    "dietary": ["vegetarian"],
+                    "dietary": "vegetarian",
                     "is_available": True
                 }
             ]
@@ -104,7 +104,7 @@ HOTEL_MENU_DATA = {
                     "description": "Romaine lettuce, parmesan cheese, croutons, and Caesar dressing",
                     "price": 14.00,
                     "preparation_time": 8,
-                    "dietary": ["vegetarian"],
+                    "dietary": "vegetarian",
                     "is_available": True
                 },
                 {
@@ -112,7 +112,7 @@ HOTEL_MENU_DATA = {
                     "description": "Classic Caesar salad topped with grilled chicken breast",
                     "price": 18.50,
                     "preparation_time": 12,
-                    "dietary": [],
+                    "dietary": None,
                     "is_available": True
                 },
                 {
@@ -120,7 +120,7 @@ HOTEL_MENU_DATA = {
                     "description": "Mixed greens, olives, tomatoes, cucumber, feta cheese, and olive oil",
                     "price": 16.00,
                     "preparation_time": 8,
-                    "dietary": ["vegetarian", "gluten-free"],
+                    "dietary": "vegetarian,gluten-free",
                     "is_available": True
                 },
                 {
@@ -128,7 +128,7 @@ HOTEL_MENU_DATA = {
                     "description": "Quinoa with roasted vegetables, chickpeas, and tahini dressing",
                     "price": 17.50,
                     "preparation_time": 10,
-                    "dietary": ["vegetarian", "vegan", "gluten-free"],
+                    "dietary": "vegetarian,vegan,gluten-free",
                     "is_available": True
                 }
             ]
@@ -144,7 +144,7 @@ HOTEL_MENU_DATA = {
                     "description": "Atlantic salmon with lemon herb butter, rice pilaf, and seasonal vegetables",
                     "price": 28.00,
                     "preparation_time": 25,
-                    "dietary": ["gluten-free"],
+                    "dietary": "gluten-free",
                     "is_available": True
                 },
                 {
@@ -152,7 +152,7 @@ HOTEL_MENU_DATA = {
                     "description": "12oz ribeye steak with garlic mashed potatoes and asparagus",
                     "price": 35.00,
                     "preparation_time": 30,
-                    "dietary": ["gluten-free"],
+                    "dietary": "gluten-free",
                     "is_available": True
                 },
                 {
@@ -160,7 +160,7 @@ HOTEL_MENU_DATA = {
                     "description": "Breaded chicken breast with marinara sauce, mozzarella, and pasta",
                     "price": 24.50,
                     "preparation_time": 25,
-                    "dietary": [],
+                    "dietary": None,
                     "is_available": True
                 },
                 {
@@ -168,7 +168,7 @@ HOTEL_MENU_DATA = {
                     "description": "Coconut curry with seasonal vegetables served over jasmine rice",
                     "price": 21.00,
                     "preparation_time": 20,
-                    "dietary": ["vegetarian", "vegan", "gluten-free"],
+                    "dietary": "vegetarian,vegan,gluten-free",
                     "is_available": True
                 },
                 {
@@ -176,7 +176,7 @@ HOTEL_MENU_DATA = {
                     "description": "Beer-battered cod with french fries and coleslaw",
                     "price": 22.50,
                     "preparation_time": 20,
-                    "dietary": [],
+                    "dietary": None,
                     "is_available": True
                 }
             ]
@@ -192,7 +192,7 @@ HOTEL_MENU_DATA = {
                     "description": "Turkey, bacon, lettuce, tomato, and mayo on toasted bread",
                     "price": 16.50,
                     "preparation_time": 12,
-                    "dietary": [],
+                    "dietary": None,
                     "is_available": True
                 },
                 {
@@ -200,7 +200,7 @@ HOTEL_MENU_DATA = {
                     "description": "Angus beef patty with cheese, lettuce, tomato, and onion",
                     "price": 18.00,
                     "preparation_time": 15,
-                    "dietary": [],
+                    "dietary": None,
                     "is_available": True
                 },
                 {
@@ -208,7 +208,7 @@ HOTEL_MENU_DATA = {
                     "description": "House-made black bean patty with avocado and sprouts",
                     "price": 16.00,
                     "preparation_time": 12,
-                    "dietary": ["vegetarian", "vegan"],
+                    "dietary": "vegetarian,vegan",
                     "is_available": True
                 },
                 {
@@ -216,7 +216,7 @@ HOTEL_MENU_DATA = {
                     "description": "Corned beef, sauerkraut, swiss cheese, and russian dressing on rye",
                     "price": 17.50,
                     "preparation_time": 12,
-                    "dietary": [],
+                    "dietary": None,
                     "is_available": True
                 }
             ]
@@ -232,7 +232,7 @@ HOTEL_MENU_DATA = {
                     "description": "Rich chocolate layer cake with chocolate ganache",
                     "price": 9.50,
                     "preparation_time": 5,
-                    "dietary": ["vegetarian"],
+                    "dietary": "vegetarian",
                     "is_available": True
                 },
                 {
@@ -240,7 +240,7 @@ HOTEL_MENU_DATA = {
                     "description": "Classic cheesecake with graham cracker crust and berry compote",
                     "price": 8.50,
                     "preparation_time": 5,
-                    "dietary": ["vegetarian"],
+                    "dietary": "vegetarian",
                     "is_available": True
                 },
                 {
@@ -248,7 +248,7 @@ HOTEL_MENU_DATA = {
                     "description": "Three scoops of vanilla ice cream with hot fudge and whipped cream",
                     "price": 7.00,
                     "preparation_time": 5,
-                    "dietary": ["vegetarian"],
+                    "dietary": "vegetarian",
                     "is_available": True
                 },
                 {
@@ -256,7 +256,7 @@ HOTEL_MENU_DATA = {
                     "description": "Seasonal fresh fruit with honey yogurt dip",
                     "price": 8.00,
                     "preparation_time": 5,
-                    "dietary": ["vegetarian", "gluten-free"],
+                    "dietary": "vegetarian,gluten-free",
                     "is_available": True
                 }
             ]
@@ -272,7 +272,7 @@ HOTEL_MENU_DATA = {
                     "description": "Freshly brewed premium coffee",
                     "price": 4.50,
                     "preparation_time": 3,
-                    "dietary": ["vegetarian", "vegan", "gluten-free"],
+                    "dietary": "vegetarian,vegan,gluten-free",
                     "is_available": True
                 },
                 {
@@ -280,7 +280,7 @@ HOTEL_MENU_DATA = {
                     "description": "Choice of black, green, herbal, or iced tea",
                     "price": 4.00,
                     "preparation_time": 3,
-                    "dietary": ["vegetarian", "vegan", "gluten-free"],
+                    "dietary": "vegetarian,vegan,gluten-free",
                     "is_available": True
                 },
                 {
@@ -288,7 +288,7 @@ HOTEL_MENU_DATA = {
                     "description": "Freshly squeezed orange juice",
                     "price": 5.50,
                     "preparation_time": 2,
-                    "dietary": ["vegetarian", "vegan", "gluten-free"],
+                    "dietary": "vegetarian,vegan,gluten-free",
                     "is_available": True
                 },
                 {
@@ -296,7 +296,7 @@ HOTEL_MENU_DATA = {
                     "description": "Coca-Cola, Sprite, or other soft drinks",
                     "price": 3.50,
                     "preparation_time": 1,
-                    "dietary": ["vegetarian", "vegan", "gluten-free"],
+                    "dietary": "vegetarian,vegan,gluten-free",
                     "is_available": True
                 },
                 {
@@ -304,7 +304,7 @@ HOTEL_MENU_DATA = {
                     "description": "Selection of red or white wines",
                     "price": 12.00,
                     "preparation_time": 2,
-                    "dietary": ["vegetarian"],
+                    "dietary": "vegetarian",
                     "is_available": True
                 },
                 {
@@ -312,7 +312,7 @@ HOTEL_MENU_DATA = {
                     "description": "Domestic or imported beer selection",
                     "price": 6.50,
                     "preparation_time": 1,
-                    "dietary": [],
+                    "dietary": None,
                     "is_available": True
                 }
             ]

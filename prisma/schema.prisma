@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -42,12 +42,12 @@ model MenuItem {
   id           String      @id @default(cuid())
   name         String
   description  String?
-  price        Decimal     @db.Decimal(10, 2)
+  price        Float       // Using Float instead of Decimal for SQLite
   category     Category    @relation(fields: [categoryId], references: [id])
   categoryId   String
   isAvailable  Boolean     @default(true)
   preparationTime Int      @default(15) // in minutes
-  dietary      String[]    // e.g., ["vegetarian", "gluten-free", "vegan"]
+  dietary      String?     // JSON string for dietary info, e.g., "vegetarian,gluten-free,vegan"
   imageUrl     String?
   orderItems   OrderItem[]
   createdAt    DateTime    @default(now())
@@ -62,7 +62,7 @@ model Order {
   guest           Guest       @relation(fields: [guestId], references: [id])
   guestId         String
   status          OrderStatus @default(PENDING)
-  totalAmount     Decimal     @db.Decimal(10, 2)
+  totalAmount     Float       // Using Float instead of Decimal for SQLite
   specialRequests String?
   deliveryNotes   String?
   estimatedDeliveryTime DateTime?
@@ -85,8 +85,8 @@ model OrderItem {
   menuItem    MenuItem @relation(fields: [menuItemId], references: [id])
   menuItemId  String
   quantity    Int      @default(1)
-  unitPrice   Decimal  @db.Decimal(10, 2)
-  totalPrice  Decimal  @db.Decimal(10, 2)
+  unitPrice   Float    // Using Float instead of Decimal for SQLite
+  totalPrice  Float    // Using Float instead of Decimal for SQLite
   specialNotes String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

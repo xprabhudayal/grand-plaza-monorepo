@@ -1,7 +1,6 @@
-from sqlalchemy import Column, String, Text, Numeric, Boolean, Integer, DateTime, ForeignKey, Enum as SQLEnum, ARRAY
+from sqlalchemy import Column, String, Text, Float, Boolean, Integer, DateTime, ForeignKey, Enum as SQLEnum
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import UUID
 from datetime import datetime
 import uuid
 import enum
@@ -66,11 +65,11 @@ class MenuItem(Base):
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     name = Column(String, nullable=False)
     description = Column(Text)
-    price = Column(Numeric(10, 2), nullable=False)
+    price = Column(Float, nullable=False)
     category_id = Column(String, ForeignKey("categories.id"), nullable=False, index=True)
     is_available = Column(Boolean, default=True, index=True)
     preparation_time = Column(Integer, default=15)
-    dietary = Column(ARRAY(String), default=[])
+    dietary = Column(String)  # Store as comma-separated string for SQLite
     image_url = Column(String)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -85,7 +84,7 @@ class Order(Base):
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     guest_id = Column(String, ForeignKey("guests.id"), nullable=False, index=True)
     status = Column(SQLEnum(OrderStatus), default=OrderStatus.PENDING, index=True)
-    total_amount = Column(Numeric(10, 2), nullable=False)
+    total_amount = Column(Float, nullable=False)
     special_requests = Column(Text)
     delivery_notes = Column(Text)
     estimated_delivery_time = Column(DateTime)
@@ -106,8 +105,8 @@ class OrderItem(Base):
     order_id = Column(String, ForeignKey("orders.id", ondelete="CASCADE"), nullable=False, index=True)
     menu_item_id = Column(String, ForeignKey("menu_items.id"), nullable=False, index=True)
     quantity = Column(Integer, default=1)
-    unit_price = Column(Numeric(10, 2), nullable=False)
-    total_price = Column(Numeric(10, 2), nullable=False)
+    unit_price = Column(Float, nullable=False)
+    total_price = Column(Float, nullable=False)
     special_notes = Column(Text)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
