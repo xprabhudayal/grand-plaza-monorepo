@@ -36,7 +36,7 @@ def check_prerequisites():
 def launch_api_server():
     """Launch the FastAPI server"""
     print("🚀 Starting Hotel Voice AI Concierge API Server...")
-    print(f"📡 Server will run on http://{settings.api.api_host}:{settings.api.api_port}")
+    print(f"📡 Server will run on http://{settings.api_host}:{settings.api_port}")
     print("📚 API docs available at http://localhost:8000/docs")
     print("\n🔄 Starting server...")
     
@@ -44,10 +44,10 @@ def launch_api_server():
         import uvicorn
         uvicorn.run(
             "app.main:app",
-            host=settings.api.api_host,
-            port=settings.api.api_port,
-            reload=settings.api.debug,
-            log_level=settings.logging.log_level.lower()
+            host=settings.api_host,
+            port=settings.api_port,
+            reload=settings.debug,
+            log_level=settings.log_level.lower()
         )
     except ImportError:
         print("❌ uvicorn not installed. Install with: pip install uvicorn")
@@ -58,7 +58,7 @@ def launch_voice_pipeline():
     """Launch the voice AI pipeline"""
     print("🎙️  Starting Hotel Voice AI Pipeline...")
     
-    if not settings.daily.daily_room_url:
+    if not settings.daily_room_url:
         print("❌ DAILY_ROOM_URL not configured")
         print("🔧 Set up Daily.co room URL to use voice features")
         return

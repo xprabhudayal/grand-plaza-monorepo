@@ -16,9 +16,8 @@ alembic==1.13.1
 
 
 # Voice AI Pipeline (Pipecat)
-pipecat-ai
 pipecat-ai-flows
-
+pipecat-ai[webrtc,silero,deepgram,openai,cartesia,runner,daily,google,anthropic,groq]>=0.0.77
 
 # Speech Services
 # Note: Soniox requires separate installation from their repository
