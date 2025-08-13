@@ -1,6 +1,12 @@
 'use client'
 
 import React, { useEffect, useRef } from 'react'
+import { 
+  SparklesIcon,
+  UserIcon,
+  SpeakerWaveIcon,
+  MicrophoneIcon
+} from '@heroicons/react/24/outline'
 import { cn, formatTime } from '@/lib/utils'
 import type { TranscriptMessage } from '@/types'
 
@@ -20,7 +26,6 @@ export default function TranscriptionView({
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
-  // Auto-scroll to latest message
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ 
@@ -36,32 +41,45 @@ export default function TranscriptionView({
 
   const getMessageStyle = (speaker: 'Guest' | 'AI') => {
     if (speaker === 'Guest') {
-      return 'bg-blue-500 text-white ml-auto'
+      return 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-200'
     }
-    return 'bg-gray-100 text-gray-900 mr-auto'
+    return 'bg-gradient-to-r from-gray-50 to-blue-50 text-gray-900 border border-gray-100 shadow-sm'
   }
 
   const getAvatarStyle = (speaker: 'Guest' | 'AI') => {
     if (speaker === 'Guest') {
-      return 'bg-blue-500 text-white'
+      return 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg'
     }
-    return 'hotel-gradient text-white'
+    return 'hotel-gradient text-white shadow-lg'
   }
 
   return (
     <div className={cn('flex flex-col h-full', className)}>
-      {/* Header */}
-      <div className="flex-shrink-0 border-b border-gray-200 p-4">
+      {/* Enhanced Header */}
+      <div className="flex-shrink-0 border-b border-gray-100 p-6 bg-gradient-to-r from-slate-50 to-blue-50">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-900">Conversation</h3>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <div className="hotel-gradient w-10 h-10 rounded-xl flex items-center justify-center shadow-lg">
+              <SparklesIcon className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold hotel-heading">Live Conversation</h3>
+              <p className="text-sm hotel-subheading">Real-time voice interaction</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
             <div className={cn(
-              'w-2 h-2 rounded-full',
-              isConnected ? 'bg-green-500' : 'bg-gray-400'
-            )}></div>
-            <span className="text-sm text-gray-600">
+              'flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium',
+              isConnected 
+                ? 'bg-green-100 text-green-700' 
+                : 'bg-gray-100 text-gray-600'
+            )}>
+              <div className={cn(
+                'w-2 h-2 rounded-full',
+                isConnected ? 'bg-green-500 animate-pulse' : 'bg-gray-400'
+              )}></div>
               {isConnected ? 'Connected' : 'Disconnected'}
-            </span>
+            </div>
           </div>
         </div>
       </div>
@@ -69,75 +87,104 @@ export default function TranscriptionView({
       {/* Messages Container */}
       <div 
         ref={containerRef}
-        className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0"
+        className="flex-1 overflow-y-auto p-6 space-y-6 min-h-0"
       >
         {messages.length === 0 ? (
           <div className="flex items-center justify-center h-full">
-            <div className="text-center">
-              <div className="hotel-gradient rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <span className="text-white font-bold text-xl">AI</span>
+            <div className="text-center max-w-md">
+              <div className="relative mb-6">
+                <div className="hotel-gradient rounded-full w-20 h-20 flex items-center justify-center mx-auto shadow-2xl">
+                  <SparklesIcon className="h-10 w-10 text-white" />
+                </div>
+                <div className="absolute -inset-2 rounded-full border-2 border-yellow-200 animate-pulse"></div>
               </div>
-              <p className="text-gray-600 text-sm">
+              <h4 className="text-xl font-bold hotel-heading mb-3">
+                Ready to Chat!
+              </h4>
+              <p className="hotel-text leading-relaxed">
                 {isConnected 
-                  ? "Say 'Hello' to start your conversation with our AI concierge!"
-                  : "Click 'Start Room Service Call' to begin"
+                  ? "Say 'Hello' to start your conversation with our AI concierge. I'm here to help you with your room service order!"
+                  : "Click 'Start Room Service Call' to begin your personalized ordering experience."
                 }
               </p>
+              {isConnected && (
+                <div className="mt-6 flex items-center justify-center gap-4 text-sm hotel-subheading">
+                  <div className="flex items-center gap-2">
+                    <MicrophoneIcon className="h-4 w-4" />
+                    Listening
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <SpeakerWaveIcon className="h-4 w-4" />
+                    Speaking
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         ) : (
           <>
-            {messages.map((message) => (
+            {messages.map((message, index) => (
               <div 
                 key={message.id} 
-                className={cn('flex gap-3', getMessageAlignment(message.speaker))}
+                className={cn(
+                  'flex gap-4 animate-fade-in-up',
+                  getMessageAlignment(message.speaker)
+                )}
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
                 {message.speaker === 'AI' && (
                   <div className={cn(
-                    'w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0',
+                    'w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold flex-shrink-0',
                     getAvatarStyle(message.speaker)
                   )}>
-                    AI
+                    <SparklesIcon className="h-5 w-5" />
                   </div>
                 )}
                 
                 <div className="flex flex-col max-w-xs lg:max-w-md">
                   <div className={cn(
-                    'rounded-lg px-4 py-2 text-sm',
+                    'rounded-2xl px-6 py-4 text-sm leading-relaxed',
                     getMessageStyle(message.speaker)
                   )}>
                     <p className="whitespace-pre-wrap break-words">{message.text}</p>
                   </div>
-                  <span className="text-xs text-gray-500 mt-1 px-1">
-                    {formatTime(message.timestamp)}
-                  </span>
+                  <div className="flex items-center gap-2 mt-2 px-2">
+                    <span className="text-xs hotel-subheading">
+                      {formatTime(message.timestamp)}
+                    </span>
+                    {message.speaker === 'AI' && (
+                      <div className="hotel-badge hotel-badge-gold text-xs">
+                        AI Concierge
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {message.speaker === 'Guest' && (
                   <div className={cn(
-                    'w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0',
+                    'w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold flex-shrink-0',
                     getAvatarStyle(message.speaker)
                   )}>
-                    You
+                    <UserIcon className="h-5 w-5" />
                   </div>
                 )}
               </div>
             ))}
 
-            {/* Typing indicator */}
+            {/* Enhanced Typing indicator */}
             {isTyping && (
-              <div className="flex gap-3 justify-start">
-                <div className="hotel-gradient w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0">
-                  AI
+              <div className="flex gap-4 justify-start animate-fade-in">
+                <div className="hotel-gradient w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold text-white flex-shrink-0 shadow-lg">
+                  <SparklesIcon className="h-5 w-5" />
                 </div>
-                <div className="bg-gray-100 rounded-lg px-4 py-2 text-sm mr-auto">
-                  <div className="flex items-center gap-1">
+                <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-2xl px-6 py-4 text-sm mr-auto border border-gray-100 shadow-sm">
+                  <div className="flex items-center gap-3">
                     <div className="flex gap-1">
                       <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
                       <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
                       <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                     </div>
-                    <span className="text-gray-500 ml-2">AI is thinking...</span>
+                    <span className="hotel-subheading">AI is thinking...</span>
                   </div>
                 </div>
               </div>
@@ -145,16 +192,22 @@ export default function TranscriptionView({
           </>
         )}
         
-        {/* Scroll anchor */}
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Status Footer */}
+      {/* Enhanced Status Footer */}
       {isConnected && (
-        <div className="flex-shrink-0 border-t border-gray-200 p-3">
-          <p className="text-xs text-gray-500 text-center">
-            Speak naturally - our AI concierge is listening and ready to help!
-          </p>
+        <div className="flex-shrink-0 border-t border-gray-100 p-4 bg-gradient-to-r from-slate-50 to-blue-50">
+          <div className="flex items-center justify-center gap-4 text-sm">
+            <div className="flex items-center gap-2 hotel-subheading">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              Voice AI Active
+            </div>
+            <div className="w-px h-4 bg-gray-300"></div>
+            <p className="hotel-text text-center">
+              🎤 Speak naturally - I'm listening and ready to help!
+            </p>
+          </div>
         </div>
       )}
     </div>

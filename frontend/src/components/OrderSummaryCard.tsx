@@ -5,7 +5,12 @@ import {
   ClockIcon, 
   CheckCircleIcon, 
   ExclamationCircleIcon,
-  TruckIcon 
+  TruckIcon,
+  ShoppingBagIcon,
+  CurrencyDollarIcon,
+  SparklesIcon,
+  MinusIcon,
+  PlusIcon
 } from '@heroicons/react/24/outline'
 import { cn, formatCurrency, formatDateTime, getStatusColor } from '@/lib/utils'
 import type { Order, Cart } from '@/types'
@@ -23,7 +28,6 @@ export default function OrderSummaryCard({
   className,
   showEstimatedTime = true
 }: OrderSummaryCardProps) {
-  // Show cart if no order is provided
   const displayCart = !order && cart
 
   const getStatusIcon = (status: string) => {
@@ -66,15 +70,31 @@ export default function OrderSummaryCard({
 
   if (!order && !displayCart) {
     return (
-      <div className={cn('bg-white rounded-lg border border-gray-200 p-6', className)}>
-        <div className="text-center">
-          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <TruckIcon className="h-8 w-8 text-gray-400" />
+      <div className={cn('h-full flex flex-col', className)}>
+        {/* Header */}
+        <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-slate-50 to-blue-50">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
+              <ShoppingBagIcon className="h-5 w-5 text-gray-400" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold hotel-heading">Your Order</h3>
+              <p className="text-sm hotel-subheading">No active order</p>
+            </div>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No Active Order</h3>
-          <p className="text-gray-600 text-sm">
-            Start a room service call to place your order
-          </p>
+        </div>
+
+        {/* Empty State */}
+        <div className="flex-1 flex items-center justify-center p-6">
+          <div className="text-center max-w-sm">
+            <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <TruckIcon className="h-10 w-10 text-gray-400" />
+            </div>
+            <h4 className="text-xl font-bold hotel-heading mb-3">No Active Order</h4>
+            <p className="hotel-text leading-relaxed">
+              Start a room service call to place your order and track it here in real-time.
+            </p>
+          </div>
         </div>
       </div>
     )
@@ -82,51 +102,76 @@ export default function OrderSummaryCard({
 
   if (displayCart) {
     return (
-      <div className={cn('bg-white rounded-lg border border-gray-200 p-6', className)}>
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-            <TruckIcon className="h-6 w-6 text-blue-600" />
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900">Current Selection</h3>
-            <p className="text-sm text-gray-600">Items ready to order</p>
+      <div className={cn('h-full flex flex-col', className)}>
+        {/* Header */}
+        <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-slate-50 to-blue-50">
+          <div className="flex items-center gap-3">
+            <div className="hotel-gradient w-10 h-10 rounded-xl flex items-center justify-center shadow-lg">
+              <ShoppingBagIcon className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold hotel-heading">Your Selection</h3>
+              <p className="text-sm hotel-subheading">
+                {cart.items.length} item{cart.items.length !== 1 ? 's' : ''} ready to order
+              </p>
+            </div>
           </div>
         </div>
 
-        {cart.items.length === 0 ? (
-          <p className="text-gray-600 text-sm text-center py-4">
-            No items selected yet
-          </p>
-        ) : (
-          <>
-            <div className="space-y-3 mb-4">
+        {/* Cart Content */}
+        <div className="flex-1 overflow-y-auto">
+          {cart.items.length === 0 ? (
+            <div className="flex items-center justify-center h-full p-6">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <ShoppingBagIcon className="h-8 w-8 text-gray-400" />
+                </div>
+                <p className="hotel-text">No items selected yet</p>
+                <p className="text-sm hotel-subheading mt-1">
+                  Browse the menu and add items to get started
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="p-6 space-y-4">
               {cart.items.map((item, index) => (
-                <div key={`${item.menu_item_id}-${index}`} className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-900">{item.menu_item.name}</p>
-                    {item.special_notes && (
-                      <p className="text-sm text-gray-600 italic">Note: {item.special_notes}</p>
-                    )}
-                  </div>
-                  <div className="text-right ml-3">
-                    <p className="font-medium">
-                      {item.quantity} × {formatCurrency(item.menu_item.price)}
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      = {formatCurrency(item.quantity * item.menu_item.price)}
-                    </p>
+                <div key={`${item.menu_item_id}-${index}`} className="hotel-card p-4">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <h4 className="font-semibold hotel-heading mb-1">{item.menu_item.name}</h4>
+                      {item.special_notes && (
+                        <p className="text-sm hotel-text italic mb-2">
+                          Note: {item.special_notes}
+                        </p>
+                      )}
+                      <div className="flex items-center gap-4 text-sm hotel-subheading">
+                        <span>Qty: {item.quantity}</span>
+                        <span>{formatCurrency(item.menu_item.price)} each</span>
+                      </div>
+                    </div>
+                    <div className="text-right ml-4">
+                      <div className="text-lg font-bold hotel-heading">
+                        {formatCurrency(item.quantity * item.menu_item.price)}
+                      </div>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
+          )}
+        </div>
 
-            <div className="border-t pt-3">
-              <div className="flex justify-between items-center">
-                <span className="font-semibold text-gray-900">Total</span>
-                <span className="font-semibold text-lg">{formatCurrency(cart.total)}</span>
-              </div>
+        {/* Total */}
+        {cart.items.length > 0 && (
+          <div className="border-t border-gray-100 p-6 bg-gradient-to-r from-slate-50 to-blue-50">
+            <div className="flex justify-between items-center mb-4">
+              <span className="text-lg font-bold hotel-heading">Total</span>
+              <span className="text-2xl font-bold hotel-heading">{formatCurrency(cart.total)}</span>
             </div>
-          </>
+            <div className="hotel-badge hotel-badge-blue w-full text-center py-2">
+              Ready to order via voice call
+            </div>
+          </div>
         )}
       </div>
     )
@@ -136,97 +181,126 @@ export default function OrderSummaryCard({
   if (!order) return null
 
   return (
-    <div className={cn('bg-white rounded-lg border border-gray-200 p-6', className)}>
+    <div className={cn('h-full flex flex-col', className)}>
       {/* Order Header */}
-      <div className="flex items-center gap-3 mb-4">
-        <div className={cn(
-          'w-10 h-10 rounded-full flex items-center justify-center',
-          getStatusColor(order.status)
-        )}>
-          {getStatusIcon(order.status)}
+      <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-slate-50 to-blue-50">
+        <div className="flex items-center gap-3 mb-4">
+          <div className={cn(
+            'w-12 h-12 rounded-xl flex items-center justify-center shadow-lg',
+            getStatusColor(order.status)
+          )}>
+            {getStatusIcon(order.status)}
+          </div>
+          <div>
+            <h3 className="text-lg font-bold hotel-heading">
+              Order #{order.id.slice(-8).toUpperCase()}
+            </h3>
+            <p className="text-sm hotel-subheading">
+              {getStatusMessage(order.status)}
+            </p>
+          </div>
         </div>
-        <div>
-          <h3 className="text-lg font-semibold text-gray-900">
-            Order #{order.id.slice(-8).toUpperCase()}
-          </h3>
-          <p className="text-sm text-gray-600">
-            {getStatusMessage(order.status)}
-          </p>
+        
+        <div className={cn(
+          'hotel-badge text-sm font-semibold',
+          `status-${order.status.toLowerCase()}`
+        )}>
+          {order.status}
         </div>
       </div>
 
       {/* Order Items */}
-      <div className="space-y-3 mb-4">
+      <div className="flex-1 overflow-y-auto p-6 space-y-4">
         {order.order_items.map((item) => (
-          <div key={item.id} className="flex justify-between items-start">
-            <div className="flex-1">
-              <p className="font-medium text-gray-900">Item #{item.menu_item_id}</p>
-              {item.special_notes && (
-                <p className="text-sm text-gray-600 italic">Note: {item.special_notes}</p>
-              )}
-            </div>
-            <div className="text-right ml-3">
-              <p className="font-medium">
-                {item.quantity} × {formatCurrency(item.unit_price)}
-              </p>
-              <p className="text-sm text-gray-600">
-                = {formatCurrency(item.total_price)}
-              </p>
+          <div key={item.id} className="hotel-card p-4">
+            <div className="flex justify-between items-start">
+              <div className="flex-1">
+                <h4 className="font-semibold hotel-heading mb-1">
+                  Item #{item.menu_item_id}
+                </h4>
+                {item.special_notes && (
+                  <p className="text-sm hotel-text italic mb-2">
+                    Note: {item.special_notes}
+                  </p>
+                )}
+                <div className="flex items-center gap-4 text-sm hotel-subheading">
+                  <span>Qty: {item.quantity}</span>
+                  <span>{formatCurrency(item.unit_price)} each</span>
+                </div>
+              </div>
+              <div className="text-right ml-4">
+                <div className="text-lg font-bold hotel-heading">
+                  {formatCurrency(item.total_price)}
+                </div>
+              </div>
             </div>
           </div>
         ))}
-      </div>
 
-      {/* Order Total */}
-      <div className="border-t pt-3 mb-4">
-        <div className="flex justify-between items-center">
-          <span className="font-semibold text-gray-900">Total</span>
-          <span className="font-semibold text-lg">{formatCurrency(order.total_amount)}</span>
-        </div>
-      </div>
-
-      {/* Special Requests */}
-      {order.special_requests && (
-        <div className="mb-4">
-          <p className="text-sm font-medium text-gray-900 mb-1">Special Requests:</p>
-          <p className="text-sm text-gray-600 italic">&ldquo;{order.special_requests}&rdquo;</p>
-        </div>
-      )}
-
-      {/* Delivery Information */}
-      {showEstimatedTime && (
-        <div className="bg-gray-50 rounded-lg p-3">
-          <div className="flex items-center gap-2 mb-2">
-            <ClockIcon className="h-4 w-4 text-gray-500" />
-            <span className="text-sm font-medium text-gray-900">Delivery Information</span>
+        {/* Special Requests */}
+        {order.special_requests && (
+          <div className="hotel-card p-4 bg-gradient-to-r from-blue-50 to-indigo-50">
+            <h4 className="font-semibold hotel-heading mb-2 flex items-center gap-2">
+              <SparklesIcon className="h-4 w-4" />
+              Special Requests
+            </h4>
+            <p className="hotel-text italic">"{order.special_requests}"</p>
           </div>
-          
-          {order.estimated_delivery_time && (
-            <p className="text-sm text-gray-600 mb-1">
-              <span className="font-medium">Estimated delivery:</span>{' '}
-              {formatDateTime(order.estimated_delivery_time)}
-            </p>
-          )}
-          
-          {order.actual_delivery_time && (
-            <p className="text-sm text-gray-600">
-              <span className="font-medium">Delivered at:</span>{' '}
-              {formatDateTime(order.actual_delivery_time)}
-            </p>
-          )}
-          
-          {order.delivery_notes && (
-            <p className="text-sm text-gray-600 mt-2">
-              <span className="font-medium">Delivery notes:</span> {order.delivery_notes}
-            </p>
-          )}
-        </div>
-      )}
+        )}
 
-      {/* Order Metadata */}
-      <div className="mt-4 pt-3 border-t text-xs text-gray-500">
-        <p>Ordered: {formatDateTime(order.created_at)}</p>
-        <p>Payment: {order.payment_status}</p>
+        {/* Delivery Information */}
+        {showEstimatedTime && (
+          <div className="hotel-card p-4 bg-gradient-to-r from-green-50 to-emerald-50">
+            <div className="flex items-center gap-2 mb-3">
+              <TruckIcon className="h-5 w-5 text-green-600" />
+              <span className="font-semibold hotel-heading">Delivery Information</span>
+            </div>
+            
+            {order.estimated_delivery_time && (
+              <p className="text-sm hotel-text mb-2">
+                <span className="font-medium">Estimated delivery:</span>{' '}
+                {formatDateTime(order.estimated_delivery_time)}
+              </p>
+            )}
+            
+            {order.actual_delivery_time && (
+              <p className="text-sm hotel-text mb-2">
+                <span className="font-medium">Delivered at:</span>{' '}
+                {formatDateTime(order.actual_delivery_time)}
+              </p>
+            )}
+            
+            {order.delivery_notes && (
+              <p className="text-sm hotel-text">
+                <span className="font-medium">Delivery notes:</span> {order.delivery_notes}
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Order Total & Footer */}
+      <div className="border-t border-gray-100 p-6 bg-gradient-to-r from-slate-50 to-blue-50">
+        <div className="flex justify-between items-center mb-4">
+          <span className="text-lg font-bold hotel-heading">Total Amount</span>
+          <span className="text-2xl font-bold hotel-heading">{formatCurrency(order.total_amount)}</span>
+        </div>
+        
+        <div className="space-y-2 text-xs hotel-subheading">
+          <div className="flex justify-between">
+            <span>Ordered:</span>
+            <span>{formatDateTime(order.created_at)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Payment:</span>
+            <span className={cn(
+              'hotel-badge text-xs',
+              order.payment_status === 'PAID' ? 'hotel-badge-green' : 'hotel-badge-gray'
+            )}>
+              {order.payment_status}
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   )

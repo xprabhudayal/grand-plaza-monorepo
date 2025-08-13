@@ -6,7 +6,9 @@ import {
   ClipboardDocumentListIcon,
   ShoppingCartIcon,
   Bars3Icon,
-  XMarkIcon
+  XMarkIcon,
+  SparklesIcon,
+  PhoneIcon
 } from '@heroicons/react/24/outline'
 import { cn } from '@/lib/utils'
 import VideoAvatar from '@/components/VideoAvatar'
@@ -23,8 +25,8 @@ export default function GuestInterface() {
   const [isCallConnected, setIsCallConnected] = useState(false)
   const [cart, setCart] = useState<Cart>({ items: [], total: 0 })
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [roomNumber] = useState('101') // This would come from auth/context in real app
-  const [guestName] = useState('Guest') // This would come from auth/context in real app
+  const [roomNumber] = useState('101')
+  const [guestName] = useState('Guest')
 
   // Update cart total when items change
   useEffect(() => {
@@ -50,7 +52,6 @@ export default function GuestInterface() {
   }
 
   const handleMenuItemSelect = (item: MenuItem) => {
-    // Add item to cart or increase quantity
     setCart(prev => {
       const existingItemIndex = prev.items.findIndex(
         cartItem => cartItem.menu_item_id === item.id
@@ -58,14 +59,12 @@ export default function GuestInterface() {
 
       let newItems: CartItem[]
       if (existingItemIndex >= 0) {
-        // Increase quantity
         newItems = prev.items.map((cartItem, index) => 
           index === existingItemIndex 
             ? { ...cartItem, quantity: cartItem.quantity + 1 }
             : cartItem
         )
       } else {
-        // Add new item
         const newItem: CartItem = {
           menu_item_id: item.id,
           menu_item: item,
@@ -76,9 +75,6 @@ export default function GuestInterface() {
 
       return { ...prev, items: newItems }
     })
-
-    // Show a brief feedback that item was added
-    // TODO: Add toast notification
   }
 
   const tabs = [
@@ -86,19 +82,22 @@ export default function GuestInterface() {
       id: 'menu' as TabType,
       name: 'Menu',
       icon: ClipboardDocumentListIcon,
-      count: undefined
+      count: undefined,
+      description: 'Browse our selection'
     },
     {
       id: 'conversation' as TabType,
-      name: 'Conversation',
+      name: 'AI Chat',
       icon: ChatBubbleBottomCenterTextIcon,
-      count: transcriptMessages.length > 0 ? transcriptMessages.length : undefined
+      count: transcriptMessages.length > 0 ? transcriptMessages.length : undefined,
+      description: 'Voice conversation'
     },
     {
       id: 'order' as TabType,
-      name: 'Order',
+      name: 'Your Order',
       icon: ShoppingCartIcon,
-      count: cart.items.length > 0 ? cart.items.length : undefined
+      count: cart.items.length > 0 ? cart.items.length : undefined,
+      description: 'Review & confirm'
     }
   ]
 
@@ -134,33 +133,38 @@ export default function GuestInterface() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      {/* Elegant Header */}
+      <header className="hotel-glass sticky top-0 z-40 border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <div className="hotel-gradient w-10 h-10 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">H</span>
+          <div className="flex justify-between items-center h-20">
+            <div className="flex items-center space-x-4">
+              <div className="hotel-gradient w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg">
+                <SparklesIcon className="h-8 w-8 text-white" />
               </div>
-              <div className="ml-3">
-                <h1 className="text-xl font-bold text-gray-900">
+              <div>
+                <h1 className="text-2xl font-bold hotel-heading">
                   {process.env.NEXT_PUBLIC_HOTEL_NAME || 'Grand Plaza Hotel'}
                 </h1>
-                <p className="text-sm text-gray-600">Room Service</p>
+                <p className="text-sm hotel-subheading flex items-center gap-2">
+                  <PhoneIcon className="h-4 w-4" />
+                  AI Room Service Concierge
+                </p>
               </div>
             </div>
             
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-6">
               <div className="hidden sm:block text-right">
-                <p className="text-sm font-medium text-gray-900">Room {roomNumber}</p>
-                <p className="text-xs text-gray-600">{guestName}</p>
+                <div className="hotel-badge hotel-badge-gold">
+                  Room {roomNumber}
+                </div>
+                <p className="text-sm hotel-text mt-1">Welcome, {guestName}</p>
               </div>
               
               {/* Mobile menu button */}
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100"
+                className="lg:hidden hotel-button-secondary p-3"
               >
                 {sidebarOpen ? (
                   <XMarkIcon className="h-6 w-6" />
@@ -173,86 +177,121 @@ export default function GuestInterface() {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-8rem)]">
-          {/* Left Column: Video Avatar */}
-          {/* FIX: Added min-h-0 to constrain the flex container within the grid cell */}
-          <div className="flex flex-col min-h-0">
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Welcome Banner */}
+        <div className="hotel-card p-8 mb-8 animate-fade-in-up">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold hotel-heading mb-4">
+              Experience Luxury Room Service
+            </h2>
+            <p className="text-lg hotel-text max-w-2xl mx-auto">
+              Order from our curated menu using our AI-powered voice assistant. 
+              Simply start a call and speak naturally to place your order.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 xl:grid-cols-5 gap-8 min-h-[calc(100vh-20rem)]">
+          {/* Left Column: Video Avatar - Takes more space */}
+          <div className="xl:col-span-3 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
             <VideoAvatar
               onTranscriptUpdate={handleTranscriptUpdate}
               onCallStateChange={handleCallStateChange}
               roomNumber={roomNumber}
               guestName={guestName}
-              className="flex-1"
+              className="h-full min-h-[500px]"
             />
           </div>
 
           {/* Right Column: Tabbed Interface */}
-          {/* FIX: Added min-h-0 to constrain the flex container within the grid cell */}
-          <div className="flex flex-col bg-white rounded-lg border border-gray-200 overflow-hidden min-h-0">
-            {/* Tab Navigation */}
-            <div className="border-b border-gray-200">
-              <nav className="flex">
-                {tabs.map((tab) => {
-                  const Icon = tab.icon
-                  const isActive = activeTab === tab.id
-                  
-                  return (
-                    <button
-                      key={tab.id}
-                      onClick={() => setActiveTab(tab.id)}
-                      className={cn(
-                        'flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors',
-                        isActive
-                          ? 'border-blue-500 text-blue-600 bg-blue-50'
-                          : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                      )}
-                    >
-                      <Icon className="h-5 w-5" />
-                      <span className="hidden sm:inline">{tab.name}</span>
-                      {tab.count !== undefined && (
-                        <span className={cn(
-                          'inline-flex items-center justify-center px-2 py-1 text-xs font-bold rounded-full',
-                          isActive 
-                            ? 'bg-blue-600 text-white' 
-                            : 'bg-gray-100 text-gray-600'
-                        )}>
-                          {tab.count}
-                        </span>
-                      )}
-                    </button>
-                  )
-                })}
-              </nav>
-            </div>
+          <div className="xl:col-span-2 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+            <div className="hotel-card overflow-hidden h-full min-h-[500px] flex flex-col">
+              {/* Enhanced Tab Navigation */}
+              <div className="border-b border-gray-100 bg-gray-50/50">
+                <nav className="flex">
+                  {tabs.map((tab) => {
+                    const Icon = tab.icon
+                    const isActive = activeTab === tab.id
+                    
+                    return (
+                      <button
+                        key={tab.id}
+                        onClick={() => setActiveTab(tab.id)}
+                        className={cn(
+                          'flex-1 flex flex-col items-center justify-center gap-2 px-4 py-4 text-sm font-medium border-b-3 transition-all duration-300',
+                          isActive
+                            ? 'border-yellow-400 text-yellow-600 bg-yellow-50/50'
+                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200 hover:bg-gray-50'
+                        )}
+                      >
+                        <div className="flex items-center gap-2">
+                          <Icon className="h-5 w-5" />
+                          {tab.count !== undefined && (
+                            <span className={cn(
+                              'hotel-badge text-xs',
+                              isActive ? 'hotel-badge-gold' : 'hotel-badge-gray'
+                            )}>
+                              {tab.count}
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-center">
+                          <div className="font-semibold">{tab.name}</div>
+                          <div className="text-xs opacity-75 hidden sm:block">{tab.description}</div>
+                        </div>
+                      </button>
+                    )
+                  })}
+                </nav>
+              </div>
 
-            {/* Tab Content */}
-            <div className="flex-1 overflow-hidden">
-              {renderTabContent()}
+              {/* Tab Content */}
+              <div className="flex-1 overflow-hidden">
+                {renderTabContent()}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Mobile Sidebar Overlay */}
-        {sidebarOpen && (
-          <div className="lg:hidden fixed inset-0 z-50 bg-black bg-opacity-50">
-            <div className="fixed inset-y-0 right-0 w-80 bg-white shadow-xl">
-              <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold">Menu & Orders</h2>
-                <button
-                  onClick={() => setSidebarOpen(false)}
-                  className="p-2 rounded-md text-gray-400 hover:text-gray-500"
-                >
-                  <XMarkIcon className="h-6 w-6" />
-                </button>
-              </div>
-              <div className="p-4 h-full overflow-y-auto">
-                {renderTabContent()}
+        {/* Call to Action */}
+        {!isCallConnected && (
+          <div className="hotel-card p-6 mt-8 text-center animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+            <div className="max-w-md mx-auto">
+              <h3 className="text-xl font-semibold hotel-heading mb-2">
+                Ready to Order?
+              </h3>
+              <p className="hotel-text mb-4">
+                Click "Start Room Service Call" above to begin your personalized ordering experience with our AI concierge.
+              </p>
+              <div className="flex items-center justify-center gap-2 text-sm hotel-subheading">
+                <SparklesIcon className="h-4 w-4" />
+                Available 24/7 • Instant Response • Natural Conversation
               </div>
             </div>
           </div>
         )}
       </div>
+
+      {/* Enhanced Mobile Sidebar */}
+      {sidebarOpen && (
+        <div className="lg:hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm">
+          <div className="fixed inset-y-0 right-0 w-full max-w-sm hotel-glass shadow-2xl">
+            <div className="flex items-center justify-between p-6 border-b border-white/20">
+              <h2 className="text-xl font-semibold hotel-heading">Room Service</h2>
+              <button
+                onClick={() => setSidebarOpen(false)}
+                className="hotel-button-secondary p-2"
+              >
+                <XMarkIcon className="h-6 w-6" />
+              </button>
+            </div>
+            <div className="p-6 h-full overflow-y-auto">
+              {renderTabContent()}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

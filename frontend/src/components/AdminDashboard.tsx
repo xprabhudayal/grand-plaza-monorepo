@@ -6,7 +6,11 @@ import {
   FunnelIcon,
   ArrowUpIcon,
   ArrowDownIcon,
-  EyeIcon
+  EyeIcon,
+  ChartBarIcon,
+  ClockIcon,
+  CheckCircleIcon,
+  TruckIcon
 } from '@heroicons/react/24/outline'
 import { cn, formatCurrency, formatDateTime, getStatusColor } from '@/lib/utils'
 import useOrders from '@/hooks/useOrders'
@@ -30,7 +34,7 @@ export default function AdminDashboard({ className }: AdminDashboardProps) {
   const [showFilters, setShowFilters] = useState(false)
 
   const { orders, loading, error, updateOrderStatus } = useOrders({
-    pollingInterval: 15000, // Poll every 15 seconds
+    pollingInterval: 15000,
     autoRefresh: true
   })
 
@@ -38,7 +42,6 @@ export default function AdminDashboard({ className }: AdminDashboardProps) {
   const filteredAndSortedOrders = useMemo(() => {
     let filtered = orders
 
-    // Apply search filter
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase()
       filtered = filtered.filter(order => 
@@ -50,12 +53,10 @@ export default function AdminDashboard({ className }: AdminDashboardProps) {
       )
     }
 
-    // Apply status filter
     if (statusFilter !== 'ALL') {
       filtered = filtered.filter(order => order.status === statusFilter)
     }
 
-    // Sort orders
     filtered.sort((a, b) => {
       let aValue: string | number = a[sortField]
       let bValue: string | number = b[sortField]
@@ -88,13 +89,11 @@ export default function AdminDashboard({ className }: AdminDashboardProps) {
     try {
       await updateOrderStatus(orderId, newStatus)
       
-      // Update selected order if it's the one being updated
       if (selectedOrder && selectedOrder.id === orderId) {
         setSelectedOrder(prev => prev ? { ...prev, status: newStatus } : null)
       }
     } catch (error) {
       console.error('Failed to update order status:', error)
-      // TODO: Show toast notification
     }
   }
 
@@ -122,60 +121,92 @@ export default function AdminDashboard({ className }: AdminDashboardProps) {
 
   if (loading && orders.length === 0) {
     return (
-      <div className={cn('p-6', className)}>
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
-          <p className="mt-2 text-sm text-gray-600">Loading orders...</p>
+      <div className={cn('p-8', className)}>
+        <div className="space-y-6">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="hotel-skeleton h-20 rounded-xl"></div>
+          ))}
         </div>
       </div>
     )
   }
 
   return (
-    <div className={cn('space-y-6', className)}>
-      {/* Header Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-lg border border-gray-200">
-          <h3 className="text-sm font-medium text-gray-900">Total Orders</h3>
-          <p className="text-2xl font-bold text-gray-900">{orders.length}</p>
+    <div className={cn('space-y-8', className)}>
+      {/* Enhanced Header Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="hotel-card p-6 bg-gradient-to-br from-blue-50 to-indigo-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-medium hotel-subheading">Total Orders</h3>
+              <p className="text-3xl font-bold hotel-heading mt-2">{orders.length}</p>
+            </div>
+            <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
+              <ChartBarIcon className="h-6 w-6 text-white" />
+            </div>
+          </div>
         </div>
-        <div className="bg-white p-4 rounded-lg border border-gray-200">
-          <h3 className="text-sm font-medium text-gray-900">Active Orders</h3>
-          <p className="text-2xl font-bold text-blue-600">
-            {statusCounts.PENDING + statusCounts.CONFIRMED + statusCounts.PREPARING + statusCounts.READY}
-          </p>
+
+        <div className="hotel-card p-6 bg-gradient-to-br from-yellow-50 to-amber-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-medium hotel-subheading">Active Orders</h3>
+              <p className="text-3xl font-bold text-yellow-600 mt-2">
+                {statusCounts.PENDING + statusCounts.CONFIRMED + statusCounts.PREPARING + statusCounts.READY}
+              </p>
+            </div>
+            <div className="w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center">
+              <ClockIcon className="h-6 w-6 text-white" />
+            </div>
+          </div>
         </div>
-        <div className="bg-white p-4 rounded-lg border border-gray-200">
-          <h3 className="text-sm font-medium text-gray-900">Delivered Today</h3>
-          <p className="text-2xl font-bold text-green-600">{statusCounts.DELIVERED}</p>
+
+        <div className="hotel-card p-6 bg-gradient-to-br from-green-50 to-emerald-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-medium hotel-subheading">Delivered Today</h3>
+              <p className="text-3xl font-bold text-green-600 mt-2">{statusCounts.DELIVERED}</p>
+            </div>
+            <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center">
+              <TruckIcon className="h-6 w-6 text-white" />
+            </div>
+          </div>
         </div>
-        <div className="bg-white p-4 rounded-lg border border-gray-200">
-          <h3 className="text-sm font-medium text-gray-900">Revenue Today</h3>
-          <p className="text-2xl font-bold text-gray-900">{formatCurrency(totalRevenue)}</p>
+
+        <div className="hotel-card p-6 bg-gradient-to-br from-purple-50 to-violet-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-medium hotel-subheading">Revenue Today</h3>
+              <p className="text-3xl font-bold text-purple-600 mt-2">{formatCurrency(totalRevenue)}</p>
+            </div>
+            <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center">
+              <CheckCircleIcon className="h-6 w-6 text-white" />
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Filters and Search */}
-      <div className="bg-white p-4 rounded-lg border border-gray-200">
-        <div className="flex flex-col sm:flex-row gap-4">
+      {/* Enhanced Filters */}
+      <div className="hotel-card p-6">
+        <div className="flex flex-col lg:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">
-              <MagnifyingGlassIcon className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <MagnifyingGlassIcon className="h-5 w-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
                 placeholder="Search orders, guests, or items..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="hotel-input w-full pl-12"
               />
             </div>
           </div>
           
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as OrderStatus | 'ALL')}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="hotel-select min-w-[150px]"
             >
               <option value="ALL">All Statuses</option>
               {ORDER_STATUSES.map(status => (
@@ -188,8 +219,8 @@ export default function AdminDashboard({ className }: AdminDashboardProps) {
             <button
               onClick={() => setShowFilters(!showFilters)}
               className={cn(
-                'flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50',
-                showFilters && 'bg-gray-50'
+                'hotel-button-secondary flex items-center gap-2',
+                showFilters && 'bg-gray-100'
               )}
             >
               <FunnelIcon className="h-4 w-4" />
@@ -198,16 +229,15 @@ export default function AdminDashboard({ className }: AdminDashboardProps) {
           </div>
         </div>
 
-        {/* Advanced filters */}
         {showFilters && (
-          <div className="mt-4 pt-4 border-t border-gray-200">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="mt-6 pt-6 border-t border-gray-100">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Sort by</label>
+                <label className="block text-sm font-medium hotel-subheading mb-2">Sort by</label>
                 <select
                   value={sortField}
                   onChange={(e) => setSortField(e.target.value as SortField)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="hotel-select w-full"
                 >
                   <option value="created_at">Order Time</option>
                   <option value="total_amount">Total Amount</option>
@@ -217,11 +247,11 @@ export default function AdminDashboard({ className }: AdminDashboardProps) {
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Direction</label>
+                <label className="block text-sm font-medium hotel-subheading mb-2">Direction</label>
                 <select
                   value={sortDirection}
                   onChange={(e) => setSortDirection(e.target.value as SortDirection)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="hotel-select w-full"
                 >
                   <option value="desc">Newest First</option>
                   <option value="asc">Oldest First</option>
@@ -234,96 +264,109 @@ export default function AdminDashboard({ className }: AdminDashboardProps) {
 
       {/* Error state */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <p className="text-red-600 text-sm">{error}</p>
+        <div className="hotel-card p-6 bg-red-50 border border-red-200">
+          <p className="text-red-600 font-medium">{error}</p>
         </div>
       )}
 
-      {/* Orders Table */}
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+      {/* Enhanced Orders Table */}
+      <div className="hotel-card overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full">
+            <thead className="bg-gradient-to-r from-slate-50 to-blue-50">
               <tr>
                 <th 
                   onClick={() => handleSort('created_at')}
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  className="px-6 py-4 text-left text-sm font-semibold hotel-heading cursor-pointer hover:bg-gray-100 transition-colors"
                 >
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-2">
                     Order Time
                     <SortIcon field="created_at" />
                   </div>
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-sm font-semibold hotel-heading">
                   Order ID
                 </th>
                 <th 
                   onClick={() => handleSort('guest_id')}
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  className="px-6 py-4 text-left text-sm font-semibold hotel-heading cursor-pointer hover:bg-gray-100 transition-colors"
                 >
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-2">
                     Guest
                     <SortIcon field="guest_id" />
                   </div>
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-sm font-semibold hotel-heading">
                   Items
                 </th>
                 <th 
                   onClick={() => handleSort('total_amount')}
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  className="px-6 py-4 text-left text-sm font-semibold hotel-heading cursor-pointer hover:bg-gray-100 transition-colors"
                 >
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-2">
                     Total
                     <SortIcon field="total_amount" />
                   </div>
                 </th>
-                <th 
-                  onClick={() => handleSort('status')}
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-                >
-                  <div className="flex items-center gap-1">
-                    Status
-                    <SortIcon field="status" />
-                  </div>
+                <th className="px-6 py-4 text-left text-sm font-semibold hotel-heading">
+                  Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-sm font-semibold hotel-heading">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="divide-y divide-gray-100">
               {filteredAndSortedOrders.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
-                    {orders.length === 0 ? 'No orders yet' : 'No orders match your filters'}
+                  <td colSpan={7} className="px-6 py-16 text-center">
+                    <div className="max-w-sm mx-auto">
+                      <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <ChartBarIcon className="h-8 w-8 text-gray-400" />
+                      </div>
+                      <h3 className="text-lg font-semibold hotel-heading mb-2">
+                        {orders.length === 0 ? 'No orders yet' : 'No orders match your filters'}
+                      </h3>
+                      <p className="hotel-text">
+                        {orders.length === 0 
+                          ? 'Orders will appear here once guests start placing them.'
+                          : 'Try adjusting your search or filter criteria.'
+                        }
+                      </p>
+                    </div>
                   </td>
                 </tr>
               ) : (
                 filteredAndSortedOrders.map((order) => (
-                  <tr key={order.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <tr key={order.id} className="hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all">
+                    <td className="px-6 py-4 text-sm hotel-text">
                       {formatDateTime(order.created_at)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">
-                      #{order.id.slice(-8).toUpperCase()}
+                    <td className="px-6 py-4">
+                      <span className="font-mono text-sm font-semibold hotel-heading">
+                        #{order.id.slice(-8).toUpperCase()}
+                      </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {order.guest_id.slice(-8).toUpperCase()}
+                    <td className="px-6 py-4">
+                      <span className="font-mono text-sm hotel-text">
+                        {order.guest_id.slice(-8).toUpperCase()}
+                      </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 text-sm hotel-text">
                       {order.order_items.length} item{order.order_items.length !== 1 ? 's' : ''}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {formatCurrency(order.total_amount)}
+                    <td className="px-6 py-4">
+                      <span className="text-lg font-bold hotel-heading">
+                        {formatCurrency(order.total_amount)}
+                      </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4">
                       <select
                         value={order.status}
                         onChange={(e) => handleStatusUpdate(order.id, e.target.value as OrderStatus)}
                         className={cn(
-                          'text-xs font-medium px-2 py-1 rounded-full border-0 focus:ring-2 focus:ring-blue-500',
-                          getStatusColor(order.status)
+                          'hotel-badge text-sm font-semibold border-0 cursor-pointer',
+                          `status-${order.status.toLowerCase()}`
                         )}
                       >
                         {ORDER_STATUSES.map(status => (
@@ -333,10 +376,11 @@ export default function AdminDashboard({ className }: AdminDashboardProps) {
                         ))}
                       </select>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <td className="px-6 py-4">
                       <button
                         onClick={() => setSelectedOrder(order)}
-                        className="text-blue-600 hover:text-blue-900 mr-3"
+                        className="hotel-button-secondary p-2"
+                        title="View details"
                       >
                         <EyeIcon className="h-4 w-4" />
                       </button>
@@ -349,62 +393,69 @@ export default function AdminDashboard({ className }: AdminDashboardProps) {
         </div>
       </div>
 
-      {/* Order Details Modal */}
+      {/* Enhanced Order Details Modal */}
       {selectedOrder && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="hotel-card max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-8 border-b border-gray-100 bg-gradient-to-r from-slate-50 to-blue-50">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  Order Details #{selectedOrder.id.slice(-8).toUpperCase()}
-                </h3>
+                <div>
+                  <h3 className="text-2xl font-bold hotel-heading">
+                    Order #{selectedOrder.id.slice(-8).toUpperCase()}
+                  </h3>
+                  <p className="hotel-subheading mt-1">Order Details & Management</p>
+                </div>
                 <button
                   onClick={() => setSelectedOrder(null)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="hotel-button-secondary p-3 text-xl"
                 >
                   ×
                 </button>
               </div>
             </div>
             
-            <div className="p-6 space-y-6">
-              {/* Order Info */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Guest ID</label>
-                  <p className="mt-1 text-sm text-gray-900">{selectedOrder.guest_id}</p>
+            <div className="p-8 space-y-8">
+              {/* Order Info Grid */}
+              <div className="grid grid-cols-2 gap-6">
+                <div className="hotel-card p-4">
+                  <label className="block text-sm font-medium hotel-subheading mb-1">Guest ID</label>
+                  <p className="font-mono font-semibold hotel-heading">{selectedOrder.guest_id}</p>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Status</label>
-                  <p className={cn('mt-1 inline-flex px-2 py-1 text-xs font-medium rounded-full', getStatusColor(selectedOrder.status))}>
+                <div className="hotel-card p-4">
+                  <label className="block text-sm font-medium hotel-subheading mb-1">Status</label>
+                  <div className={cn('hotel-badge inline-flex', `status-${selectedOrder.status.toLowerCase()}`)}>
                     {selectedOrder.status}
-                  </p>
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Order Time</label>
-                  <p className="mt-1 text-sm text-gray-900">{formatDateTime(selectedOrder.created_at)}</p>
+                <div className="hotel-card p-4">
+                  <label className="block text-sm font-medium hotel-subheading mb-1">Order Time</label>
+                  <p className="font-semibold hotel-heading">{formatDateTime(selectedOrder.created_at)}</p>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Total Amount</label>
-                  <p className="mt-1 text-sm font-medium text-gray-900">{formatCurrency(selectedOrder.total_amount)}</p>
+                <div className="hotel-card p-4">
+                  <label className="block text-sm font-medium hotel-subheading mb-1">Total Amount</label>
+                  <p className="text-xl font-bold hotel-heading">{formatCurrency(selectedOrder.total_amount)}</p>
                 </div>
               </div>
 
               {/* Order Items */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">Order Items</label>
+                <h4 className="text-lg font-bold hotel-heading mb-4">Order Items</h4>
                 <div className="space-y-3">
                   {selectedOrder.order_items.map((item) => (
-                    <div key={item.id} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                      <div>
-                        <p className="font-medium text-gray-900">Item #{item.menu_item_id}</p>
-                        {item.special_notes && (
-                          <p className="text-sm text-gray-600 italic">Note: {item.special_notes}</p>
-                        )}
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium">{item.quantity} × {formatCurrency(item.unit_price)}</p>
-                        <p className="text-sm text-gray-600">{formatCurrency(item.total_price)}</p>
+                    <div key={item.id} className="hotel-card p-4 bg-gradient-to-r from-gray-50 to-blue-50">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <p className="font-semibold hotel-heading">Item #{item.menu_item_id}</p>
+                          {item.special_notes && (
+                            <p className="text-sm hotel-text italic mt-1">Note: {item.special_notes}</p>
+                          )}
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold hotel-heading">
+                            {item.quantity} × {formatCurrency(item.unit_price)}
+                          </p>
+                          <p className="text-lg font-bold hotel-heading">{formatCurrency(item.total_price)}</p>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -413,33 +464,34 @@ export default function AdminDashboard({ className }: AdminDashboardProps) {
 
               {/* Special Requests */}
               {selectedOrder.special_requests && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Special Requests</label>
-                  <p className="mt-1 text-sm text-gray-900 p-3 bg-gray-50 rounded-lg">
-                    {selectedOrder.special_requests}
-                  </p>
+                <div className="hotel-card p-6 bg-gradient-to-r from-yellow-50 to-amber-50">
+                  <h4 className="text-lg font-bold hotel-heading mb-3">Special Requests</h4>
+                  <p className="hotel-text italic text-lg">"{selectedOrder.special_requests}"</p>
                 </div>
               )}
 
               {/* Delivery Information */}
               {(selectedOrder.estimated_delivery_time || selectedOrder.delivery_notes) && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">Delivery Information</label>
-                  <div className="space-y-2">
+                <div className="hotel-card p-6 bg-gradient-to-r from-green-50 to-emerald-50">
+                  <h4 className="text-lg font-bold hotel-heading mb-4">Delivery Information</h4>
+                  <div className="space-y-3">
                     {selectedOrder.estimated_delivery_time && (
-                      <p className="text-sm text-gray-900">
-                        <span className="font-medium">Estimated delivery:</span> {formatDateTime(selectedOrder.estimated_delivery_time)}
-                      </p>
+                      <div className="flex justify-between">
+                        <span className="font-medium hotel-subheading">Estimated delivery:</span>
+                        <span className="hotel-text">{formatDateTime(selectedOrder.estimated_delivery_time)}</span>
+                      </div>
                     )}
                     {selectedOrder.actual_delivery_time && (
-                      <p className="text-sm text-gray-900">
-                        <span className="font-medium">Delivered at:</span> {formatDateTime(selectedOrder.actual_delivery_time)}
-                      </p>
+                      <div className="flex justify-between">
+                        <span className="font-medium hotel-subheading">Delivered at:</span>
+                        <span className="hotel-text">{formatDateTime(selectedOrder.actual_delivery_time)}</span>
+                      </div>
                     )}
                     {selectedOrder.delivery_notes && (
-                      <p className="text-sm text-gray-900">
-                        <span className="font-medium">Delivery notes:</span> {selectedOrder.delivery_notes}
-                      </p>
+                      <div>
+                        <span className="font-medium hotel-subheading">Delivery notes:</span>
+                        <p className="hotel-text mt-1">{selectedOrder.delivery_notes}</p>
+                      </div>
                     )}
                   </div>
                 </div>
