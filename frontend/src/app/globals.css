@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -92,203 +93,112 @@ body {
 }
 
 /* Luxury hotel aesthetics */
-.hotel-gradient {
-  background: linear-gradient(135deg, var(--hotel-gold) 0%, var(--hotel-dark-gold) 100%);
-  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
-}
-
-.hotel-gradient-subtle {
-  background: linear-gradient(135deg, var(--hotel-light-gold) 0%, var(--hotel-cream) 100%);
-}
-
-.hotel-glass {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
-
-.hotel-shadow {
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-}
-
-.hotel-shadow-soft {
-  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-.hotel-card {
-  background: white;
-  border-radius: 16px;
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.hotel-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  border-color: var(--hotel-gold);
-}
-
-.hotel-button-primary {
-  background: linear-gradient(135deg, var(--hotel-gold) 0%, var(--hotel-dark-gold) 100%);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  padding: 12px 24px;
-  font-weight: 600;
-  font-size: 14px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 14px 0 rgba(212, 175, 55, 0.39);
-}
-
-.hotel-button-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px 0 rgba(212, 175, 55, 0.5);
-}
-
-.hotel-button-secondary {
-  background: white;
-  color: var(--hotel-navy);
-  border: 2px solid var(--hotel-gold);
-  border-radius: 12px;
-  padding: 10px 22px;
-  font-weight: 600;
-  font-size: 14px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.hotel-button-secondary:hover {
-  background: var(--hotel-gold);
-  color: white;
-  transform: translateY(-1px);
-}
-
-.hotel-input {
-  background: white;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 12px 16px;
-  font-size: 14px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.hotel-input:focus {
-  outline: none;
-  border-color: var(--hotel-gold);
-  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
-}
-
-.hotel-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.025em;
-}
-
-.hotel-badge-gold {
-  background: var(--hotel-light-gold);
-  color: var(--hotel-dark-gold);
-}
-
-.hotel-badge-blue {
-  background: #dbeafe;
-  color: #1e40af;
-}
-
-.hotel-badge-green {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.hotel-badge-red {
-  background: #fee2e2;
-  color: #dc2626;
-}
-
-.hotel-badge-gray {
-  background: #f1f5f9;
-  color: #475569;
-}
-
-/* Animations */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
+@layer components {
+  .hotel-gradient {
+    @apply bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600;
+    box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  .hotel-gradient-subtle {
+    @apply bg-gradient-to-br from-yellow-50 to-amber-50;
   }
-}
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
+  .hotel-glass {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   }
-  to {
-    opacity: 1;
+
+  .hotel-shadow {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   }
-}
 
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
+  .hotel-shadow-soft {
+    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   }
-  to {
-    opacity: 1;
-    transform: translateX(0);
+
+  .hotel-card {
+    @apply bg-white rounded-2xl border border-slate-200 shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
   }
-}
 
-.animate-fade-in-up {
-  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
+  .hotel-button-primary {
+    @apply bg-gradient-to-r from-yellow-400 to-yellow-500 text-white border-0 rounded-xl px-6 py-3 font-semibold text-sm transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5;
+    box-shadow: 0 4px 14px 0 rgba(212, 175, 55, 0.39);
+  }
 
-.animate-fade-in {
-  animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
+  .hotel-button-primary:hover {
+    box-shadow: 0 6px 20px 0 rgba(212, 175, 55, 0.5);
+  }
 
-.animate-slide-in-right {
-  animation: slideInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
+  .hotel-button-secondary {
+    @apply bg-white text-slate-700 border-2 border-yellow-400 rounded-xl px-6 py-3 font-semibold text-sm transition-all duration-300 hover:bg-yellow-400 hover:text-white hover:-translate-y-0.5;
+  }
 
-/* Status indicators */
-.status-pending { @apply hotel-badge-gray; }
-.status-confirmed { @apply hotel-badge-blue; }
-.status-preparing { @apply hotel-badge-gold; }
-.status-ready { @apply hotel-badge-green; }
-.status-delivered { @apply hotel-badge-green; }
-.status-cancelled { @apply hotel-badge-red; }
+  .hotel-input {
+    @apply bg-white border-2 border-slate-200 rounded-xl px-4 py-3 text-sm transition-all duration-300 focus:outline-none focus:border-yellow-400 focus:ring-4 focus:ring-yellow-100;
+  }
 
-/* Typography improvements */
-.hotel-heading {
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  color: var(--hotel-navy);
-}
+  .hotel-select {
+    @apply bg-white border-2 border-slate-200 rounded-xl px-4 py-3 text-sm transition-all duration-300 appearance-none focus:outline-none focus:border-yellow-400 focus:ring-4 focus:ring-yellow-100;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    padding-right: 40px;
+  }
 
-.hotel-subheading {
-  font-weight: 600;
-  color: var(--hotel-silver);
-}
+  .hotel-badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide;
+  }
 
-.hotel-text {
-  color: #64748b;
-  line-height: 1.6;
-}
+  .hotel-badge-gold {
+    @apply bg-yellow-100 text-yellow-800;
+  }
 
-/* Loading states */
-.hotel-skeleton {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: loading 1.5s infinite;
+  .hotel-badge-blue {
+    @apply bg-blue-100 text-blue-800;
+  }
+
+  .hotel-badge-green {
+    @apply bg-green-100 text-green-800;
+  }
+
+  .hotel-badge-red {
+    @apply bg-red-100 text-red-800;
+  }
+
+  .hotel-badge-gray {
+    @apply bg-gray-100 text-gray-700;
+  }
+
+  .hotel-heading {
+    @apply font-bold text-slate-800;
+    letter-spacing: -0.025em;
+  }
+
+  .hotel-subheading {
+    @apply font-semibold text-slate-600;
+  }
+
+  .hotel-text {
+    @apply text-slate-600;
+    line-height: 1.6;
+  }
+
+  .hotel-skeleton {
+    @apply bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-pulse rounded;
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+  }
+
+  /* Status indicators */
+  .status-pending { @apply hotel-badge-gray; }
+  .status-confirmed { @apply hotel-badge-blue; }
+  .status-preparing { @apply hotel-badge-gold; }
+  .status-ready { @apply hotel-badge-green; }
+  .status-delivered { @apply hotel-badge-green; }
+  .status-cancelled { @apply hotel-badge-red; }
 }
 
 @keyframes loading {
@@ -303,44 +213,21 @@ body {
 /* Mobile optimizations */
 @media (max-width: 768px) {
   .hotel-card {
-    border-radius: 12px;
+    @apply rounded-xl;
   }
   
   .hotel-button-primary,
   .hotel-button-secondary {
-    border-radius: 10px;
-    padding: 10px 20px;
+    @apply rounded-lg px-5 py-2.5;
   }
   
-  .hotel-input {
-    border-radius: 10px;
+  .hotel-input,
+  .hotel-select {
+    @apply rounded-lg;
   }
 }
 
 /* Focus improvements for accessibility */
 .hotel-focus:focus {
-  outline: 2px solid var(--hotel-gold);
-  outline-offset: 2px;
-}
-
-/* Custom select styling */
-.hotel-select {
-  background: white;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 12px 16px;
-  font-size: 14px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
-  background-position: right 12px center;
-  background-repeat: no-repeat;
-  background-size: 16px;
-  padding-right: 40px;
-}
-
-.hotel-select:focus {
-  outline: none;
-  border-color: var(--hotel-gold);
-  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+  @apply outline-2 outline-yellow-400 outline-offset-2;
 }
