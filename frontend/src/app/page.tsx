@@ -8,7 +8,8 @@ import {
   Bars3Icon,
   XMarkIcon,
   SparklesIcon,
-  PhoneIcon
+  PhoneIcon,
+  StarIcon
 } from '@heroicons/react/24/outline'
 import { cn } from '@/lib/utils'
 import VideoAvatar from '@/components/VideoAvatar'
@@ -182,6 +183,13 @@ export default function GuestInterface() {
         {/* Welcome Banner */}
         <div className="hotel-card p-8 mb-8 animate-fade-in-up">
           <div className="text-center">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <StarIcon className="h-8 w-8 text-yellow-500" />
+              <StarIcon className="h-8 w-8 text-yellow-500" />
+              <StarIcon className="h-8 w-8 text-yellow-500" />
+              <StarIcon className="h-8 w-8 text-yellow-500" />
+              <StarIcon className="h-8 w-8 text-yellow-500" />
+            </div>
             <h2 className="text-3xl font-bold hotel-heading mb-4">
               Experience Luxury Room Service
             </h2>
