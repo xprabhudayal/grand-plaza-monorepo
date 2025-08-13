@@ -14,6 +14,7 @@ import re
 import aiohttp
 from dotenv import load_dotenv
 from loguru import logger
+from app.order_service import order_service
 from pipecat.audio.vad.silero import SileroVADAnalyzer
 from pipecat.pipeline.pipeline import Pipeline
 from pipecat.pipeline.runner import PipelineRunner
@@ -192,6 +193,17 @@ async def add_item_to_order(
             price=menu_item["price"] * quantity_int,
             special_notes=special_notes
         )
+        
+        # Track items for database storage
+        if not hasattr(flow_manager, 'current_order'):
+            flow_manager.current_order = {'items': [], 'room_number': None, 'guest_name': None}
+        
+        flow_manager.current_order['items'].append({
+            'name': menu_item["name"],
+            'quantity': quantity_int,
+            'special_notes': special_notes
+        })
+        
         return order_item, "item_added"
     else:
         # Item not found, go back to menu
@@ -203,6 +215,38 @@ async def review_current_order(flow_manager: FlowManager) -> tuple[None, str]:
 
 async def confirm_final_order(flow_manager: FlowManager) -> tuple[None, str]:
     """Confirm and place the final order"""
+    # Store the order in the database
+    try:
+        # Get collected order data from context
+        context = flow_manager.context_aggregator.context
+        
+        # Extract order items from context (you'll need to track these as items are added)
+        # For now, we'll store them in a simple way
+        if not hasattr(flow_manager, 'current_order'):
+            flow_manager.current_order = {'items': [], 'room_number': None, 'guest_name': None}
+        
+        room_number = os.getenv("GUEST_ROOM_NUMBER", "101")  # Default or from environment
+        guest_name = getattr(flow_manager, 'guest_name', 'Guest')  # Should be collected in flow
+        
+        if flow_manager.current_order['items']:
+            # Create order in database
+            order = await order_service.create_order_from_voice(
+                room_number=room_number,
+                guest_name=guest_name,
+                items=flow_manager.current_order['items'],
+                special_requests=getattr(flow_manager, 'special_requests', None)
+            )
+            
+            # Store order ID for reference
+            flow_manager.order_id = order['id']
+            flow_manager.order_confirmation = order_service.format_order_confirmation(order)
+            logger.info(f"Order stored in database: {order['id']}")
+        else:
+            logger.warning("No items in order to save")
+    except Exception as e:
+        logger.error(f"Failed to store order: {str(e)}")
+        # Continue with flow even if storage fails
+    
     return None, "order_placed"
 
 async def modify_order(flow_manager: FlowManager) -> tuple[None, str]:
@@ -321,9 +365,10 @@ hotel_room_service_flow: FlowConfig = {
                     "role": "system",
                     "content": """Thank the guest for their order and confirm it has been placed with the kitchen.
                     
+                    If an order confirmation is available, share the reference number.
                     Provide:
-                    - Order confirmation 
-                    - Estimated delivery time
+                    - Order confirmation with reference ID (if available)
+                    - Estimated delivery time (20-30 minutes)
                     - Room number confirmation
                     - Let them know they can call back if they need anything else
                     
