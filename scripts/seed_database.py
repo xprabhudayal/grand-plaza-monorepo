@@ -19,15 +19,14 @@ load_dotenv()
 
 def create_database_tables():
     """Create all database tables"""
-    DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:password@localhost/hoteldb")
-    engine = create_engine(DATABASE_URL)
+    from app.database import engine
     Base.metadata.create_all(bind=engine)
     return engine
 
 def seed_menu_data():
     """Seed the database with menu categories and items"""
     engine = create_database_tables()
-    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    from app.database import SessionLocal
     db = SessionLocal()
     
     try:
@@ -84,7 +83,7 @@ def seed_menu_data():
 def create_sample_guest():
     """Create a sample guest for testing"""
     engine = create_database_tables()
-    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    from app.database import SessionLocal
     db = SessionLocal()
     
     try:
