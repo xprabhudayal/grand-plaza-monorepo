@@ -26,6 +26,20 @@ def get_guests(
     guests = query.offset(skip).limit(limit).all()
     return guests
 
+@router.get("/room/{room_number}", response_model=Guest)
+def get_guest_by_room(room_number: str, db: Session = Depends(get_db)):
+    """Get a guest by room number."""
+    guest = db.query(GuestModel).filter(
+        GuestModel.room_number == room_number,
+        GuestModel.is_active == True
+    ).first()
+    if not guest:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No active guest found in this room"
+        )
+    return guest
+
 @router.get("/{guest_id}", response_model=Guest)
 def get_guest(guest_id: str, db: Session = Depends(get_db)):
     """Get a specific guest by ID."""

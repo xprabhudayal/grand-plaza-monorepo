@@ -83,7 +83,7 @@ def create_order(order: OrderCreate, db: Session = Depends(get_db)):
         
         unit_price = menu_item.price
         total_price = unit_price * item_data.quantity
-        total_amount += total_price
+        total_amount += Decimal(str(total_price))
         
         order_items_data.append({
             "menu_item_id": item_data.menu_item_id,
