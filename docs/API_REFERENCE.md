@@ -359,6 +359,70 @@ Delete a voice session.
 
 ---
 
+## Voice Pipeline Integration
+
+### Overview
+
+The voice pipeline is built using Pipecat and integrates with the REST API to handle voice-based room service orders. The system uses:
+
+- **Speech-to-Text:** Deepgram or Soniox
+- **Text-to-Speech:** Cartesia
+- **LLM:** Groq or OpenAI/Perplexity
+- **Transport:** Daily.co
+
+### Voice Pipeline Flow
+
+1. **Greeting:** Welcome the guest and offer menu browsing or search
+2. **Menu Navigation:** Browse categories or search for items
+3. **Order Building:** Add items with quantities and special notes
+4. **Order Review:** Confirm order details and total
+5. **Order Placement:** Save order to database via API
+6. **Confirmation:** Provide order confirmation and estimated delivery time
+
+### Voice Functions
+
+The voice pipeline implements several functions that are called by the LLM:
+
+#### Menu Functions
+- `browse_menu()` - Start browsing menu categories
+- `search_items(query: str)` - Search for menu items
+- `select_category(category_name: str)` - Browse items in a category
+
+#### Order Functions
+- `add_item_to_order(item_name: str, quantity: Union[str, int] = 1, special_notes: str = None)` - Add item to order
+- `review_current_order()` - Review current order items
+- `confirm_final_order()` - Place the order
+- `modify_order()` - Make changes to order
+- `cancel_order()` - Cancel the entire order
+
+### Text-to-Number Conversion
+
+The system includes a utility to convert spoken numbers to integers:
+- "one" → 1
+- "two" → 2
+- "twenty-one" → 21
+- "a" or "an" → 1
+
+### Menu Data Structure
+
+The hotel menu contains 7 categories:
+1. **Breakfast** - Available 24/7
+2. **Appetizers** - Light bites
+3. **Salads** - Fresh options
+4. **Main Courses** - Hearty entrees
+5. **Sandwiches** - Gourmet options
+6. **Desserts** - Sweet treats
+7. **Beverages** - Hot & cold drinks
+
+Each menu item includes:
+- Name and description
+- Price
+- Preparation time
+- Dietary information (vegetarian, vegan, gluten-free)
+- Availability status
+
+---
+
 ## Frontend Integration Guide
 
 ### Essential Data Models

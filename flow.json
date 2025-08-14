@@ -1,0 +1,480 @@
+{
+    "initial_node": "greeting",
+    "nodes": {
+        "greeting": {
+            "role_messages": [
+                {
+                    "role": "system",
+                    "content": "You are a professional and friendly hotel room service assistant with a warm, welcoming personality. You help guests order food and beverages from our comprehensive room service menu. Always be warm, courteous, and efficient. Speak naturally and conversationally, as if you're having a video call with the guest. Use appropriate facial expressions and maintain eye contact through the camera. Keep responses concise but helpful."
+                }
+            ],
+            "task_messages": [
+                {
+                    "role": "system",
+                    "content": "Greet the guest warmly with a smile and ask how you can help them with their room service order today. Let them know they can: - Browse our menu categories (Breakfast, Appetizers, Salads, Main Courses, Sandwiches, Desserts, Beverages) - Search for specific items - Ask about dietary options. Ask what they'd like to do first. Remember to maintain friendly eye contact and a welcoming demeanor."
+                }
+            ],
+            "functions": [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "browse_menu",
+                        "description": "Show all menu categories to the guest",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {},
+                            "required": []
+                        }
+                    }
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "search_items",
+                        "description": "Search for specific menu items by name or keyword",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "search_term": {
+                                    "type": "string",
+                                    "description": "The keyword or item name to search for"
+                                }
+                            },
+                            "required": ["search_term"]
+                        }
+                    }
+                }
+            ]
+        },
+        "menu_browse": {
+            "role_messages": [
+                {
+                    "role": "system",
+                    "content": "You are a professional and friendly hotel room service assistant helping guests navigate the menu with enthusiasm."
+                }
+            ],
+            "task_messages": [
+                {
+                    "role": "system",
+                    "content": "Help the guest navigate our room service menu with enthusiasm. Our categories are: 🍳 Breakfast - Available 24/7 (Continental, American, Avocado Toast, Pancakes, Oatmeal) 🥗 Appetizers - Light bites (Shrimp Cocktail, Wings, Hummus, Nachos) 🥬 Salads - Fresh options (Caesar, Mediterranean, Quinoa Bowl) 🍽️ Main Courses - Hearty entrees (Salmon, Steak, Chicken Parmesan, Curry) 🥪 Sandwiches - Gourmet options (Club, Burger, Veggie Burger, Reuben) 🍰 Desserts - Sweet treats (Chocolate Cake, Cheesecake, Ice Cream) ☕ Beverages - Hot & cold drinks (Coffee, Tea, Juices, Wine, Beer). Ask which category interests them or if they'd like to search for something specific. Show genuine interest in helping them find the perfect meal."
+                }
+            ],
+            "functions": [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "select_category",
+                        "description": "Show items from a specific menu category",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "category": {
+                                    "type": "string",
+                                    "enum": ["Breakfast", "Appetizers", "Salads", "Main Courses", "Sandwiches", "Desserts", "Beverages"],
+                                    "description": "The menu category to display"
+                                }
+                            },
+                            "required": ["category"]
+                        }
+                    }
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "search_items",
+                        "description": "Search for specific menu items",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "search_term": {
+                                    "type": "string",
+                                    "description": "Search keyword"
+                                }
+                            },
+                            "required": ["search_term"]
+                        }
+                    }
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "add_item_to_order",
+                        "description": "Add a menu item to the guest's order",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "item_name": {
+                                    "type": "string",
+                                    "description": "Name of the menu item"
+                                },
+                                "quantity": {
+                                    "type": "integer",
+                                    "description": "Number of items to add"
+                                },
+                                "special_notes": {
+                                    "type": "string",
+                                    "description": "Special preparation requests or dietary modifications"
+                                }
+                            },
+                            "required": ["item_name", "quantity"]
+                        }
+                    }
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "review_current_order",
+                        "description": "Show the guest their current order summary",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {},
+                            "required": []
+                        }
+                    }
+                }
+            ]
+        },
+        "show_search_results": {
+            "role_messages": [
+                {
+                    "role": "system",
+                    "content": "You are a helpful hotel room service assistant presenting search results enthusiastically."
+                }
+            ],
+            "task_messages": [
+                {
+                    "role": "system",
+                    "content": "Present the search results clearly with names, prices, and brief descriptions. If items have dietary information (vegetarian, vegan, gluten-free), mention it enthusiastically. Ask if they'd like to add any of these items to their order or search for something else. Express excitement about their choices when appropriate."
+                }
+            ],
+            "functions": [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "add_item_to_order",
+                        "description": "Add a menu item to the guest's order",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "item_name": {"type": "string"},
+                                "quantity": {"type": "integer"},
+                                "special_notes": {"type": "string"}
+                            },
+                            "required": ["item_name", "quantity"]
+                        }
+                    }
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "search_items",
+                        "description": "Search for different menu items",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "search_term": {"type": "string"}
+                            },
+                            "required": ["search_term"]
+                        }
+                    }
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "select_category",
+                        "description": "Browse menu by category",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "category": {
+                                    "type": "string",
+                                    "enum": ["Breakfast", "Appetizers", "Salads", "Main Courses", "Sandwiches", "Desserts", "Beverages"]
+                                }
+                            },
+                            "required": ["category"]
+                        }
+                    }
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "review_current_order",
+                        "description": "Show current order summary",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {},
+                            "required": []
+                        }
+                    }
+                }
+            ]
+        },
+        "show_category_items": {
+            "role_messages": [
+                {
+                    "role": "system",
+                    "content": "You are a hotel room service assistant showcasing menu items with enthusiasm."
+                }
+            ],
+            "task_messages": [
+                {
+                    "role": "system",
+                    "content": "Show the items in the selected category with prices and descriptions enthusiastically. Highlight any special dietary options. Ask if they'd like to add any items to their order, browse other categories, or need more details about specific items. Use positive body language and facial expressions to convey the appeal of the dishes."
+                }
+            ],
+            "functions": [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "add_item_to_order",
+                        "description": "Add a menu item to the order",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "item_name": {"type": "string"},
+                                "quantity": {"type": "integer"},
+                                "special_notes": {"type": "string"}
+                            },
+                            "required": ["item_name", "quantity"]
+                        }
+                    }
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "select_category",
+                        "description": "Browse different menu category",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "category": {
+                                    "type": "string",
+                                    "enum": ["Breakfast", "Appetizers", "Salads", "Main Courses", "Sandwiches", "Desserts", "Beverages"]
+                                }
+                            },
+                            "required": ["category"]
+                        }
+                    }
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "search_items",
+                        "description": "Search for specific items",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "search_term": {"type": "string"}
+                            },
+                            "required": ["search_term"]
+                        }
+                    }
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "review_current_order",
+                        "description": "Show current order",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {},
+                            "required": []
+                        }
+                    }
+                }
+            ]
+        },
+        "item_added": {
+            "role_messages": [
+                {
+                    "role": "system",
+                    "content": "You are a hotel room service assistant confirming order additions with satisfaction."
+                }
+            ],
+            "task_messages": [
+                {
+                    "role": "system",
+                    "content": "Confirm the item has been added to their order with quantity and any special notes, showing satisfaction with their choice. Ask if they'd like to: - Add more items - Review their current order - Browse other menu categories - Place their order. Maintain a helpful and encouraging demeanor."
+                }
+            ],
+            "functions": [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "add_item_to_order",
+                        "description": "Add another item to the order",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "item_name": {"type": "string"},
+                                "quantity": {"type": "integer"},
+                                "special_notes": {"type": "string"}
+                            },
+                            "required": ["item_name", "quantity"]
+                        }
+                    }
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "browse_menu",
+                        "description": "Show menu categories",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {},
+                            "required": []
+                        }
+                    }
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "review_current_order",
+                        "description": "Show complete order summary",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {},
+                            "required": []
+                        }
+                    }
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "confirm_final_order",
+                        "description": "Proceed to place the order",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "room_number": {
+                                    "type": "string",
+                                    "description": "Guest's room number for delivery"
+                                }
+                            },
+                            "required": ["room_number"]
+                        }
+                    }
+                }
+            ]
+        },
+        "order_review": {
+            "role_messages": [
+                {
+                    "role": "system",
+                    "content": "You are a hotel room service assistant reviewing orders with attention to detail."
+                }
+            ],
+            "task_messages": [
+                {
+                    "role": "system",
+                    "content": "Review their complete order including all items, quantities, prices, and total amount with care and attention. Provide an estimated delivery time (typically 20-45 minutes depending on items). Ask if they want to: - Confirm and place the order - Add more items - Remove or modify items - Cancel the order. Show attentiveness and readiness to help with any changes."
+                }
+            ],
+            "functions": [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "confirm_final_order",
+                        "description": "Place the final order",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "room_number": {
+                                    "type": "string",
+                                    "description": "Room number for delivery"
+                                }
+                            },
+                            "required": ["room_number"]
+                        }
+                    }
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "add_item_to_order",
+                        "description": "Add more items to the order",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "item_name": {"type": "string"},
+                                "quantity": {"type": "integer"},
+                                "special_notes": {"type": "string"}
+                            },
+                            "required": ["item_name", "quantity"]
+                        }
+                    }
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "modify_order",
+                        "description": "Modify or remove items from the order",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "action": {
+                                    "type": "string",
+                                    "enum": ["remove", "change_quantity"],
+                                    "description": "Type of modification"
+                                },
+                                "item_name": {
+                                    "type": "string",
+                                    "description": "Item to modify"
+                                },
+                                "new_quantity": {
+                                    "type": "integer",
+                                    "description": "New quantity (for change_quantity action)"
+                                }
+                            },
+                            "required": ["action", "item_name"]
+                        }
+                    }
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "cancel_order",
+                        "description": "Cancel the entire order",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {},
+                            "required": []
+                        }
+                    }
+                }
+            ]
+        },
+        "order_placed": {
+            "role_messages": [
+                {
+                    "role": "system",
+                    "content": "You are a hotel room service assistant completing the order process professionally."
+                }
+            ],
+            "task_messages": [
+                {
+                    "role": "system",
+                    "content": "Thank the guest warmly for their order and confirm it has been placed with the kitchen. If an order confirmation is available, share the reference number. Provide: - Order confirmation with reference ID (if available) - Estimated delivery time (20-30 minutes) - Room number confirmation - Let them know they can call back if they need anything else. End with a warm smile and professional goodbye. Thank them for choosing our room service."
+                }
+            ],
+            "functions": [],
+            "post_actions": [{"type": "end_conversation"}]
+        },
+        "order_cancelled": {
+            "role_messages": [
+                {
+                    "role": "system",
+                    "content": "You are a hotel room service assistant handling order cancellations professionally."
+                }
+            ],
+            "task_messages": [
+                {
+                    "role": "system",
+                    "content": "Politely acknowledge the order cancellation with understanding and ask if there's anything else you can help them with. Let them know they can always call back when they're ready to place an order. Maintain a friendly and professional demeanor despite the cancellation."
+                }
+            ],
+            "functions": [],
+            "post_actions": [{"type": "end_conversation"}]
+        }
+    }
+}

@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
+const inter = Inter({ subsets: ["latin"] });
+
 export const metadata: Metadata = {
-  title: "Hotel Voice AI Concierge - Grand Plaza Hotel",
-  description: "Experience seamless room service ordering with our AI-powered voice concierge system",
-  keywords: "hotel, room service, AI, voice assistant, concierge",
-  authors: [{ name: "Grand Plaza Hotel" }],
-  viewport: "width=device-width, initial-scale=1",
+  title: "Hotel Voice AI Concierge",
+  description: "AI-powered room service ordering system",
 };
 
 export default function RootLayout({
@@ -15,10 +15,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="antialiased">
-        {children}
-      </body>
+    <html data-theme="cupcake" lang="en">
+      <body className={inter.className}>{children}</body>
     </html>
   );
 }

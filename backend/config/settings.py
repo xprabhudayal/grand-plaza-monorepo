@@ -18,7 +18,10 @@ class Settings(BaseSettings):
     cartesia_api_key: Optional[str] = Field(None, env="CARTESIA_API_KEY")
     deepgram_api_key: Optional[str] = Field(None, env="DEEPGRAM_API_KEY")
     openai_api_key: Optional[str] = Field(None, env="OPENAI_API_KEY")
-    
+    tavus_api_key: Optional[str] = Field(None, env="TAVUS_API_KEY")
+    tavus_replica_id: Optional[str] = Field(None, env="TAVUS_REPLICA_ID")
+    tavus_persona_id: Optional[str] = Field(None, env="TAVUS_PERSONA_ID")
+
     voice_timeout: int = Field(120, env="VOICE_TIMEOUT")
     max_conversation_duration: int = Field(600, env="MAX_CONVERSATION_DURATION")
     interruption_enabled: bool = Field(True, env="INTERRUPTION_ENABLED")

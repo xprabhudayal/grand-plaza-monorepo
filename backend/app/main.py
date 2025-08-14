@@ -13,6 +13,7 @@ app = FastAPI(
     title="Hotel Voice AI Concierge API",
     description="REST API for hotel room service voice AI concierge system",
     version="1.0.0",
+    redirect_slashes=False,  # Disable automatic slash redirects
 )
 
 # Configure CORS

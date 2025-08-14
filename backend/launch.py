@@ -73,6 +73,25 @@ def launch_voice_pipeline():
     except Exception as e:
         print(f"❌ Failed to start voice pipeline: {e}")
 
+def launch_voice_tavus_pipeline():
+    """Launch the voice AI with tavus pipeline"""
+    print("🎙️  Starting Hotel Voice AI with Tavus Pipeline...")
+    
+    if not settings.daily_room_url:
+        print("❌ DAILY_ROOM_URL not configured")
+        print("🔧 Set up Daily.co room URL to use voice features")
+        return
+    
+    try:
+        # Import and run the voice pipeline
+        from hotel_room_service_tavus import main
+        asyncio.run(main())
+    except ImportError as e:
+        print(f"❌ Missing dependencies for voice pipeline: {e}")
+        print("💡 Install required packages")
+    except Exception as e:
+        print(f"❌ Failed to start voice pipeline: {e}")
+
 def seed_database():
     """Seed the database with menu data"""
     print("🌱 Seeding database with menu data...")
@@ -113,6 +132,10 @@ def main():
         elif command == "voice":
             if check_prerequisites():
                 launch_voice_pipeline()
+            return
+        elif command == "voice_tavus":
+            if check_prerequisites():
+                launch_voice_tavus_pipeline()
             return
         elif command == "seed":
             seed_database()
