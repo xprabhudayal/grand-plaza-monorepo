@@ -14,7 +14,6 @@ import re
 import aiohttp
 from dotenv import load_dotenv
 from loguru import logger
-from app.order_service import order_service
 from pipecat.audio.vad.silero import SileroVADAnalyzer
 from pipecat.pipeline.pipeline import Pipeline
 from pipecat.pipeline.runner import PipelineRunner
@@ -77,6 +76,24 @@ load_dotenv(override=True)
 logger.remove(0)
 logger.add(sys.stderr, level="DEBUG")
 
+# Function to get guest by room number
+async def get_guest_by_room_number(room_number: str) -> Dict[str, Any]:
+    """Get guest information by room number via API"""
+    api_base_url = os.getenv("API_BASE_URL", "http://localhost:8000")
+    api_endpoint = f"{api_base_url}/api/v1/guests/room/{room_number}"
+    
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(api_endpoint) as response:
+                if response.status == 200:
+                    return await response.json()
+                else:
+                    logger.error(f"Failed to fetch guest for room {room_number}: {response.status}")
+                    return None
+    except Exception as e:
+        logger.error(f"Error getting guest by room number via API: {str(e)}")
+        return None
+
 # Function to search menu items via API
 async def search_menu_items_api(query: str) -> List[Dict[str, Any]]:
     """Search menu items by name or description via API"""
@@ -104,6 +121,41 @@ async def search_menu_items_api(query: str) -> List[Dict[str, Any]]:
     except Exception as e:
         logger.error(f"Error searching menu items via API: {str(e)}")
         return []
+
+# Function to create an order via API
+async def create_order_api(guest_id: str, order_items: List[Dict[str, Any]], special_requests: str = None) -> Dict[str, Any]:
+    """Create an order via API"""
+    api_base_url = os.getenv("API_BASE_URL", "http://localhost:8000")
+    api_endpoint = f"{api_base_url}/api/v1/orders/"
+    
+    # Format order items for API
+    formatted_items = []
+    for item in order_items:
+        formatted_items.append({
+            "menu_item_id": item["menu_item_id"],
+            "quantity": item["quantity"],
+            "special_notes": item.get("special_notes")
+        })
+    
+    order_data = {
+        "guest_id": guest_id,
+        "order_items": formatted_items
+    }
+    
+    if special_requests:
+        order_data["special_requests"] = special_requests
+    
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.post(api_endpoint, json=order_data) as response:
+                if response.status == 200:
+                    return await response.json()
+                else:
+                    logger.error(f"Failed to create order: {response.status}")
+                    return None
+    except Exception as e:
+        logger.error(f"Error creating order via API: {str(e)}")
+        return None
 
 # Text-to-number conversion for STT post-processing
 def convert_text_to_number(text: Union[str, int]) -> int:
@@ -281,6 +333,7 @@ async def add_item_to_order(
         
         flow_manager.current_order['items'].append({
             'name': menu_item["name"],
+            'menu_item_id': menu_item["id"],
             'quantity': quantity_int,
             'special_notes': special_notes
         })
@@ -294,38 +347,62 @@ async def review_current_order(flow_manager: FlowManager) -> tuple[None, str]:
     """Review the items in the current order"""
     return None, "order_review"
 
-async def confirm_final_order(flow_manager: FlowManager) -> tuple[None, str]:
+async def confirm_final_order(flow_manager: FlowManager) -> tuple[Dict[str, Any], str]:
     """Confirm and place the final order"""
-    # Store the order in the database
     try:
-        # Get collected order data from context
-        context = flow_manager.context_aggregator.context
-        
-        # Extract order items from context (you'll need to track these as items are added)
-        # For now, we'll store them in a simple way
-        if not hasattr(flow_manager, 'current_order'):
-            flow_manager.current_order = {'items': [], 'room_number': None, 'guest_name': None}
-        
+        # Get room number from environment or flow context
         room_number = os.getenv("GUEST_ROOM_NUMBER", "101")  # Default or from environment
-        guest_name = getattr(flow_manager, 'guest_name', 'Guest')  # Should be collected in flow
         
-        if flow_manager.current_order['items']:
-            # Create order in database
-            order = await order_service.create_order_from_voice(
-                room_number=room_number,
-                guest_name=guest_name,
-                items=flow_manager.current_order['items'],
-                special_requests=getattr(flow_manager, 'special_requests', None)
-            )
-            
+        # Get guest information
+        guest = await get_guest_by_room_number(room_number)
+        if not guest:
+            logger.error(f"Could not find guest for room {room_number}")
+            return None, "order_placed"  # Still complete the flow but log the error
+        
+        guest_id = guest["id"]
+        
+        # Extract order items from flow context
+        if not hasattr(flow_manager, 'current_order') or not flow_manager.current_order['items']:
+            logger.warning("No items in order to save")
+            return None, "order_placed"
+        
+        # Format items for API
+        order_items = []
+        menu_items = await search_menu_items_api("")  # Get all menu items to map names to IDs
+        
+        for item in flow_manager.current_order['items']:
+            # Find the menu item ID by name
+            menu_item = next((mi for mi in menu_items if mi["name"].lower() == item['name'].lower()), None)
+            if menu_item:
+                order_items.append({
+                    "menu_item_id": menu_item["id"],
+                    "quantity": item['quantity'],
+                    "special_notes": item.get('special_notes')
+                })
+            else:
+                logger.warning(f"Could not find menu item ID for {item['name']}")
+        
+        if not order_items:
+            logger.error("No valid items found for order")
+            return None, "order_placed"
+        
+        # Create order via API
+        special_requests = getattr(flow_manager, 'special_requests', None)
+        order = await create_order_api(
+            guest_id=guest_id,
+            order_items=order_items,
+            special_requests=special_requests
+        )
+        
+        if order:
             # Store order ID for reference
             flow_manager.order_id = order['id']
-            flow_manager.order_confirmation = order_service.format_order_confirmation(order)
-            logger.info(f"Order stored in database: {order['id']}")
+            logger.info(f"Order created via API: {order['id']}")
         else:
-            logger.warning("No items in order to save")
+            logger.error("Failed to create order via API")
+            
     except Exception as e:
-        logger.error(f"Failed to store order: {str(e)}")
+        logger.error(f"Failed to create order: {str(e)}")
         # Continue with flow even if storage fails
     
     return None, "order_placed"
@@ -616,6 +693,21 @@ async def main():
                     "role": "system", 
                     "content": f"The guest is calling from room {room_number}."
                 })
+                
+                # Get guest information and add to context
+                guest = await get_guest_by_room_number(room_number)
+                if guest:
+                    context.add_message({
+                        "role": "system",
+                        "content": f"Guest name: {guest['name']}"
+                    })
+                    # Store guest info in flow manager
+                    flow_manager.guest_id = guest["id"]
+                    flow_manager.guest_name = guest["name"]
+                else:
+                    logger.warning(f"Could not find guest for room {room_number}")
+            else:
+                logger.warning("No room number found in environment variables")
             
             # Add avatar context
             if tavus_service:
