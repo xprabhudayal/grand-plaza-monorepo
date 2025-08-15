@@ -22,6 +22,7 @@ from pipecat.services.groq.llm import GroqLLMService
 from pipecat.processors.aggregators.openai_llm_context import OpenAILLMContext
 from pipecat.services.cartesia.tts import CartesiaTTSService
 from pipecat.services.deepgram.stt import DeepgramSTTService
+from pipecat.services.deepgram.tts import DeepgramTTSService
 from pipecat.transports.services.daily import DailyParams, DailyTransport
 from pipecat.services.soniox.stt import SonioxSTTService, SonioxInputParams
 from pipecat.transcriptions.language import Language
@@ -71,6 +72,10 @@ from runner import configure
 sys.path.append(str(Path(__file__).parent))
 from data.menu_data import get_menu_categories, get_menu_items_by_category
 
+# Import SessionStatus enum
+sys.path.append(str(Path(__file__).parent))
+from app.schemas import SessionStatus
+
 load_dotenv(override=True)
 
 logger.remove(0)
@@ -89,10 +94,86 @@ async def get_guest_by_room_number(room_number: str) -> Dict[str, Any]:
                     return await response.json()
                 else:
                     logger.error(f"Failed to fetch guest for room {room_number}: {response.status}")
+                    # Log response content for debugging
+                    try:
+                        error_content = await response.text()
+                        logger.error(f"Error response content: {error_content}")
+                    except Exception as e:
+                        logger.error(f"Could not read error response: {str(e)}")
                     return None
     except Exception as e:
         logger.error(f"Error getting guest by room number via API: {str(e)}")
         return None
+
+# Function to update session status by room number
+async def update_session_status(room_number: str, status: str):
+    """Update voice session status via API"""
+    api_base_url = os.getenv("API_BASE_URL", "http://localhost:8000")
+    api_endpoint = f"{api_base_url}/api/v1/voice-sessions/"
+    
+    try:
+        # First, get the session by room number
+        async with aiohttp.ClientSession() as session:
+            async with session.get(f"{api_endpoint}?room_number={room_number}&status=ACTIVE") as response:
+                if response.status == 200:
+                    sessions = await response.json()
+                    if sessions:
+                        session_id = sessions[0]["id"]
+                        # Update the session status - send status as query parameter
+                        status_param = status
+                        logger.debug(f"Updating session {session_id} status to: {status_param}")
+                        async with session.patch(
+                            f"{api_endpoint}{session_id}/status?status={status_param}"
+                        ) as update_response:
+                            if update_response.status == 200:
+                                logger.info(f"Session status updated to {status}")
+                            else:
+                                logger.error(f"Failed to update session status: {update_response.status}")
+                                # Log response content for debugging
+                                try:
+                                    error_content = await update_response.text()
+                                    logger.error(f"Error response content: {error_content}")
+                                except Exception as e:
+                                    logger.error(f"Could not read error response: {str(e)}")
+                    else:
+                        logger.warning(f"No active session found for room {room_number}")
+                else:
+                    logger.error(f"Failed to fetch session for room {room_number}: {response.status}")
+                    # Log response content for debugging
+                    try:
+                        error_content = await response.text()
+                        logger.error(f"Error response content: {error_content}")
+                    except Exception as e:
+                        logger.error(f"Could not read error response: {str(e)}")
+    except Exception as e:
+        logger.error(f"Error updating session status via API: {str(e)}")
+
+# Function to update session status by session ID
+async def update_session_status_by_id(session_id: str, status: str):
+    """Update voice session status via API using session ID"""
+    api_base_url = os.getenv("API_BASE_URL", "http://localhost:8000")
+    api_endpoint = f"{api_base_url}/api/v1/voice-sessions/"
+    
+    try:
+        async with aiohttp.ClientSession() as session:
+            # Update the session status directly by ID - send status as query parameter
+            status_param = status
+            logger.debug(f"Updating session {session_id} status to: {status_param}")
+            async with session.patch(
+                f"{api_endpoint}{session_id}/status?status={status_param}"
+            ) as update_response:
+                if update_response.status == 200:
+                    logger.info(f"Session {session_id} status updated to {status}")
+                else:
+                    logger.error(f"Failed to update session {session_id} status: {update_response.status}")
+                    # Log response content for debugging
+                    try:
+                        error_content = await update_response.text()
+                        logger.error(f"Error response content: {error_content}")
+                    except Exception as e:
+                        logger.error(f"Could not read error response: {str(e)}")
+    except Exception as e:
+        logger.error(f"Error updating session {session_id} status via API: {str(e)}")
 
 # Function to search menu items via API
 async def search_menu_items_api(query: str) -> List[Dict[str, Any]]:
@@ -145,13 +226,21 @@ async def create_order_api(guest_id: str, order_items: List[Dict[str, Any]], spe
     if special_requests:
         order_data["special_requests"] = special_requests
     
+    logger.debug(f"Creating order with data: {order_data}")
+    
     try:
         async with aiohttp.ClientSession() as session:
             async with session.post(api_endpoint, json=order_data) as response:
-                if response.status == 200:
+                if response.status == 200 or response.status == 201:
                     return await response.json()
                 else:
                     logger.error(f"Failed to create order: {response.status}")
+                    # Log response content for debugging
+                    try:
+                        error_content = await response.text()
+                        logger.error(f"Error response content: {error_content}")
+                    except Exception as e:
+                        logger.error(f"Could not read error response: {str(e)}")
                     return None
     except Exception as e:
         logger.error(f"Error creating order via API: {str(e)}")
@@ -594,10 +683,20 @@ async def main():
             stt = DeepgramSTTService(api_key=os.getenv("DEEPGRAM_API_KEY"))
 
         # Initialize TTS service (Cartesia works well with Tavus)
-        tts = CartesiaTTSService(
-            api_key=os.getenv("CARTESIA_API_KEY"),
-            voice_id="820a3788-2b37-4d21-847a-b65d8a68c99a",  # Professional voice
-        )
+        cartesia_key = os.getenv("CARTESIA_API_KEY")
+        if cartesia_key:
+            logger.info("Using Cartesia TTS service")
+            tts = CartesiaTTSService(
+                api_key=cartesia_key,
+                voice_id="820a3788-2b37-4d21-847a-b65d8a68c99a",  # Professional voice
+            )
+        else:
+            logger.info("Cartesia API key not found, using Deepgram TTS service")
+            # Fallback to Deepgram TTS with a male voice
+            tts = DeepgramTTSService(
+                api_key=os.getenv("DEEPGRAM_API_KEY"),
+                voice="aura-angus-en",  # Male voice
+            )
 
         # Initialize LLM service
         groq_key = os.getenv("GROQ_API_KEY")
@@ -733,8 +832,34 @@ async def main():
                         }
                     )
 
+        # Add event handler for participant leaving to end the session
+        @transport.event_handler("on_participant_left")
+        async def on_participant_left(transport, participant, reason):
+            logger.info(f"Participant left: {participant['id']}, reason: {reason}")
+            # End the task when participant leaves
+            task.cancel()
+
         runner = PipelineRunner()
-        await runner.run(task)
+        try:
+            await runner.run(task)
+        except asyncio.CancelledError:
+            logger.info("Voice session was cancelled")
+        except Exception as e:
+            logger.error(f"Error in voice pipeline: {e}")
+            # Update session status to ERROR
+            room_number = os.getenv("GUEST_ROOM_NUMBER", "")
+            if room_number:
+                await update_session_status(room_number, SessionStatus.ERROR.value)
+        finally:
+            # Update session status to COMPLETED when pipeline ends normally
+            room_number = os.getenv("GUEST_ROOM_NUMBER", "")
+            session_id = os.getenv("VOICE_SESSION_ID", "")
+            if room_number:
+                # Try to update via session ID first, fallback to room number
+                if session_id:
+                    await update_session_status_by_id(session_id, SessionStatus.COMPLETED.value)
+                else:
+                    await update_session_status(room_number, SessionStatus.COMPLETED.value)
 
 if __name__ == "__main__":
     asyncio.run(main())
