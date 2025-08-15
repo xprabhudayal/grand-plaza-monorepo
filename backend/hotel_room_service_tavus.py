@@ -1,15 +1,16 @@
 """
 Hotel Room Service Voice Pipeline with Tavus Video Avatar Integration
-This version integrates Tavus video avatars for a visual conversational experience
-while maintaining all hotel room service functionality
+Refactored version with proper flow implementation and database validation
 """
 
 import asyncio
 import os
 import sys
 from pathlib import Path
-from typing import Dict, Any, List, Union
+from typing import Dict, Any, List, Optional, Union
 import re
+from datetime import datetime
+import json
 
 import aiohttp
 from dotenv import load_dotenv
@@ -30,60 +31,161 @@ from pipecat.transcriptions.language import Language
 # Import Tavus Video Service
 from pipecat.services.tavus.video import TavusVideoService
 
-# For LLM, we can use Groq or Perplexity
-# from pipecat.services.perplexity.llm import PerplexityLLMService
-
-# Import only needed parts from pipecat_flows to avoid loading all LLM services
+# Import pipecat_flows with proper error handling
 try:
-    from pipecat_flows import FlowConfig, FlowManager, FlowResult
+    from pipecat_flows import FlowConfig, FlowManager, FlowResult, FlowArgs
 except ImportError as e:
-    # If pipecat_flows has dependency issues, we can create minimal versions
-    if "anthropic" in str(e):
-        print("⚠️  pipecat_flows has optional dependencies. Creating minimal flow manager...")
-        # Define minimal flow classes inline
-        class FlowResult:
-            def __init__(self, **kwargs):
-                for k, v in kwargs.items():
-                    setattr(self, k, v)
-        
-        class FlowManager:
-            def __init__(self, task, llm, context_aggregator, flow_config):
-                self.task = task
-                self.llm = llm
-                self.context_aggregator = context_aggregator
-                self.flow_config = flow_config
-            
-            async def initialize(self):
-                # Start with greeting node
-                await self._start_flow("greeting")
-            
-            async def _start_flow(self, node_name):
-                # Basic flow implementation
-                pass
-        
-        FlowConfig = dict  # FlowConfig is just a dict
-    else:
-        raise
+    logger.warning(f"pipecat_flows import issue: {e}. Using fallback implementation.")
+    # Fallback implementation for FlowResult
+    class FlowResult:
+        def __init__(self, **kwargs):
+            for k, v in kwargs.items():
+                setattr(self, k, v)
 
 sys.path.append(str(Path(__file__).parent.parent))
 from runner import configure
 
-# Import hotel-specific data
+# Import OrderStatus enum
 sys.path.append(str(Path(__file__).parent))
-from data.menu_data import get_menu_categories, get_menu_items_by_category
-
-# Import SessionStatus enum
-sys.path.append(str(Path(__file__).parent))
-from app.schemas import SessionStatus
+from app.schemas import OrderStatus
 
 load_dotenv(override=True)
 
 logger.remove(0)
 logger.add(sys.stderr, level="DEBUG")
 
-# Function to get guest by room number
-async def get_guest_by_room_number(room_number: str) -> Dict[str, Any]:
-    """Get guest information by room number via API"""
+# ============================================================================
+# Global Configuration and Cache
+# ============================================================================
+
+class ServiceCache:
+    """Cache for API responses to reduce redundant calls"""
+    def __init__(self):
+        self.categories = None
+        self.menu_items = None
+        self.guest_info = None
+        self.last_update = None
+        
+    async def get_categories(self, force_refresh=False):
+        """Get cached categories or fetch from API"""
+        if self.categories is None or force_refresh:
+            await self.refresh_menu_data()
+        return self.categories
+    
+    async def get_menu_items(self, force_refresh=False):
+        """Get cached menu items or fetch from API"""
+        if self.menu_items is None or force_refresh:
+            await self.refresh_menu_data()
+        return self.menu_items
+    
+    async def refresh_menu_data(self):
+        """Refresh both categories and menu items from API"""
+        api_base_url = os.getenv("API_BASE_URL", "http://localhost:8000")
+        
+        async with aiohttp.ClientSession() as session:
+            # Fetch categories
+            try:
+                async with session.get(f"{api_base_url}/api/v1/categories/?is_active=true") as response:
+                    if response.status == 200:
+                        self.categories = await response.json()
+                    else:
+                        logger.error(f"Failed to fetch categories: {response.status}")
+                        self.categories = []
+            except Exception as e:
+                logger.error(f"Error fetching categories: {e}")
+                self.categories = []
+            
+            # Fetch menu items
+            try:
+                async with session.get(f"{api_base_url}/api/v1/menu-items/?is_available=true") as response:
+                    if response.status == 200:
+                        self.menu_items = await response.json()
+                    else:
+                        logger.error(f"Failed to fetch menu items: {response.status}")
+                        self.menu_items = []
+            except Exception as e:
+                logger.error(f"Error fetching menu items: {e}")
+                self.menu_items = []
+        
+        self.last_update = datetime.now()
+
+# Global cache instance
+service_cache = ServiceCache()
+
+# ============================================================================
+# Order Manager Class
+# ============================================================================
+
+class OrderManager:
+    """Manages the current order state"""
+    def __init__(self):
+        self.reset()
+    
+    def reset(self):
+        """Reset the order to initial state"""
+        self.guest_id = None
+        self.guest_name = None
+        self.room_number = None
+        self.items = []
+        self.special_requests = None
+        self.delivery_notes = None
+        self.order_id = None
+        self.total_amount = 0.0
+    
+    def add_item(self, menu_item: Dict[str, Any], quantity: int, special_notes: Optional[str] = None):
+        """Add an item to the order"""
+        item = {
+            "menu_item_id": menu_item["id"],
+            "name": menu_item["name"],
+            "quantity": quantity,
+            "unit_price": menu_item["price"],
+            "total_price": menu_item["price"] * quantity,
+            "special_notes": special_notes
+        }
+        self.items.append(item)
+        self.total_amount += item["total_price"]
+        return item
+    
+    def remove_item(self, item_name: str) -> bool:
+        """Remove an item from the order by name"""
+        for i, item in enumerate(self.items):
+            if item["name"].lower() == item_name.lower():
+                self.total_amount -= item["total_price"]
+                self.items.pop(i)
+                return True
+        return False
+    
+    def get_summary(self) -> str:
+        """Get a formatted order summary"""
+        if not self.items:
+            return "No items in the order yet."
+        
+        summary = "Order Summary:\n"
+        for item in self.items:
+            summary += f"- {item['quantity']}x {item['name']} - ${item['total_price']:.2f}"
+            if item.get('special_notes'):
+                summary += f" (Note: {item['special_notes']})"
+            summary += "\n"
+        
+        summary += f"\nTotal: ${self.total_amount:.2f}"
+        
+        if self.special_requests:
+            summary += f"\nSpecial Requests: {self.special_requests}"
+        
+        if self.delivery_notes:
+            summary += f"\nDelivery Notes: {self.delivery_notes}"
+        
+        return summary
+
+# Global order manager instance
+order_manager = OrderManager()
+
+# ============================================================================
+# API Service Functions
+# ============================================================================
+
+async def validate_room_number(room_number: str) -> Optional[Dict[str, Any]]:
+    """Validate room number and get guest information"""
     api_base_url = os.getenv("API_BASE_URL", "http://localhost:8000")
     api_endpoint = f"{api_base_url}/api/v1/guests/room/{room_number}"
     
@@ -91,120 +193,25 @@ async def get_guest_by_room_number(room_number: str) -> Dict[str, Any]:
         async with aiohttp.ClientSession() as session:
             async with session.get(api_endpoint) as response:
                 if response.status == 200:
-                    return await response.json()
+                    guest_info = await response.json()
+                    # Cache guest info
+                    service_cache.guest_info = guest_info
+                    return guest_info
+                elif response.status == 404:
+                    logger.info(f"No guest found for room {room_number}")
+                    return None
                 else:
                     logger.error(f"Failed to fetch guest for room {room_number}: {response.status}")
-                    # Log response content for debugging
-                    try:
-                        error_content = await response.text()
-                        logger.error(f"Error response content: {error_content}")
-                    except Exception as e:
-                        logger.error(f"Could not read error response: {str(e)}")
                     return None
     except Exception as e:
-        logger.error(f"Error getting guest by room number via API: {str(e)}")
+        logger.error(f"Error validating room number: {str(e)}")
         return None
 
-# Function to update session status by room number
-async def update_session_status(room_number: str, status: str):
-    """Update voice session status via API"""
-    api_base_url = os.getenv("API_BASE_URL", "http://localhost:8000")
-    api_endpoint = f"{api_base_url}/api/v1/voice-sessions/"
-    
-    try:
-        # First, get the session by room number
-        async with aiohttp.ClientSession() as session:
-            async with session.get(f"{api_endpoint}?room_number={room_number}&status=ACTIVE") as response:
-                if response.status == 200:
-                    sessions = await response.json()
-                    if sessions:
-                        session_id = sessions[0]["id"]
-                        # Update the session status - send status as query parameter
-                        status_param = status
-                        logger.debug(f"Updating session {session_id} status to: {status_param}")
-                        async with session.patch(
-                            f"{api_endpoint}{session_id}/status?status={status_param}"
-                        ) as update_response:
-                            if update_response.status == 200:
-                                logger.info(f"Session status updated to {status}")
-                            else:
-                                logger.error(f"Failed to update session status: {update_response.status}")
-                                # Log response content for debugging
-                                try:
-                                    error_content = await update_response.text()
-                                    logger.error(f"Error response content: {error_content}")
-                                except Exception as e:
-                                    logger.error(f"Could not read error response: {str(e)}")
-                    else:
-                        logger.warning(f"No active session found for room {room_number}")
-                else:
-                    logger.error(f"Failed to fetch session for room {room_number}: {response.status}")
-                    # Log response content for debugging
-                    try:
-                        error_content = await response.text()
-                        logger.error(f"Error response content: {error_content}")
-                    except Exception as e:
-                        logger.error(f"Could not read error response: {str(e)}")
-    except Exception as e:
-        logger.error(f"Error updating session status via API: {str(e)}")
 
-# Function to update session status by session ID
-async def update_session_status_by_id(session_id: str, status: str):
-    """Update voice session status via API using session ID"""
-    api_base_url = os.getenv("API_BASE_URL", "http://localhost:8000")
-    api_endpoint = f"{api_base_url}/api/v1/voice-sessions/"
-    
-    try:
-        async with aiohttp.ClientSession() as session:
-            # Update the session status directly by ID - send status as query parameter
-            status_param = status
-            logger.debug(f"Updating session {session_id} status to: {status_param}")
-            async with session.patch(
-                f"{api_endpoint}{session_id}/status?status={status_param}"
-            ) as update_response:
-                if update_response.status == 200:
-                    logger.info(f"Session {session_id} status updated to {status}")
-                else:
-                    logger.error(f"Failed to update session {session_id} status: {update_response.status}")
-                    # Log response content for debugging
-                    try:
-                        error_content = await update_response.text()
-                        logger.error(f"Error response content: {error_content}")
-                    except Exception as e:
-                        logger.error(f"Could not read error response: {str(e)}")
-    except Exception as e:
-        logger.error(f"Error updating session {session_id} status via API: {str(e)}")
 
-# Function to search menu items via API
-async def search_menu_items_api(query: str) -> List[Dict[str, Any]]:
-    """Search menu items by name or description via API"""
-    api_base_url = os.getenv("API_BASE_URL", "http://localhost:8000")
-    api_endpoint = f"{api_base_url}/api/v1/menu-items/"
-    
-    try:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(api_endpoint) as response:
-                if response.status == 200:
-                    menu_items = await response.json()
-                    query = query.lower()
-                    results = []
-                    
-                    for item in menu_items:
-                        if (query in item["name"].lower() or 
-                            query in item["description"].lower() or
-                            (item.get("dietary") and query in item["dietary"].lower())):
-                            results.append(item)
-                    
-                    return results
-                else:
-                    logger.error(f"Failed to fetch menu items: {response.status}")
-                    return []
-    except Exception as e:
-        logger.error(f"Error searching menu items via API: {str(e)}")
-        return []
-
-# Function to create an order via API
-async def create_order_api(guest_id: str, order_items: List[Dict[str, Any]], special_requests: str = None) -> Dict[str, Any]:
+async def create_order_api(guest_id: str, order_items: List[Dict[str, Any]], 
+                          special_requests: Optional[str] = None,
+                          delivery_notes: Optional[str] = None) -> Optional[Dict[str, Any]]:
     """Create an order via API"""
     api_base_url = os.getenv("API_BASE_URL", "http://localhost:8000")
     api_endpoint = f"{api_base_url}/api/v1/orders/"
@@ -226,36 +233,37 @@ async def create_order_api(guest_id: str, order_items: List[Dict[str, Any]], spe
     if special_requests:
         order_data["special_requests"] = special_requests
     
+    if delivery_notes:
+        order_data["delivery_notes"] = delivery_notes
+    
     logger.debug(f"Creating order with data: {order_data}")
     
     try:
         async with aiohttp.ClientSession() as session:
             async with session.post(api_endpoint, json=order_data) as response:
-                if response.status == 200 or response.status == 201:
+                if response.status in [200, 201]:
                     return await response.json()
                 else:
                     logger.error(f"Failed to create order: {response.status}")
-                    # Log response content for debugging
-                    try:
-                        error_content = await response.text()
-                        logger.error(f"Error response content: {error_content}")
-                    except Exception as e:
-                        logger.error(f"Could not read error response: {str(e)}")
+                    error_content = await response.text()
+                    logger.error(f"Error response: {error_content}")
                     return None
     except Exception as e:
         logger.error(f"Error creating order via API: {str(e)}")
         return None
 
-# Text-to-number conversion for STT post-processing
+# ============================================================================
+# Utility Functions
+# ============================================================================
+
 def convert_text_to_number(text: Union[str, int]) -> int:
-    """Convert text numbers to integers (e.g., 'two' -> 2, 'twenty-one' -> 21)"""
+    """Convert text numbers to integers (e.g., 'two' -> 2)"""
     if isinstance(text, int):
         return text
     
     if isinstance(text, str) and text.isdigit():
         return int(text)
     
-    # Dictionary for text to number conversion
     text_to_num = {
         'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5,
         'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10,
@@ -266,15 +274,14 @@ def convert_text_to_number(text: Union[str, int]) -> int:
     }
     
     if not isinstance(text, str):
-        return 1  # Default to 1 if invalid input
+        return 1
     
     text = text.lower().strip()
     
-    # Handle simple cases
     if text in text_to_num:
         return text_to_num[text]
     
-    # Handle compound numbers like "twenty-one", "thirty-five"
+    # Handle compound numbers
     if '-' in text:
         parts = text.split('-')
         if len(parts) == 2 and parts[0] in text_to_num and parts[1] in text_to_num:
@@ -284,227 +291,221 @@ def convert_text_to_number(text: Union[str, int]) -> int:
     if text in ['a', 'an']:
         return 1
     
-    # Try to extract numbers from text using regex
+    # Try to extract numbers from text
     numbers = re.findall(r'\d+', text)
     if numbers:
         return int(numbers[0])
     
-    # Default to 1 if no conversion possible
     return 1
 
-# Hotel Room Service Flow Result Types
-# We'll define the structure but functions will return dictionaries
-MenuSearchResult = FlowResult
-CategorySelectResult = FlowResult
-OrderItemResult = FlowResult
-OrderSummaryResult = FlowResult
+def find_menu_item_by_name(item_name: str, menu_items: List[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    """Find a menu item by name with fuzzy matching"""
+    item_name_lower = item_name.lower()
+    
+    # Try exact match first
+    for item in menu_items:
+        if item["name"].lower() == item_name_lower:
+            return item
+    
+    # Try partial match
+    for item in menu_items:
+        if item_name_lower in item["name"].lower() or item["name"].lower() in item_name_lower:
+            return item
+    
+    # Try word-based matching
+    item_words = set(item_name_lower.split())
+    for item in menu_items:
+        menu_words = set(item["name"].lower().split())
+        if len(item_words.intersection(menu_words)) >= len(item_words) * 0.7:  # 70% word match
+            return item
+    
+    return None
 
+# ============================================================================
 # Flow Functions
-async def browse_menu(flow_manager: FlowManager) -> tuple[None, str]:
-    """Start browsing the menu"""
-    # Get categories from API for the prompt
-    api_base_url = os.getenv("API_BASE_URL", "http://localhost:8000")
-    categories_endpoint = f"{api_base_url}/api/v1/categories/"
-    
-    try:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(categories_endpoint) as response:
-                if response.status == 200:
-                    categories = await response.json()
-                    # Update the flow configuration with actual categories
-                    # This would require a more complex implementation to dynamically update prompts
-                    pass
-    except Exception as e:
-        logger.error(f"Error fetching categories via API: {str(e)}")
-    
-    return None, "menu_browse"
+# ============================================================================
 
-async def search_items(flow_manager: FlowManager, query: str) -> tuple[Dict[str, Any], str]:
-    """Search for menu items by name or description"""
-    results = await search_menu_items_api(query)
-    search_result = {
-        "query": query,
-        "results": results,
-        "status": "success"
+async def request_room_number(args: FlowArgs) -> tuple[None, str]:
+    """Request the room number from the guest"""
+    return None, "request_room"
+
+async def validate_room(args: FlowArgs) -> tuple[Dict[str, Any], str]:
+    """Validate the room number and get guest info"""
+    room_number = args["room_number"].strip()
+    logger.info(f"validate_room called with room number: '{room_number}'")
+    
+    guest_info = await validate_room_number(room_number)
+    
+    if guest_info:
+        logger.info(f"Room validation successful for guest: {guest_info['name']} in room {room_number}")
+        # Store guest info in order manager
+        order_manager.guest_id = guest_info["id"]
+        order_manager.guest_name = guest_info["name"]
+        order_manager.room_number = room_number
+        
+        result = {
+            "status": "valid",
+            "guest_name": guest_info["name"],
+            "room_number": room_number
+        }
+        return result, "welcome_guest"
+    else:
+        logger.warning(f"Room validation failed for room: {room_number}")
+        result = {
+            "status": "invalid",
+            "room_number": room_number
+        }
+        return result, "invalid_room"
+
+async def show_categories(args: FlowArgs) -> tuple[Dict[str, Any], str]:
+    """Show menu categories to the guest"""
+    categories = await service_cache.get_categories()
+    
+    result = {
+        "categories": [cat["name"] for cat in categories if cat.get("is_active", True)]
     }
-    return search_result, "show_search_results"
+    return result, "category_selection"
 
-async def select_category(flow_manager: FlowManager, category_name: str) -> tuple[Dict[str, Any], str]:
-    """Select a specific menu category to browse"""
-    # First get categories from API to validate
-    api_base_url = os.getenv("API_BASE_URL", "http://localhost:8000")
-    categories_endpoint = f"{api_base_url}/api/v1/categories/"
-    menu_items_endpoint = f"{api_base_url}/api/v1/menu-items/"
+async def select_category(args: FlowArgs) -> tuple[Dict[str, Any], str]:
+    """Select a category and show its items"""
+    category_name = args["category_name"]
+    categories = await service_cache.get_categories()
+    menu_items = await service_cache.get_menu_items()
     
-    try:
-        async with aiohttp.ClientSession() as session:
-            # Get categories
-            async with session.get(categories_endpoint) as response:
-                if response.status == 200:
-                    categories = await response.json()
-                else:
-                    logger.error(f"Failed to fetch categories: {response.status}")
-                    categories = []
-            
-            # Find the matching category
-            category = next((cat for cat in categories if cat["name"].lower() == category_name.lower()), None)
-            
-            if not category:
-                # Try partial match
-                category = next((cat for cat in categories if category_name.lower() in cat["name"].lower()), None)
-            
-            if category:
-                # Get menu items for this category
-                async with session.get(f"{menu_items_endpoint}?category_id={category['id']}") as response:
-                    if response.status == 200:
-                        items = await response.json()
-                    else:
-                        logger.error(f"Failed to fetch menu items: {response.status}")
-                        items = []
-                
-                category_result = {
-                    "category_name": category["name"], 
-                    "items": items,
-                    "status": "success"
-                }
-                return category_result, "show_category_items"
-            else:
-                # Category not found, go back to menu browsing
-                return None, "menu_browse"
-    except Exception as e:
-        logger.error(f"Error selecting category via API: {str(e)}")
-        return None, "menu_browse"
+    # Find matching category
+    category = None
+    category_name_lower = category_name.lower()
+    
+    for cat in categories:
+        if cat["name"].lower() == category_name_lower or category_name_lower in cat["name"].lower():
+            category = cat
+            break
+    
+    if not category:
+        return {"status": "not_found", "category": category_name}, "category_not_found"
+    
+    # Get items for this category
+    category_items = [item for item in menu_items if item.get("category_id") == category["id"]]
+    
+    result = {
+        "category": category["name"],
+        "items": [{"name": item["name"], "price": item["price"], "description": item.get("description", "")} 
+                  for item in category_items]
+    }
+    return result, "show_items"
 
-async def add_item_to_order(
-    flow_manager: FlowManager, 
-    item_name: str, 
-    quantity: Union[str, int] = 1,
-    special_notes: str = None
-) -> tuple[Dict[str, Any], str]:
-    """Add an item to the current order"""
-    # Convert quantity from text to number
-    quantity_int = convert_text_to_number(quantity)
+async def add_to_order(args: FlowArgs) -> tuple[Dict[str, Any], str]:
+    """Add an item to the order"""
+    item_name = args["item_name"]
+    quantity = args.get("quantity", 1)
+    special_notes = args.get("special_notes")
     
-    # Find the item in the menu to get the price via API
-    api_base_url = os.getenv("API_BASE_URL", "http://localhost:8000")
-    api_endpoint = f"{api_base_url}/api/v1/menu-items/"
+    logger.info(f"add_to_order called: item='{item_name}', quantity={quantity}, notes='{special_notes}'")
     
-    try:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(api_endpoint) as response:
-                if response.status == 200:
-                    all_items = await response.json()
-                else:
-                    logger.error(f"Failed to fetch menu items: {response.status}")
-                    all_items = []
-    except Exception as e:
-        logger.error(f"Error fetching menu items via API: {str(e)}")
-        all_items = []
+    menu_items = await service_cache.get_menu_items()
     
-    menu_item = next((item for item in all_items if item["name"].lower() == item_name.lower()), None)
+    # Find the menu item
+    menu_item = find_menu_item_by_name(item_name, menu_items)
     
     if not menu_item:
-        # Try partial match
-        menu_item = next((item for item in all_items if item_name.lower() in item["name"].lower()), None)
+        logger.warning(f"Menu item not found: '{item_name}'")
+        return {"status": "not_found", "item": item_name}, "item_not_found"
     
-    if menu_item:
-        order_item = {
-            "item_name": menu_item["name"],
-            "quantity": quantity_int,
-            "price": menu_item["price"] * quantity_int,
-            "special_notes": special_notes,
-            "status": "success"
+    # Convert quantity to integer
+    quantity_int = convert_text_to_number(quantity)
+    
+    # Add to order
+    order_item = order_manager.add_item(menu_item, quantity_int, special_notes)
+    logger.info(f"Added to order: {order_item['name']} x{quantity_int} = ${order_item['total_price']:.2f}")
+    
+    result = {
+        "status": "added",
+        "item_name": menu_item["name"],
+        "quantity": quantity_int,
+        "price": order_item["total_price"],
+        "special_notes": special_notes
+    }
+    return result, "item_added"
+
+async def continue_ordering(args: FlowArgs) -> tuple[None, str]:
+    """Check if guest wants to continue ordering"""
+    response = args["response"]
+    response_lower = response.lower()
+    
+    logger.info(f"continue_ordering called with response: '{response}'")
+    
+    if any(word in response_lower for word in ["yes", "yeah", "sure", "more", "add", "continue"]):
+        logger.info("Guest wants to continue ordering")
+        return None, "category_selection"
+    else:
+        logger.info("Guest finished ordering, moving to special requests")
+        return None, "request_special"
+
+async def set_special_requests(args: FlowArgs) -> tuple[None, str]:
+    """Set special requests and delivery notes"""
+    requests = args.get("requests")
+    notes = args.get("notes")
+    
+    if requests and requests.lower() not in ["no", "none", "nothing"]:
+        order_manager.special_requests = requests
+    
+    if notes and notes.lower() not in ["no", "none", "nothing"]:
+        order_manager.delivery_notes = notes
+    
+    return None, "confirm_order"
+
+async def place_order(args: FlowArgs) -> tuple[Dict[str, Any], str]:
+    """Place the final order"""
+    confirmation = args.get("confirmation", "").lower()
+    logger.info(f"place_order function called with confirmation: '{confirmation}'")
+    
+    # Check for negative confirmation
+    if confirmation in ["no", "cancel", "stop", "negative"]:
+        logger.info("User cancelled the order")
+        return {"status": "cancelled"}, "start"
+    
+    if not order_manager.items:
+        logger.warning("Attempting to place empty order")
+        return {"status": "empty"}, "empty_order"
+    
+    logger.info(f"Placing order with {len(order_manager.items)} items for guest {order_manager.guest_id}")
+    
+    # Create order via API
+    order = await create_order_api(
+        guest_id=order_manager.guest_id,
+        order_items=order_manager.items,
+        special_requests=order_manager.special_requests,
+        delivery_notes=order_manager.delivery_notes
+    )
+    
+    if order:
+        logger.info(f"Order created successfully with ID: {order['id']}")
+        result = {
+            "status": "success",
+            "order_id": order["id"],
+            "total_amount": order["total_amount"],
+            "estimated_time": "20-30 minutes",
+            "items": order_manager.items,
+            "special_requests": order_manager.special_requests,
+            "delivery_notes": order_manager.delivery_notes
         }
         
-        # Track items for database storage
-        if not hasattr(flow_manager, 'current_order'):
-            flow_manager.current_order = {'items': [], 'room_number': None, 'guest_name': None}
+        # Store order ID
+        order_manager.order_id = order["id"]
         
-        flow_manager.current_order['items'].append({
-            'name': menu_item["name"],
-            'menu_item_id': menu_item["id"],
-            'quantity': quantity_int,
-            'special_notes': special_notes
-        })
-        
-        return order_item, "item_added"
+        return result, "order_complete"
     else:
-        # Item not found, go back to menu
-        return None, "menu_browse"
+        logger.error("Failed to create order via API")
+        return {"status": "failed"}, "order_failed"
 
-async def review_current_order(flow_manager: FlowManager) -> tuple[None, str]:
-    """Review the items in the current order"""
-    return None, "order_review"
+async def end_call(args: FlowArgs) -> tuple[None, str]:
+    """End the call properly"""
+    return None, "goodbye"
 
-async def confirm_final_order(flow_manager: FlowManager) -> tuple[Dict[str, Any], str]:
-    """Confirm and place the final order"""
-    try:
-        # Get room number from environment or flow context
-        room_number = os.getenv("GUEST_ROOM_NUMBER", "101")  # Default or from environment
-        
-        # Get guest information
-        guest = await get_guest_by_room_number(room_number)
-        if not guest:
-            logger.error(f"Could not find guest for room {room_number}")
-            return None, "order_placed"  # Still complete the flow but log the error
-        
-        guest_id = guest["id"]
-        
-        # Extract order items from flow context
-        if not hasattr(flow_manager, 'current_order') or not flow_manager.current_order['items']:
-            logger.warning("No items in order to save")
-            return None, "order_placed"
-        
-        # Format items for API
-        order_items = []
-        menu_items = await search_menu_items_api("")  # Get all menu items to map names to IDs
-        
-        for item in flow_manager.current_order['items']:
-            # Find the menu item ID by name
-            menu_item = next((mi for mi in menu_items if mi["name"].lower() == item['name'].lower()), None)
-            if menu_item:
-                order_items.append({
-                    "menu_item_id": menu_item["id"],
-                    "quantity": item['quantity'],
-                    "special_notes": item.get('special_notes')
-                })
-            else:
-                logger.warning(f"Could not find menu item ID for {item['name']}")
-        
-        if not order_items:
-            logger.error("No valid items found for order")
-            return None, "order_placed"
-        
-        # Create order via API
-        special_requests = getattr(flow_manager, 'special_requests', None)
-        order = await create_order_api(
-            guest_id=guest_id,
-            order_items=order_items,
-            special_requests=special_requests
-        )
-        
-        if order:
-            # Store order ID for reference
-            flow_manager.order_id = order['id']
-            logger.info(f"Order created via API: {order['id']}")
-        else:
-            logger.error("Failed to create order via API")
-            
-    except Exception as e:
-        logger.error(f"Failed to create order: {str(e)}")
-        # Continue with flow even if storage fails
-    
-    return None, "order_placed"
+# ============================================================================
+# Hotel Room Service Flow Configuration
+# ============================================================================
 
-async def modify_order(flow_manager: FlowManager) -> tuple[None, str]:
-    """Make changes to the current order"""
-    return None, "menu_browse"
-
-async def cancel_order(flow_manager: FlowManager) -> tuple[None, str]:
-    """Cancel the entire order"""
-    return None, "order_cancelled"
-
-# Hotel Room Service Flow Configuration with Avatar-friendly prompts
 hotel_room_service_flow: FlowConfig = {
     "initial_node": "greeting",
     "nodes": {
@@ -512,136 +513,473 @@ hotel_room_service_flow: FlowConfig = {
             "role_messages": [
                 {
                     "role": "system",
-                    "content": """You are a professional and friendly hotel room service assistant with a warm, welcoming personality. 
-                    You help guests order food and beverages from our comprehensive room service menu. 
+                    "content": """You are a professional hotel room service assistant for Grand Plaza Hotel.
                     
-                    Always be warm, courteous, and efficient. Speak naturally and conversationally, as if you're having a video call with the guest.
-                    Use appropriate facial expressions and maintain eye contact through the camera. Keep responses concise but helpful."""
+                    CRITICAL: You have function-calling capabilities. You MUST use the available functions to progress the conversation.
+                    
+                    Your available functions:
+                    - request_room_number: Use when guest needs to provide room number
+                    - validate_room: Use when guest provides room number  
+                    - show_categories: Use to display menu categories
+                    - select_category: Use when guest selects a category
+                    - add_to_order: Use when guest wants to order specific items
+                    - continue_ordering: Use when asking if guest wants more items
+                    - set_special_requests: Use to capture special requests
+                    - place_order: Use ONLY when guest explicitly confirms order with "yes", "okay", "confirm"
+                    - end_call: Use to end conversation
+                    
+                    Be concise, polite, and efficient. Always use functions to progress the conversation."""
                 }
             ],
             "task_messages": [
                 {
                     "role": "system",
-                    "content": """Greet the guest warmly with a smile and ask how you can help them with their room service order today. 
+                    "content": """Greet the guest briefly: "Good [morning/afternoon/evening], this is room service at Grand Plaza Hotel."
+                    Then immediately ask: "May I have your room number, please?" 
                     
-                    Let them know they can:
-                    - Browse our menu categories (Breakfast, Appetizers, Salads, Main Courses, Sandwiches, Desserts, Beverages)
-                    - Search for specific items
-                    - Ask about dietary options
-                    
-                    Ask what they'd like to do first. Remember to maintain friendly eye contact and a welcoming demeanor."""
+                    IMPORTANT: You MUST use the request_room_number function to progress the conversation.
+                    Do not mention any menu items or categories yet."""
                 }
             ],
-            "functions": [browse_menu, search_items],
+            "functions": [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "request_room_number",
+                        "description": "Request the room number from guest",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {},
+                            "required": []
+                        },
+                        "handler": request_room_number
+                    }
+                }
+            ],
         },
-        "menu_browse": {
+        "request_room": {
             "task_messages": [
                 {
                     "role": "system",
-                    "content": """Help the guest navigate our room service menu with enthusiasm. Our categories are:
+                    "content": """The guest needs to provide their room number. Listen for their response and capture the room number.
                     
-                    🍳 Breakfast - Available 24/7 (Continental, American, Avocado Toast, Pancakes, Oatmeal)
-                    🥗 Appetizers - Light bites (Shrimp Cocktail, Wings, Hummus, Nachos)  
-                    🥬 Salads - Fresh options (Caesar, Mediterranean, Quinoa Bowl)
-                    🍽️ Main Courses - Hearty entrees (Salmon, Steak, Chicken Parmesan, Curry)
-                    🥪 Sandwiches - Gourmet options (Club, Burger, Veggie Burger, Reuben)
-                    🍰 Desserts - Sweet treats (Chocolate Cake, Cheesecake, Ice Cream)
-                    ☕ Beverages - Hot & cold drinks (Coffee, Tea, Juices, Wine, Beer)
-                    
-                    Ask which category interests them or if they'd like to search for something specific. 
-                    Show genuine interest in helping them find the perfect meal."""
+                    IMPORTANT: You MUST use the validate_room function with the room number they provide.
+                    If unclear, politely ask them to repeat it, then use the function."""
                 }
             ],
-            "functions": [select_category, search_items, add_item_to_order, review_current_order],
+            "functions": [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "validate_room",
+                        "description": "Validate room number and get guest information",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "room_number": {"type": "string", "description": "The room number provided by guest"}
+                            },
+                            "required": ["room_number"]
+                        },
+                        "handler": validate_room
+                    }
+                }
+            ],
         },
-        "show_search_results": {
+        "invalid_room": {
             "task_messages": [
                 {
                     "role": "system",
-                    "content": """Present the search results clearly with names, prices, and brief descriptions. 
-                    
-                    If items have dietary information (vegetarian, vegan, gluten-free), mention it enthusiastically. 
-                    Ask if they'd like to add any of these items to their order or search for something else.
-                    Express excitement about their choices when appropriate."""
+                    "content": """The room number provided is not valid or no guest is registered to that room.
+                    Say: "I'm sorry, I couldn't find a guest registered to room {room_number}. Could you please verify your room number?"
+                    Listen for their response and try to validate again."""
                 }
             ],
-            "functions": [add_item_to_order, search_items, select_category, review_current_order],
+            "functions": [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "validate_room",
+                        "description": "Validate room number and get guest information",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "room_number": {"type": "string", "description": "The room number to validate"}
+                            },
+                            "required": ["room_number"]
+                        },
+                        "handler": validate_room
+                    }
+                }
+            ],
         },
-        "show_category_items": {
+        "welcome_guest": {
             "task_messages": [
                 {
-                    "role": "system", 
-                    "content": """Show the items in the selected category with prices and descriptions enthusiastically. 
+                    "role": "system",
+                    "content": """Thank the guest by name: "Thank you, {guest_name}."
+                    Then briefly mention: "We have the following categories available: Breakfast, Appetizers, Salads, Main Courses, Sandwiches, Desserts, and Beverages."
+                    Ask: "Which category would you like to explore?" 
                     
-                    Highlight any special dietary options. Ask if they'd like to add any items to their order, 
-                    browse other categories, or need more details about specific items.
-                    Use positive body language and facial expressions to convey the appeal of the dishes."""
+                    IMPORTANT: You MUST use the select_category function when the guest chooses a category.
+                    Keep it concise - do not list individual items."""
                 }
             ],
-            "functions": [add_item_to_order, select_category, search_items, review_current_order],
+            "functions": [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "show_categories",
+                        "description": "Show available menu categories",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {},
+                            "required": []
+                        },
+                        "handler": show_categories
+                    }
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "select_category",
+                        "description": "Select a menu category to browse",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "category_name": {"type": "string", "description": "The name of the category to select"}
+                            },
+                            "required": ["category_name"]
+                        },
+                        "handler": select_category
+                    }
+                }
+            ],
+        },
+        "category_selection": {
+            "task_messages": [
+                {
+                    "role": "system",
+                    "content": """The guest needs to select a category. Available categories are:
+                    Breakfast, Appetizers, Salads, Main Courses, Sandwiches, Desserts, Beverages.
+                    
+                    IMPORTANT: You MUST use the select_category function when they choose.
+                    Listen for their selection and use the function to show items from that category.
+                    If they ask for something specific, help them find the right category first."""
+                }
+            ],
+            "functions": [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "select_category",
+                        "description": "Select a menu category to browse",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "category_name": {"type": "string", "description": "The name of the category to select"}
+                            },
+                            "required": ["category_name"]
+                        },
+                        "handler": select_category
+                    }
+                }
+            ],
+        },
+        "category_not_found": {
+            "task_messages": [
+                {
+                    "role": "system",
+                    "content": """The category wasn't found. Say: "I couldn't find that category. 
+                    We have: Breakfast, Appetizers, Salads, Main Courses, Sandwiches, Desserts, and Beverages.
+                    Which would you like?" Keep it brief."""
+                }
+            ],
+            "functions": [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "select_category",
+                        "description": "Select a menu category to browse",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "category_name": {"type": "string", "description": "The name of the category to select"}
+                            },
+                            "required": ["category_name"]
+                        },
+                        "handler": select_category
+                    }
+                }
+            ],
+        },
+        "show_items": {
+            "task_messages": [
+                {
+                    "role": "system",
+                    "content": """List the items in the selected category with prices. Be concise - just name and price.
+                    For example: "In {category}, we have: [item1] at $[price1], [item2] at $[price2]..."
+                    Then ask: "What would you like to order?" 
+                    
+                    IMPORTANT: You MUST use the add_to_order function when guest wants to order items.
+                    You can also use select_category function if they want a different category.
+                    Do not provide lengthy descriptions unless asked."""
+                }
+            ],
+            "functions": [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "add_to_order",
+                        "description": "Add a menu item to the order",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "item_name": {"type": "string", "description": "The name of the item to add"},
+                                "quantity": {"type": "integer", "description": "The quantity of items to add", "default": 1},
+                                "special_notes": {"type": "string", "description": "Any special notes for the item"}
+                            },
+                            "required": ["item_name"]
+                        },
+                        "handler": add_to_order
+                    }
+                },
+                {
+                    "type": "function", 
+                    "function": {
+                        "name": "select_category",
+                        "description": "Select a different menu category",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "category_name": {"type": "string", "description": "The name of the category to select"}
+                            },
+                            "required": ["category_name"]
+                        },
+                        "handler": select_category
+                    }
+                }
+            ],
+        },
+        "item_not_found": {
+            "task_messages": [
+                {
+                    "role": "system",
+                    "content": """The item wasn't found. Say briefly: "I couldn't find that item. 
+                    Would you like me to show the items again, or would you like to try a different category?" """
+                }
+            ],
+            "functions": [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "select_category",
+                        "description": "Select a menu category to browse",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "category_name": {"type": "string", "description": "The name of the category to select"}
+                            },
+                            "required": ["category_name"]
+                        },
+                        "handler": select_category
+                    }
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "add_to_order",
+                        "description": "Add a menu item to the order",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "item_name": {"type": "string", "description": "The name of the item to add"},
+                                "quantity": {"type": "integer", "description": "The quantity of items", "default": 1},
+                                "special_notes": {"type": "string", "description": "Special notes for the item"}
+                            },
+                            "required": ["item_name"]
+                        },
+                        "handler": add_to_order
+                    }
+                }
+            ],
         },
         "item_added": {
             "task_messages": [
                 {
                     "role": "system",
-                    "content": """Confirm the item has been added to their order with quantity and any special notes, showing satisfaction with their choice.
+                    "content": """Confirm the item briefly: "Added {quantity} {item_name} to your order."
+                    If there were special notes, acknowledge them.
+                    Then ask: "Would you like to add anything else?" 
                     
-                    Ask if they'd like to:
-                    - Add more items
-                    - Review their current order
-                    - Browse other menu categories
-                    - Place their order
-                    
-                    Maintain a helpful and encouraging demeanor."""
+                    IMPORTANT: You MUST use the continue_ordering function to capture their response.
+                    Keep it very brief."""
                 }
             ],
-            "functions": [add_item_to_order, browse_menu, review_current_order, confirm_final_order],
+            "functions": [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "continue_ordering",
+                        "description": "Check if guest wants to continue ordering",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "response": {"type": "string", "description": "Guest's response about continuing"}
+                            },
+                            "required": ["response"]
+                        },
+                        "handler": continue_ordering
+                    }
+                }
+            ],
         },
-        "order_review": {
+        "request_special": {
             "task_messages": [
                 {
                     "role": "system",
-                    "content": """Review their complete order including all items, quantities, prices, and total amount with care and attention.
+                    "content": """Ask concisely: "Any special requests for your order?" 
+                    Wait for response.
+                    Then ask: "Any delivery instructions for your room?"
                     
-                    Provide an estimated delivery time (typically 20-45 minutes depending on items).
-                    Ask if they want to:
-                    - Confirm and place the order
-                    - Add more items  
-                    - Remove or modify items
-                    - Cancel the order
-                    
-                    Show attentiveness and readiness to help with any changes."""
+                    IMPORTANT: You MUST use the set_special_requests function to capture both responses.
+                    Capture both responses together in one function call."""
                 }
             ],
-            "functions": [confirm_final_order, add_item_to_order, modify_order, cancel_order],
+            "functions": [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "set_special_requests",
+                        "description": "Set special requests and delivery notes",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "requests": {"type": "string", "description": "Special requests for the order"},
+                                "notes": {"type": "string", "description": "Delivery notes for the room"}
+                            },
+                            "required": []
+                        },
+                        "handler": set_special_requests
+                    }
+                }
+            ],
         },
-        "order_placed": {
+        "confirm_order": {
             "task_messages": [
                 {
                     "role": "system",
-                    "content": """Thank the guest warmly for their order and confirm it has been placed with the kitchen.
+                    "content": """Provide a concise order summary and ask for confirmation:
+                    "Your order: [list items with quantities and total price].
+                    Total: $[amount].
+                    {Include special requests/delivery notes if any}
                     
-                    If an order confirmation is available, share the reference number.
-                    Provide:
-                    - Order confirmation with reference ID (if available)
-                    - Estimated delivery time (20-30 minutes)
-                    - Room number confirmation
-                    - Let them know they can call back if they need anything else
+                    Do you want me to place this order? Please say yes to confirm or no to cancel."
                     
-                    End with a warm smile and professional goodbye. Thank them for choosing our room service."""
+                    CRITICAL: You MUST use the place_order function when the user says YES, OKAY, CONFIRM, or similar.
+                    Keep it brief and clear."""
                 }
             ],
-            "functions": [],
-            "post_actions": [{"type": "end_conversation"}],
+            "functions": [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "place_order",
+                        "description": "Place the final order when user confirms with yes, okay, confirm, or similar affirmative response",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "confirmation": {
+                                    "type": "string",
+                                    "description": "User's confirmation response (yes/no/okay/confirm/cancel)"
+                                }
+                            },
+                            "required": ["confirmation"]
+                        },
+                        "handler": place_order
+                    }
+                }
+            ],
         },
-        "order_cancelled": {
+        "empty_order": {
             "task_messages": [
                 {
                     "role": "system",
-                    "content": """Politely acknowledge the order cancellation with understanding and ask if there's anything else you can help them with.
-                    
-                    Let them know they can always call back when they're ready to place an order.
-                    Maintain a friendly and professional demeanor despite the cancellation."""
+                    "content": """There are no items in the order. Say: "You haven't added any items yet. 
+                    Would you like to browse our menu?" """
+                }
+            ],
+            "functions": [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "show_categories",
+                        "description": "Show menu categories to browse",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {},
+                            "required": []
+                        },
+                        "handler": show_categories
+                    }
+                }
+            ],
+        },
+        "order_failed": {
+            "task_messages": [
+                {
+                    "role": "system",
+                    "content": """There was an error placing the order. Say: "I apologize, there was an error processing your order. 
+                    Please call the front desk for assistance. Thank you." Then end the call."""
+                }
+            ],
+            "functions": [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "end_call",
+                        "description": "End the call properly",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {},
+                            "required": []
+                        },
+                        "handler": end_call
+                    }
+                }
+            ],
+        },
+        "order_complete": {
+            "task_messages": [
+                {
+                    "role": "system",
+                    "content": """Confirm the order successfully: "Your order has been placed. 
+                    Your order reference is {order_id}. 
+                    It will be delivered to room {room_number} in approximately {estimated_time}.
+                    Thank you for your order, {guest_name}. Have a wonderful day."
+                    Then end the call."""
+                }
+            ],
+            "functions": [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "end_call",
+                        "description": "End the call properly",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {},
+                            "required": []
+                        },
+                        "handler": end_call
+                    }
+                }
+            ],
+        },
+        "goodbye": {
+            "task_messages": [
+                {
+                    "role": "system",
+                    "content": """The conversation is ending. Say goodbye briefly and end the call."""
                 }
             ],
             "functions": [],
@@ -650,216 +988,184 @@ hotel_room_service_flow: FlowConfig = {
     },
 }
 
+# ============================================================================
+# Main Application
+# ============================================================================
+
 async def main():
     """Main function to set up and run the hotel room service bot with Tavus video avatar"""
-    async with aiohttp.ClientSession() as session:
-        (room_url, _) = await configure(session)
+    
+    try:
+        async with aiohttp.ClientSession() as session:
+            (room_url, _) = await configure(session)
 
-        # Initialize transport with video enabled for Tavus
-        transport = DailyTransport(
-            room_url,
-            None,
-            "Hotel Concierge",  # Name displayed for the avatar
-            DailyParams(
-                audio_in_enabled=True,
-                audio_out_enabled=True,
-                video_out_enabled=True,  # Enable video output for Tavus
-                vad_analyzer=SileroVADAnalyzer(),
-            ),
-        )
-
-        # Initialize STT service
-        soniox_key = os.getenv("SONIOX_API_KEY")
-        if soniox_key:
-            logger.info("Using Soniox STT service")
-            stt = SonioxSTTService(
-                api_key=soniox_key,
-                params=SonioxInputParams(
-                    language_hints=[Language.EN],
+            # Initialize transport with video enabled for Tavus
+            transport = DailyTransport(
+                room_url,
+                None,
+                "Hotel Concierge",
+                DailyParams(
+                    audio_in_enabled=True,
+                    audio_out_enabled=True,
+                    video_out_enabled=True,
+                    vad_analyzer=SileroVADAnalyzer(),
                 ),
             )
-        else:
-            logger.info("Using Deepgram STT service")
-            stt = DeepgramSTTService(api_key=os.getenv("DEEPGRAM_API_KEY"))
 
-        # Initialize TTS service (Cartesia works well with Tavus)
-        cartesia_key = os.getenv("CARTESIA_API_KEY")
-        if cartesia_key:
-            logger.info("Using Cartesia TTS service")
-            tts = CartesiaTTSService(
-                api_key=cartesia_key,
-                voice_id="820a3788-2b37-4d21-847a-b65d8a68c99a",  # Professional voice
-            )
-        else:
-            logger.info("Cartesia API key not found, using Deepgram TTS service")
-            # Fallback to Deepgram TTS with a male voice
-            tts = DeepgramTTSService(
-                api_key=os.getenv("DEEPGRAM_API_KEY"),
-                voice="aura-angus-en",  # Male voice
-            )
-
-        # Initialize LLM service
-        groq_key = os.getenv("GROQ_API_KEY")
-        # perplexity_key = os.getenv("PERPLEXITY_API_KEY")
-        
-        # if perplexity_key:
-        #     logger.info("Using Perplexity LLM service")
-        #     llm = PerplexityLLMService(
-        #         api_key=perplexity_key,
-        #         model="sonar-pro",
-        #         temperature=0.7,
-        #         max_tokens=512,
-        #     )
-        # else:
-        #     logger.info("Using Groq LLM service")
-        
-        
-        # choosing only with groq for now
-        llm = GroqLLMService(
-            api_key=groq_key,
-            model="meta-llama/llama-4-scout-17b-16e-instruct",
-            temperature=0.7,
-            max_tokens=512,
-        )
-
-
-        # Initialize Tavus Video Service
-        tavus_api_key = os.getenv("TAVUS_API_KEY")
-        tavus_replica_id = os.getenv("TAVUS_REPLICA_ID")
-        
-        if not tavus_api_key or not tavus_replica_id:
-            logger.warning("Tavus API credentials not found. Please set TAVUS_API_KEY and TAVUS_REPLICA_ID in your .env file")
-            logger.info("Continuing without video avatar...")
-            tavus_service = None
-        else:
-            logger.info("Initializing Tavus video avatar service...")
-            tavus_service = TavusVideoService(
-                api_key=tavus_api_key,
-                replica_id=tavus_replica_id,
-                session=session,
-            )
-
-        # Set up context and aggregator
-        context = OpenAILLMContext()
-        context_aggregator = llm.create_context_aggregator(context)
-
-        # Build pipeline with Tavus integration
-        if tavus_service:
-            # Pipeline with Tavus video avatar
-            pipeline = Pipeline([
-                transport.input(),
-                stt,
-                context_aggregator.user(),
-                llm,
-                tts,
-                tavus_service,  # Tavus processes TTS audio to generate video
-                transport.output(),
-                context_aggregator.assistant(),
-            ])
-            logger.info("Pipeline created with Tavus video avatar")
-        else:
-            # Fallback pipeline without video
-            pipeline = Pipeline([
-                transport.input(),
-                stt,
-                context_aggregator.user(),
-                llm,
-                tts,
-                transport.output(),
-                context_aggregator.assistant(),
-            ])
-            logger.info("Pipeline created without video avatar")
-
-        task = PipelineTask(pipeline, params=PipelineParams(allow_interruptions=True))
-
-        # Initialize flow manager
-        flow_manager = FlowManager(
-            task=task,
-            llm=llm,
-            context_aggregator=context_aggregator,
-            flow_config=hotel_room_service_flow,
-        )
-
-        @transport.event_handler("on_first_participant_joined")
-        async def on_first_participant_joined(transport, participant):
-            await transport.capture_participant_transcription(participant["id"])
-            logger.debug("Initializing hotel room service flow with video avatar")
-            
-            # Add room context
-            room_number = os.getenv("GUEST_ROOM_NUMBER", "")
-            if room_number:
-                context.add_message({
-                    "role": "system", 
-                    "content": f"The guest is calling from room {room_number}."
-                })
-                
-                # Get guest information and add to context
-                guest = await get_guest_by_room_number(room_number)
-                if guest:
-                    context.add_message({
-                        "role": "system",
-                        "content": f"Guest name: {guest['name']}"
-                    })
-                    # Store guest info in flow manager
-                    flow_manager.guest_id = guest["id"]
-                    flow_manager.guest_name = guest["name"]
-                else:
-                    logger.warning(f"Could not find guest for room {room_number}")
+            # Initialize STT service
+            soniox_key = os.getenv("SONIOX_API_KEY")
+            if soniox_key:
+                logger.info("Using Soniox STT service")
+                stt = SonioxSTTService(
+                    api_key=soniox_key,
+                    params=SonioxInputParams(
+                        language_hints=[Language.EN],
+                    ),
+                )
             else:
-                logger.warning("No room number found in environment variables")
+                logger.info("Using Deepgram STT service")
+                stt = DeepgramSTTService(api_key=os.getenv("DEEPGRAM_API_KEY"))
+
+            # Initialize TTS service
+            cartesia_key = os.getenv("CARTESIA_API_KEY")
+            if cartesia_key:
+                logger.info("Using Cartesia TTS service")
+                tts = CartesiaTTSService(
+                    api_key=cartesia_key,
+                    voice_id="820a3788-2b37-4d21-847a-b65d8a68c99a",
+                )
+            else:
+                logger.info("Using Deepgram TTS service")
+                tts = DeepgramTTSService(
+                    api_key=os.getenv("DEEPGRAM_API_KEY"),
+                    voice="aura-angus-en",
+                )
+
+            # Initialize LLM service
+            llm = GroqLLMService(
+                api_key=os.getenv("GROQ_API_KEY"),
+                model="meta-llama/llama-4-scout-17b-16e-instruct",
+                temperature=0.7,
+                max_tokens=512,
+            )
+
+            # Initialize Tavus Video Service
+            tavus_api_key = os.getenv("TAVUS_API_KEY")
+            tavus_replica_id = os.getenv("TAVUS_REPLICA_ID")
             
-            # Add avatar context
+            if tavus_api_key and tavus_replica_id:
+                logger.info("Initializing Tavus video avatar service...")
+                tavus_service = TavusVideoService(
+                    api_key=tavus_api_key,
+                    replica_id=tavus_replica_id,
+                    session=session,
+                )
+            else:
+                logger.warning("Tavus API credentials not found. Continuing without video avatar...")
+                tavus_service = None
+
+            # Set up context and aggregator
+            context = OpenAILLMContext()
+            context_aggregator = llm.create_context_aggregator(context)
+
+            # Build pipeline
             if tavus_service:
+                pipeline = Pipeline([
+                    transport.input(),
+                    stt,
+                    context_aggregator.user(),
+                    llm,
+                    tts,
+                    tavus_service,
+                    transport.output(),
+                    context_aggregator.assistant(),
+                ])
+                logger.info("Pipeline created with Tavus video avatar")
+            else:
+                pipeline = Pipeline([
+                    transport.input(),
+                    stt,
+                    context_aggregator.user(),
+                    llm,
+                    tts,
+                    transport.output(),
+                    context_aggregator.assistant(),
+                ])
+                logger.info("Pipeline created without video avatar")
+
+            task = PipelineTask(pipeline, params=PipelineParams(allow_interruptions=True))
+
+            # Initialize flow manager
+            flow_manager = FlowManager(
+                task=task,
+                llm=llm,
+                context_aggregator=context_aggregator,
+                flow_config=hotel_room_service_flow,
+            )
+
+            # Pre-load menu data into cache
+            logger.info("Pre-loading menu data...")
+            await service_cache.refresh_menu_data()
+
+            @transport.event_handler("on_first_participant_joined")
+            async def on_first_participant_joined(transport, participant):
+                await transport.capture_participant_transcription(participant["id"])
+                logger.debug("First participant joined - initializing flow")
+                
+                # Add system context
                 context.add_message({
                     "role": "system",
-                    "content": "You are appearing as a video avatar. Remember to maintain eye contact, use appropriate facial expressions, and appear professional and welcoming."
+                    "content": "You are a professional hotel room service assistant. Be concise and efficient."
                 })
-            
-            await flow_manager.initialize()
+                
+                # Add avatar context if using Tavus
+                if tavus_service:
+                    context.add_message({
+                        "role": "system",
+                        "content": "You are appearing as a video avatar. Maintain professional demeanor and eye contact."
+                    })
+                
+                # Initialize the flow
+                await flow_manager.initialize()
 
-        # Handle Tavus-specific events if needed
-        if tavus_service:
-            @transport.event_handler("on_participant_updated")
-            async def on_participant_updated(transport, participant):
-                # This could be used to handle Tavus replica's microphone state
-                if participant.get("info", {}).get("userName") == "Tavus":
-                    # Ensure we're not subscribed to Tavus's microphone
-                    await transport.update_subscriptions(
-                        participant_settings={
-                            participant["id"]: {
-                                "media": "video"  # Only subscribe to video, not audio
+            # Handle Tavus-specific events
+            if tavus_service:
+                @transport.event_handler("on_participant_updated")
+                async def on_participant_updated(transport, participant):
+                    if participant.get("info", {}).get("userName") == "Tavus":
+                        await transport.update_subscriptions(
+                            participant_settings={
+                                participant["id"]: {
+                                    "media": "video"
+                                }
                             }
-                        }
-                    )
+                        )
 
-        # Add event handler for participant leaving to end the session
-        @transport.event_handler("on_participant_left")
-        async def on_participant_left(transport, participant, reason):
-            logger.info(f"Participant left: {participant['id']}, reason: {reason}")
-            # End the task when participant leaves
-            task.cancel()
+            @transport.event_handler("on_participant_left")
+            async def on_participant_left(transport, participant, reason):
+                logger.info(f"Participant left: {participant['id']}, reason: {reason}")
+                
+                # Cancel the task
+                task.cancel()
 
-        runner = PipelineRunner()
-        try:
+            # Run the pipeline
+            runner = PipelineRunner()
             await runner.run(task)
-        except asyncio.CancelledError:
-            logger.info("Voice session was cancelled")
-        except Exception as e:
-            logger.error(f"Error in voice pipeline: {e}")
-            # Update session status to ERROR
-            room_number = os.getenv("GUEST_ROOM_NUMBER", "")
-            if room_number:
-                await update_session_status(room_number, SessionStatus.ERROR.value)
-        finally:
-            # Update session status to COMPLETED when pipeline ends normally
-            room_number = os.getenv("GUEST_ROOM_NUMBER", "")
-            session_id = os.getenv("VOICE_SESSION_ID", "")
-            if room_number:
-                # Try to update via session ID first, fallback to room number
-                if session_id:
-                    await update_session_status_by_id(session_id, SessionStatus.COMPLETED.value)
-                else:
-                    await update_session_status(room_number, SessionStatus.COMPLETED.value)
+            
+    except asyncio.CancelledError:
+        logger.info("Voice session was cancelled")
+    except Exception as e:
+        logger.error(f"Error in voice pipeline: {e}")
+        raise
+    finally:
+        # Clean up
+        logger.info("Cleaning up voice session")
+        
+        # Reset order manager for next session
+        order_manager.reset()
+        
+        # Log session completion
+        logger.info("Voice session completed")
 
 if __name__ == "__main__":
     asyncio.run(main())
