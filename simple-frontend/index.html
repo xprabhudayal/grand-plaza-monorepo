@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Voice AI Concierge</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@daily-co/daily-js"></script>
+    <style>
+        .menu-item-card {
+            transition: all 0.2s ease;
+        }
+        .menu-item-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .menu-container {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        /* Daily.co video container styling */
+        #video-call-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            min-height: 400px;
+            max-height: 400px;
+            overflow: hidden;
+        }
+        
+        /* Ensure the Daily iframe stays contained */
+        #video-call-container iframe {
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-base-200">
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-primary">Hotel Voice AI Concierge</h1>
+            <p class="text-base-content/70 mt-2">Order room service with our AI assistant</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Left Column: Video Call -->
+            <div class="bg-base-100 rounded-box shadow-xl p-6 h-full flex flex-col">
+                <div class="card-body flex-grow">
+                    <h2 class="card-title text-primary mb-4">Video Call</h2>
+                    <div id="video-call-container" class="bg-base-300 rounded-lg flex-grow flex items-center justify-center mb-4">
+                        <div class="text-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-base-content/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                            <p class="mt-2 text-base-content/50">Video call will appear here</p>
+                        </div>
+                    </div>
+                    <button id="start-call-btn" class="btn btn-primary w-full">Start Voice Call</button>
+                    <div id="call-status" class="text-center mt-2 text-sm text-base-content/70 hidden"></div>
+                </div>
+            </div>
+
+            <!-- Right Column: Menu -->
+            <div class="bg-base-100 rounded-box shadow-xl p-6 flex flex-col">
+                <div class="card-body flex-grow flex flex-col">
+                    <h2 class="card-title text-primary mb-4">Room Service Menu</h2>
+                    
+                    <!-- Menu Items -->
+                    <div id="menu-container" class="menu-container flex-grow overflow-y-auto">
+                        <div class="text-center py-8" id="loading-menu">
+                            <span class="loading loading-spinner loading-md"></span>
+                            <p class="mt-2 text-base-content/70">Loading menu...</p>
+                        </div>
+                        <div id="menu-items" class="hidden"></div>
+                    </div>
+                    
+                    <!-- Order Actions -->
+                    <div class="flex flex-col sm:flex-row gap-2 mt-4">
+                        <button id="clear-order-btn" class="btn btn-outline flex-1">Clear Order</button>
+                        <button id="place-order-btn" class="btn btn-success flex-1" disabled>Place Order</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast toast-end toast-top z-50"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
