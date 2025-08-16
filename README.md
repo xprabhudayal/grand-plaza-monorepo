@@ -253,6 +253,15 @@ python test_order_storage.py
 2. Configure build settings for Next.js
 3. Set environment variables in Vercel dashboard
 
+### Production Deployment with Docker
+
+For production deployment, see [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions on:
+
+- Building and running with Docker
+- Deploying to DigitalOcean
+- Configuring environment variables
+- Setting up persistence
+
 ## 🤝 Contributing
 
 1. **Fork the repository**
