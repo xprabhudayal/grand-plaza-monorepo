@@ -32,7 +32,7 @@ placeOrderBtn.addEventListener('click', placeOrder);
 // Load menu items from API
 async function loadMenuItems() {
     try {
-        const response = await fetch('http://localhost:8000/api/v1/menu-items/');
+        const response = await fetch('/api/v1/menu-items/');
         if (!response.ok) throw new Error('Failed to load menu items');
         
         menuItems = await response.json();
@@ -144,7 +144,7 @@ async function placeOrder() {
         };
         
         // Send order to API
-        const response = await fetch('http://localhost:8000/api/v1/orders/', {
+        const response = await fetch('/api/v1/orders/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -185,7 +185,7 @@ async function startVoiceCall() {
         callStatus.textContent = 'Initializing call...';
         
         // Call the backend API to start the voice call
-        const response = await fetch('http://localhost:8000/api/v1/voice-sessions/start-call?room_number=101', {
+        const response = await fetch('/api/v1/voice-sessions/start-call?room_number=101', {
             method: 'POST'
         });
         
