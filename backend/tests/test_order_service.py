@@ -230,4 +230,4 @@ class TestOrderService:
         with patch.dict('os.environ', {'API_BASE_URL': 'http://api.example.com'}):
             service = OrderService()
             assert service.api_base_url == "http://api.example.com"
-            assert service.api_endpoint == "http://api.example.com/api/v1/orders"
+            assert service.api_endpoint == "http://api.example.com/api/v1/orders/"

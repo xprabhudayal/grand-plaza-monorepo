@@ -6,7 +6,7 @@ from app.models import Guest, Category, MenuItem, Order, OrderStatus, PaymentSta
 
 class TestGuestsRouter:
     def test_get_guests(self, client: TestClient, sample_guest: Guest):
-        response = client.get("/api/v1/guests")
+        response = client.get("/api/v1/guests/")
         assert response.status_code == 200
         guests = response.json()
         assert len(guests) >= 1
@@ -180,7 +180,7 @@ class TestMenuItemsRouter:
             "preparation_time": 15,
             "dietary": "vegan"
         }
-        response = client.post("/api/v1/menu-items", json=item_data)
+        response = client.post("/api/v1/menu-items/", json=item_data)
         assert response.status_code == 201
         item = response.json()
         assert item["name"] == "New Item"
@@ -212,7 +212,7 @@ class TestMenuItemsRouter:
 
 class TestOrdersRouter:
     def test_get_orders(self, client: TestClient, sample_order: Order):
-        response = client.get("/api/v1/orders")
+        response = client.get("/api/v1/orders/")
         assert response.status_code == 200
         orders = response.json()
         assert len(orders) >= 1
@@ -262,7 +262,7 @@ class TestOrdersRouter:
                 }
             ]
         }
-        response = client.post("/api/v1/orders", json=order_data)
+        response = client.post("/api/v1/orders/", json=order_data)
         assert response.status_code == 201
         order = response.json()
         assert order["guest_id"] == sample_guest.id
@@ -279,7 +279,7 @@ class TestOrdersRouter:
                 }
             ]
         }
-        response = client.post("/api/v1/orders", json=order_data)
+        response = client.post("/api/v1/orders/", json=order_data)
         assert response.status_code == 400
         assert "Guest not found" in response.json()["detail"]
     
@@ -297,7 +297,7 @@ class TestOrdersRouter:
                 }
             ]
         }
-        response = client.post("/api/v1/orders", json=order_data)
+        response = client.post("/api/v1/orders/", json=order_data)
         assert response.status_code == 400
         assert "not available" in response.json()["detail"]
     
@@ -315,7 +315,7 @@ class TestOrdersRouter:
     
     def test_update_order_status(self, client: TestClient, sample_order: Order):
         response = client.patch(
-            f"/api/v1/orders/{sample_order.id}/status",
+            f"/api/v1/orders/{sample_order.id}/status/",
             json="DELIVERED"  # Send as JSON string
         )
         assert response.status_code == 200
@@ -338,7 +338,7 @@ class TestVoiceSessionsRouter:
         db_session.add(session)
         db_session.commit()
         
-        response = client.get("/api/v1/voice-sessions")
+        response = client.get("/api/v1/voice-sessions/")
         assert response.status_code == 200
         sessions = response.json()
         assert len(sessions) >= 1
@@ -350,7 +350,7 @@ class TestVoiceSessionsRouter:
             "room_number": "101",
             "session_id": "new_session_001"
         }
-        response = client.post("/api/v1/voice-sessions", json=session_data)
+        response = client.post("/api/v1/voice-sessions/", json=session_data)
         assert response.status_code == 201
         session = response.json()
         assert session["session_id"] == "new_session_001"
@@ -392,7 +392,7 @@ class TestMainApp:
         assert data["service"] == "hotel-voice-ai-concierge"
     
     def test_cors_headers(self, client: TestClient):
-        response = client.options("/api/v1/guests")
+        response = client.options("/api/v1/guests/")
         assert response.status_code == 200
         # CORS headers should be present
         headers = response.headers

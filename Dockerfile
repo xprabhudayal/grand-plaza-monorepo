@@ -80,4 +80,4 @@ EXPOSE 80 8000
 # Switch back to app user for runtime
 
 USER root
-CMD ["sh", "-c", "nginx && su - app -c 'cd /home/app/backend && python -m uvicorn app.main:app --host 0.0.0.0 --port 8000'"]
+CMD ["sh", "-c", "nginx && su app -c 'cd /home/app/backend && python -m uvicorn app.main:app --host 0.0.0.0 --port 8000'"]
