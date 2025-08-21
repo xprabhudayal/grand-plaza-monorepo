@@ -9,12 +9,14 @@ import sys
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 import json
+import re
 from datetime import datetime
 
 import aiohttp
 from dotenv import load_dotenv
 from loguru import logger
 from pipecat.audio.vad.silero import SileroVADAnalyzer
+
 from pipecat.pipeline.pipeline import Pipeline
 from pipecat.pipeline.runner import PipelineRunner
 from pipecat.pipeline.task import PipelineParams, PipelineTask
@@ -28,6 +30,7 @@ from pipecat.services.soniox.stt import SonioxSTTService, SonioxInputParams
 from pipecat.transcriptions.language import Language
 from pipecat.services.tavus.video import TavusVideoService
 from pipecat.processors.aggregators.openai_llm_context import OpenAILLMContextFrame
+from pipecat.frames.frames import TextFrame, LLMFullResponseStartFrame, LLMFullResponseEndFrame
 
 # Import LangGraph agent
 from langgraph_agent import get_concierge_agent
@@ -106,169 +109,14 @@ class LangGraphHandler:
         return self.conversation_state.get("order_summary", {})
 
 
+
+
+
 # ============================================================================
 # Main Pipeline Handler
 # ============================================================================
 
-class HotelConciergeVoicePipeline:
-    """Main voice pipeline with LangGraph integration"""
-    
-    def __init__(self):
-        self.lang_handler = LangGraphHandler()
-        self.session_data = {}
-        
-    async def initialize(self):
-        """Initialize the pipeline components"""
-        await self.lang_handler.initialize_agent()
-        logger.info("Hotel Concierge Voice Pipeline initialized")
-    
-    async def create_pipeline(self, room_url: str, token: str) -> Pipeline:
-        """Create the main pipeline with LangGraph integration"""
-        
-        # Initialize LangGraph if not already done
-        if not self.lang_handler.agent:
-            await self.initialize()
-        
-        # Configure transport
-        transport = DailyTransport(
-            room_url=room_url,
-            token=token,
-            bot_name="Hotel Concierge",
-            params=DailyParams(
-                audio_out_enabled=True,
-                audio_in_enabled=True,
-                video_out_enabled=True,
-                video_in_enabled=False,
-                transcription_enabled=False,
-                vad_enabled=True,
-                vad_analyzer=SileroVADAnalyzer()
-            )
-        )
-        
-        # Configure STT Service
-        stt = DeepgramSTTService(
-            api_key=os.getenv("DEEPGRAM_API_KEY"),
-            model="nova-2",
-            language="en-US",
-            interim_results=True
-        )
-        
-        # Configure TTS Service  
-        tts = DeepgramTTSService(
-            api_key=os.getenv("DEEPGRAM_API_KEY"),
-            voice="aura-luna-en"
-        )
-        
-        # Configure Tavus Video Service if available
-        video_service = None
-        if os.getenv("TAVUS_API_KEY"):
-            try:
-                video_service = TavusVideoService(
-                    api_key=os.getenv("TAVUS_API_KEY"),
-                    replica_id=os.getenv("TAVUS_REPLICA_ID")
-                )
-            except Exception as e:
-                logger.warning(f"Tavus video service unavailable: {e}")
-        
-        # Custom LLM service that integrates with LangGraph
-        class LangGraphLLMService(GroqLLMService):
-            """Custom LLM service that uses LangGraph agent"""
-            
-            def __init__(self, lang_handler, **kwargs):
-                super().__init__(**kwargs)
-                self.lang_handler = lang_handler
-            
-            async def _process_context(self, context):
-                """Override to use LangGraph agent instead of direct LLM calls"""
-                try:
-                    # Get the user message from context
-                    messages = context.get_messages()
-                    if messages:
-                        # Get the last user message
-                        user_messages = [msg for msg in messages if msg.get("role") == "user"]
-                        if user_messages:
-                            user_input = user_messages[-1].get("content", "")
-                            
-                            # Process through LangGraph
-                            response = await self.lang_handler.process_user_input(user_input)
-                            
-                            # Create response message
-                            await self.push_frame(
-                                OpenAILLMContextFrame({
-                                    "role": "assistant", 
-                                    "content": response
-                                })
-                            )
-                            return
-                    
-                    # Fallback response
-                    await self.push_frame(
-                        OpenAILLMContextFrame({
-                            "role": "assistant",
-                            "content": "Hello! I'm your hotel concierge assistant. How can I help you with room service today?"
-                        })
-                    )
-                    
-                except Exception as e:
-                    logger.error(f"Error in LangGraph LLM service: {e}")
-                    await self.push_frame(
-                        OpenAILLMContextFrame({
-                            "role": "assistant",
-                            "content": "I apologize for the technical difficulty. How can I assist you with room service?"
-                        })
-                    )
-        
-        # Create LLM service with LangGraph integration
-        llm = LangGraphLLMService(
-            lang_handler=self.lang_handler,
-            api_key=os.getenv("GROQ_API_KEY"),
-            model="qwen/qwen3-32b"
-        )
-        
-        # Context aggregator
-        context = OpenAILLMContext()
-        context_aggregator = llm.create_context_aggregator(context)
-        
-        # Build pipeline
-        pipeline = Pipeline([
-            transport.input(),
-            stt,
-            context_aggregator.user(),
-            llm,
-            tts,
-            transport.output(),
-            context_aggregator.assistant()
-        ])
-        
-        # Add video if available
-        if video_service:
-            pipeline.processors.insert(-2, video_service)  # Insert before transport output
-        
-        return pipeline
-    
-    async def run_pipeline(self, room_url: str, token: str):
-        """Run the complete pipeline"""
-        try:
-            # Create pipeline
-            pipeline = await self.create_pipeline(room_url, token)
-            
-            # Create and run task
-            task = PipelineTask(
-                pipeline=pipeline,
-                params=PipelineParams(
-                    allow_interruptions=True,
-                    enable_metrics=True,
-                    enable_usage_metrics=True
-                )
-            )
-            
-            # Run the pipeline
-            runner = PipelineRunner()
-            await runner.run(task)
-            
-        except Exception as e:
-            logger.error(f"Pipeline error: {e}")
-            raise
+
 
 
 # ============================================================================
@@ -280,20 +128,34 @@ async def main():
     
     try:
         async with aiohttp.ClientSession() as session:
-            (room_url, _) = await configure(session)
+            use_daily = os.getenv("DAILY_API_KEY")
+            transport = None
+            tavus_service = None
 
-            # Initialize transport with proper configuration
-            transport = DailyTransport(
-                room_url,
-                None,  # Token handled by configure()
-                "Hotel Concierge",
-                DailyParams(
-                    audio_in_enabled=True,
-                    audio_out_enabled=True,
-                    video_out_enabled=True,
-                    vad_analyzer=SileroVADAnalyzer(),
-                ),
-            )
+            if use_daily:
+                logger.info("Using Daily transport for WebRTC connection.")
+                (room_url, _) = await configure(session)
+                transport = DailyTransport(
+                    room_url,
+                    None,  # Token handled by configure()
+                    "Hotel Concierge",
+                    DailyParams(
+                        audio_in_enabled=True,
+                        audio_out_enabled=True,
+                        video_out_enabled=True,
+                        vad_analyzer=SileroVADAnalyzer(),
+                    ),
+                )
+            else:
+                logger.info("DAILY_API_KEY not found. Using local microphone and speakers.")
+                from pipecat.transports.local.audio import LocalAudioTransport, LocalAudioTransportParams
+                transport = LocalAudioTransport(
+                    params=LocalAudioTransportParams(
+                        audio_in_enabled=True,
+                        audio_out_enabled=True,
+                        vad_analyzer=SileroVADAnalyzer(),
+                    )
+                )
 
             # Initialize STT service
             soniox_key = os.getenv("SONIOX_API_KEY")
@@ -335,6 +197,10 @@ async def main():
                 def __init__(self, lang_handler, **kwargs):
                     super().__init__(**kwargs)
                     self.lang_handler = lang_handler
+                    self._pattern = re.compile(r"<think>.*?</think>\s*", re.DOTALL)
+
+                def _clean_text(self, text: str) -> str:
+                    return self._pattern.sub(' ', text).strip()
                 
                 async def _process_context(self, context):
                     """Override to use LangGraph agent instead of direct LLM calls"""
@@ -349,55 +215,50 @@ async def main():
                                 
                                 # Process through LangGraph
                                 response = await self.lang_handler.process_user_input(user_input)
-                                
-                                # Create response message
-                                await self.push_frame(
-                                    OpenAILLMContextFrame({
-                                        "role": "assistant", 
-                                        "content": response
-                                    })
-                                )
+                                clean_response = self._clean_text(response)
+
+                                if clean_response:
+                                    # Create response message
+                                    await self.push_frame(LLMFullResponseStartFrame())
+                                    await self.push_frame(TextFrame(clean_response))
+                                    await self.push_frame(LLMFullResponseEndFrame())
                                 return
                         
                         # Fallback response
-                        await self.push_frame(
-                            OpenAILLMContextFrame({
-                                "role": "assistant",
-                                "content": "Hello! I'm your hotel concierge assistant. How can I help you with room service today?"
-                            })
-                        )
+                        await self.push_frame(LLMFullResponseStartFrame())
+                        await self.push_frame(TextFrame("Hello! I'm your hotel concierge assistant. How can I help you with room service today?"))
+                        await self.push_frame(LLMFullResponseEndFrame())
                         
                     except Exception as e:
                         logger.error(f"Error in LangGraph LLM service: {e}")
-                        await self.push_frame(
-                            OpenAILLMContextFrame({
-                                "role": "assistant",
-                                "content": "I apologize for the technical difficulty. How can I assist you with room service?"
-                            })
-                        )
+                        await self.push_frame(LLMFullResponseStartFrame())
+                        await self.push_frame(TextFrame("I apologize for the technical difficulty. How can I assist you with room service?"))
+                        await self.push_frame(LLMFullResponseEndFrame())
 
             # Initialize LLM service with LangGraph integration
             llm = LangGraphLLMService(
                 lang_handler=lang_handler,
                 api_key=os.getenv("GROQ_API_KEY"),
-                model="meta-llama/llama-4-scout-17b-16e-instruct",
-                temperature=0.7,
-                max_tokens=512,
+                model="qwen/qwen3-32b",
+                temperature=0.1,
+                max_tokens=1000,
             )
 
             # Initialize Tavus Video Service with session
             tavus_api_key = os.getenv("TAVUS_API_KEY")
             tavus_replica_id = os.getenv("TAVUS_REPLICA_ID")
             
-            if tavus_api_key and tavus_replica_id:
+            if use_daily and tavus_api_key and tavus_replica_id:
                 logger.info("Initializing Tavus video avatar service...")
                 tavus_service = TavusVideoService(
                     api_key=tavus_api_key,
                     replica_id=tavus_replica_id,
                     session=session,
                 )
-            else:
+            elif use_daily:
                 logger.warning("Tavus API credentials not found. Continuing without video avatar...")
+            else:
+                logger.info("Tavus video avatar not supported for local transport.")
                 tavus_service = None
 
             # Set up context and aggregator
@@ -405,69 +266,71 @@ async def main():
             context_aggregator = llm.create_context_aggregator(context)
 
             # Build pipeline
+            pipeline_components = [
+                transport.input(),
+                stt,
+                context_aggregator.user(),
+                llm,
+                tts,
+            ]
             if tavus_service:
-                pipeline = Pipeline([
-                    transport.input(),
-                    stt,
-                    context_aggregator.user(),
-                    llm,
-                    tts,
-                    tavus_service,
-                    transport.output(),
-                    context_aggregator.assistant(),
-                ])
-                logger.info("Pipeline created with Tavus video avatar")
-            else:
-                pipeline = Pipeline([
-                    transport.input(),
-                    stt,
-                    context_aggregator.user(),
-                    llm,
-                    tts,
-                    transport.output(),
-                    context_aggregator.assistant(),
-                ])
-                logger.info("Pipeline created without video avatar")
+                pipeline_components.append(tavus_service)
+            
+            pipeline_components.append(transport.output())
+            pipeline_components.append(context_aggregator.assistant())
+            
+            pipeline = Pipeline(pipeline_components)
+            logger.info(f"Pipeline created with {'Tavus video avatar' if tavus_service else 'audio only'}")
 
             task = PipelineTask(pipeline, params=PipelineParams(allow_interruptions=True))
 
-            @transport.event_handler("on_first_participant_joined")
-            async def on_first_participant_joined(transport, participant):
-                await transport.capture_participant_transcription(participant["id"])
-                logger.debug("First participant joined - initializing LangGraph context")
-                
-                # Add system context
+            # Event handlers
+            if use_daily:
+                @transport.event_handler("on_first_participant_joined")
+                async def on_first_participant_joined(transport, participant):
+                    await transport.capture_participant_transcription(participant["id"])
+                    logger.debug("First participant joined - initializing LangGraph context")
+                    
+                    # Add system context
+                    context.add_message({
+                        "role": "system",
+                        "content": "You are a professional hotel room service assistant. Be concise and efficient."
+                    })
+                    
+                    # Add avatar context if using Tavus
+                    if tavus_service:
+                        context.add_message({
+                            "role": "system",
+                            "content": "You are appearing as a video avatar. Maintain professional demeanor and eye contact."
+                        })
+
+                # Handle Tavus-specific events
+                if tavus_service:
+                    @transport.event_handler("on_participant_updated")
+                    async def on_participant_updated(transport, participant):
+                        if participant.get("info", {}).get("userName") == "Tavus":
+                            await transport.update_subscriptions(
+                                participant_settings={
+                                    participant["id"]: {
+                                        "media": "video"
+                                    }
+                                }
+                            )
+
+                @transport.event_handler("on_participant_left")
+                async def on_participant_left(transport, participant, reason):
+                    logger.info(f"Participant left: {participant['id']}, reason: {reason}")
+                    
+                    # Cancel the task
+                    task.cancel()
+            else:
+                # For local transport, we can add initial context directly
+                logger.debug("Initializing LangGraph context for local session")
                 context.add_message({
                     "role": "system",
                     "content": "You are a professional hotel room service assistant. Be concise and efficient."
                 })
-                
-                # Add avatar context if using Tavus
-                if tavus_service:
-                    context.add_message({
-                        "role": "system",
-                        "content": "You are appearing as a video avatar. Maintain professional demeanor and eye contact."
-                    })
 
-            # Handle Tavus-specific events
-            if tavus_service:
-                @transport.event_handler("on_participant_updated")
-                async def on_participant_updated(transport, participant):
-                    if participant.get("info", {}).get("userName") == "Tavus":
-                        await transport.update_subscriptions(
-                            participant_settings={
-                                participant["id"]: {
-                                    "media": "video"
-                                }
-                            }
-                        )
-
-            @transport.event_handler("on_participant_left")
-            async def on_participant_left(transport, participant, reason):
-                logger.info(f"Participant left: {participant['id']}, reason: {reason}")
-                
-                # Cancel the task
-                task.cancel()
 
             # Run the pipeline
             runner = PipelineRunner()

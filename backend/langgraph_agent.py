@@ -9,7 +9,7 @@ import aiohttp
 from typing import Dict, Any, List, Optional, TypedDict, Annotated
 from datetime import datetime
 
-from langchain_core.messages import BaseMessage, HumanMessage, AIMessage, SystemMessage
+from langchain_core.messages import BaseMessage, HumanMessage, AIMessage, SystemMessage, ToolMessage
 from langchain_groq import ChatGroq
 from langgraph.graph import StateGraph, END
 from langgraph.graph.message import add_messages
@@ -218,18 +218,15 @@ class OrderUpdateTool(BaseTool):
     def _run(self, action: str, item_name: str, quantity: int = 1) -> str:
         """Update the order summary"""
         try:
-            # This tool manages the order_summary in the agent's state
-            # For now, we'll return a formatted response that the agent can use
-            if action.lower() == "add":
-                return f"Added {quantity}x {item_name} to your order."
-            elif action.lower() == "remove":
-                return f"Removed {quantity}x {item_name} from your order."
-            else:
-                return "Invalid action. Please use 'add' or 'remove'."
-                
+            # Return a JSON string that tool_executor_node can parse
+            return json.dumps({
+                "action": action.lower(),
+                "item_name": item_name,
+                "quantity": quantity
+            })
         except Exception as e:
-            logger.error(f"Error updating order: {e}")
-            return "I had trouble updating your order. Please try again."
+            logger.error(f"Error creating order update data: {e}")
+            return json.dumps({"error": "Failed to process update."})
 
 
 # ============================================================================
@@ -513,38 +510,53 @@ Guest room number: {room_number}
 
 
 def tool_executor_node(state: AgentState) -> Dict[str, Any]:
-    """Execute the requested tool"""
+    """Execute the requested tool and update state if necessary"""
     
     last_message = state["messages"][-1]
     
-    # Extract tool calls from the message
-    if hasattr(last_message, 'tool_calls') and last_message.tool_calls:
-        # Create tool node to handle execution
-        tool_node = ToolNode([
-            MenuRetrievalTool(),
-            OrderPlacementTool(), 
-            OrderUpdateTool()
-        ])
-        
-        # Execute tools
-        result = tool_node.invoke(state)
-        
-        # Update order summary if order was updated
-        if any(tool_call.get("name") == "update_order" for tool_call in last_message.tool_calls):
-            # Extract order updates and maintain state
-            updated_order = state.get("order_summary", {})
-            # Tool result will be in the messages, parse it to update state
-            # This is simplified - in production you'd want more robust state management
-            
-            return {
-                "messages": result.get("messages", []),
-                "order_summary": updated_order,
-                "tool_output": "Order updated"
-            }
-        
-        return result
+    if not hasattr(last_message, 'tool_calls') or not last_message.tool_calls:
+        return {} # No tools to execute
+
+    tool_node = ToolNode([
+        MenuRetrievalTool(),
+        OrderPlacementTool(),
+        OrderUpdateTool()
+    ])
     
-    return {"messages": []}
+    # result is a dict with a 'messages' key containing ToolMessage objects
+    result = tool_node.invoke(state)
+    
+    updated_order_summary = state.get("order_summary", {}).copy()
+    
+    tool_messages = result['messages']
+
+    # Correlate tool calls with tool messages
+    for tool_call, tool_message in zip(last_message.tool_calls, tool_messages):
+        if tool_call['name'] == 'update_order':
+            try:
+                update_data = json.loads(tool_message.content)
+                item_name = update_data['item_name']
+                quantity = update_data.get('quantity', 1)
+                
+                if update_data['action'] == 'add':
+                    updated_order_summary[item_name] = updated_order_summary.get(item_name, 0) + quantity
+                    logger.info(f"Order summary updated: added {quantity}x {item_name}")
+                elif update_data['action'] == 'remove':
+                    if item_name in updated_order_summary:
+                        updated_order_summary[item_name] -= quantity
+                        if updated_order_summary[item_name] <= 0:
+                            del updated_order_summary[item_name]
+                        logger.info(f"Order summary updated: removed {quantity}x {item_name}")
+                    else:
+                        logger.warning(f"Attempted to remove item not in order: {item_name}")
+
+            except (json.JSONDecodeError, KeyError) as e:
+                logger.error(f"Could not parse tool output for order update: {e} - content: {tool_message.content}")
+
+    result['order_summary'] = updated_order_summary
+    result['tool_output'] = "Tool execution is complete."
+    
+    return result
 
 
 def should_continue(state: AgentState) -> str:
@@ -584,7 +596,7 @@ class HotelConciergeAgent:
         # Initialize LLM
         self.llm = ChatGroq(
             groq_api_key=groq_api_key,
-            model_name="qwen/qwen2-32b-instruct",  # Updated model name
+            model_name="qwen/qwen3-32b",  # Updated model name
             temperature=0.1,
             max_tokens=1000
         )
@@ -687,7 +699,7 @@ class HotelConciergeAgent:
         
         # general_agent -> [intent_classification]
         # General inquiries return to intent classification for next action
-        workflow.add_edge("general_agent", "intent_classification")
+        workflow.add_edge("general_agent", END)
         
         # order_validation -> [order_placement_tools | guest_validation | order_management_agent | general_agent]
         # Routes based on order validation result
