@@ -1,0 +1,104 @@
+Hotel Concierge Voice Pipeline Integration Diagram
+
++---------------------------------------------------------------+
+|                   hotel_concierge_langgraph.py                |
+|                  (Pipecat Voice Pipeline)                     |
++---------------------------------------------------------------+
+|                                                               |
+|  HotelConciergeVoicePipeline                                  |
+|  +-------------------------+                                  |
+|  | LangGraphLLMService     |  <---- Custom LLM Service        |
+|  | (extends GroqLLMService)|  <---- Uses LangGraph agent      |
+|  +-------------------------+                                  |
+|            |                                                  |
+|            | user_input                                       |
+|            v                                                  |
+|  +-------------------------+                                  |
+|  | LangGraphHandler        |                                  |
+|  | + agent                 |  <---- LangGraph agent instance  |
+|  | + conversation_state    |  <---- Maintains conversation    |
+|  +-------------------------+                                  |
+|            |                                                  |
+|            | process_user_input(message)                      |
+|            v                                                  |
+|  +-------------------------+                                  |
+|  | get_concierge_agent()   |  <---- Gets singleton agent      |
+|  +-------------------------+                                  |
+|            |                                                  |
+|            | agent.process_message(message, state)            |
+|            v                                                  |
++----------------+----------------------------------------------+
+                 |
+                 | message + state
+                 v
++---------------------------------------------------------------+
+|                     langgraph_agent.py                        |
+|                    (LangGraph Agent)                          |
++---------------------------------------------------------------+
+|                                                               |
+|  HotelConciergeAgent                                          |
+|  +-------------------------+                                  |
+|  | StateGraph              |  <---- Workflow definition       |
+|  | + nodes                 |  <---- Agent + Tools             |
+|  | + edges                 |  <---- Conditional routing       |
+|  +-------------------------+                                  |
+|            |                                                  |
+|            | app.ainvoke(state)                               |
+|            v                                                  |
+|  +-------------------------+                                  |
+|  | AgentState              |  <---- Conversation state        |
+|  | + messages              |  <---- Message history           |
+|  | + room_number           |  <---- Guest room ID             |
+|  | + order_summary         |  <---- Current order             |
+|  | + tool_output           |  <---- Last tool result          |
+|  +-------------------------+                                  |
+|            |                                                  |
+|            | Conditional Routing                              |
+|            v                                                  |
+|  +-------------------------+  +-----------------------------+ |
+|  | Agent Node              |  | Tool Node                   | |
+|  | + LLM reasoning         |  | + Tool execution            | |
+|  | + Tool calling          |  | + MenuRetrievalTool         | |
+|  | + Intent classification |  | + OrderPlacementTool        | |
+|  | + State management      |  | + OrderUpdateTool           | |
+|  +-------------------------+  +-----------------------------+ |
+|            |                               |                  |
+|            | Response                      | Tool calls       |
+|            v                               v                  |
+|  +-------------------------+  +-----------------------------+ |
+|  | LLM (Groq/Qwen)         |  | RAG Pipeline                | |
+|  | + Tools enabled         |  | + Menu retrieval            | |
+|  | + System prompt         |  | + Context retrieval         | |
+|  +-------------------------+  +-----------------------------+ |
+|                                                               |
++---------------------------------------------------------------+
+                 |
+                 | updated_state
+                 v
++----------------+----------------------------------------------+
+|                   hotel_concierge_langgraph.py                |
+|                  (Pipecat Voice Pipeline)                     |
++---------------------------------------------------------------+
+|            |                                                  |
+|            | return response                                  |
+|            v                                                  |
+|  +-------------------------+                                  |
+|  | LangGraphLLMService     |  <---- Returns response to       |
+|  | (extends GroqLLMService)|  <---- Pipecat pipeline          |
+|  +-------------------------+                                  |
+|            |                                                  |
+|            | response                                         |
+|            v                                                  |
+|  +-------------------------+                                  |
+|  | Pipecat Pipeline        |                                  |
+|  | + STT (Deepgram)        |  <---- Speech to text            |
+|  | + TTS (Deepgram/Cartesia)| <---- Text to speech            |
+|  | + Daily Transport       |  <---- Audio/video transport     |
+|  +-------------------------+                                  |
+|            |                                                  |
+|            | audio output                                     |
+|            v                                                  |
+|  +-------------------------+                                  |
+|  | Guest                   |                                  |
+|  +-------------------------+                                  |
++---------------------------------------------------------------+

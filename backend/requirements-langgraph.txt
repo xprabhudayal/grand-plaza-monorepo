@@ -1,0 +1,28 @@
+# Core LangGraph and LangChain dependencies
+langgraph>=0.2.0
+langchain>=0.2.0
+langchain-community>=0.2.0
+langchain-groq>=0.1.0
+
+# RAG dependencies
+chromadb>=0.4.0
+langchain-chroma>=0.1.0
+pypdf>=3.0.0
+pandas>=2.0.0
+openpyxl>=3.0.0
+
+# Embeddings
+langchain-mistralai>=0.1.0
+mistralai>=0.1.0
+
+# Existing dependencies (keep from original)
+# pipecat-ai[daily,deepgram,groq,cartesia,soniox,tavus]>=0.0.40
+# aiohttp>=3.9.0
+# python-dotenv>=1.0.0
+# loguru>=0.7.0
+
+# # API and database
+# fastapi>=0.100.0
+# uvicorn>=0.23.0
+# sqlalchemy>=2.0.0
+# pydantic>=2.0.0

@@ -1,0 +1,159 @@
+Enhanced LangGraph Agent - Detailed Edge Connections and Flow
+
+=====================================================================================
+VISUAL GRAPH REPRESENTATION - ENHANCED HOTEL CONCIERGE AGENT
+=====================================================================================
+
+                                   ┌─────────────┐
+                                   │  __start__  │
+                                   └─────────────┘
+                                          │
+                                          │ (entry)
+                                          ▼
+                              ┌─────────────────────────┐
+                              │    guest_validation     │
+                              │                         │
+                              │ • Captures room number  │
+                              │ • Validates guest       │
+                              │ • Sets welcome message  │
+                              └─────────────────────────┘
+                                          │
+                         ┌────────────────┼────────────────┐
+                         │                │                │
+          room_needed    │   room_captured│room_validated  │
+                         │                │                │
+                         ▼                ▼                ▼
+                  ┌─────────────┐  ┌─────────────────────────┐
+                  │     END     │  │   intent_classification │
+                  │             │  │                         │
+                  │(await room) │  │ • Analyzes user intent  │
+                  └─────────────┘  │ • Routes by topic       │
+                                   │ • Sets conversation     │
+                                   │   phase                 │
+                                   └─────────────────────────┘
+                                              │
+                          ┌───────────────────┼───────────────────┐
+                          │                   │                   │
+                          │                   │                   │
+            menu_inquiry  │      order_*      │    general_       │  order_confirmation
+                          │                   │    inquiry        │
+                          ▼                   ▼                   ▼                   ▼
+              ┌─────────────────────┐ ┌─────────────────────┐ ┌─────────────────────┐ ┌─────────────────────┐
+              │ menu_retrieval_     │ │ order_management_   │ │   general_agent     │ │   order_validation  │
+              │      agent          │ │       agent         │ │                     │ │                     │
+              │                     │ │                     │ │ • General inquiries │ │ • Validates order   │
+              │ • Menu inquiries    │ │ • Order management  │ │ • Hotel services    │ │ • Checks completeness│
+              │ • Food questions    │ │ • Add/remove items  │ │ • Conversation      │ │ • Room validation   │
+              │ • RAG retrieval     │ │ • Modify quantities │ │ • Non-food queries  │ └─────────────────────┘
+              └─────────────────────┘ └─────────────────────┘ └─────────────────────┘              │
+                          │                       │                       │            ┌─────────────┼─────────────┐
+                has_tools │             has_tools │             (always)  │            │             │             │
+                          │                       │                       │       valid│  missing_   │  empty_     │
+                          ▼                       ▼                       ▼            │   room      │   order     │
+                                                                                        │             │             │
+              ┌─────────────────────────────────────────────────────────────────────────────────────┐            │             │
+              │                           tools                                                        │            ▼             ▼
+              │                                                                                        │ ┌─────────────────────┐ ┌─────────────────────┐
+              │ • MenuRetrievalTool    - RAG pipeline for menu info                                   │ │ order_placement_    │ │ order_management_   │
+              │ • OrderUpdateTool      - Add/remove items from cart                                   │ │      tools          │ │      agent          │
+              │ • OrderPlacementTool   - Final order API submission                                   │ │                     │ │                     │
+              └─────────────────────────────────────────────────────────────────────────────────────┘ │ • Final order API   │ │ (back to ordering)  │
+                                                        │                                                │ • Confirmation       │ └─────────────────────┘
+                                          (route by intent)                                             │ • Success message   │
+                                                        │                                                └─────────────────────┘
+                          ┌─────────────────────────────┼─────────────────────────────┐                            │
+            menu_inquiry  │               order_*       │               general_       │                            │
+                          │                             │                inquiry       │                    ┌───────┼───────┐
+                          ▼                             ▼                             ▼                    │               │
+              ┌─────────────────────┐       ┌─────────────────────┐       ┌─────────────────────┐    completed│         │(continue)
+              │ menu_retrieval_     │       │ order_management_   │       │   general_agent     │            │               │
+              │      agent          │       │       agent         │       │                     │            ▼               ▼
+              │                     │       │                     │       │ (back to intent     │     ┌─────────────┐ ┌─────────────────────┐
+              │ (continue convo)    │       │ (continue convo)    │       │  classification)    │     │     END     │ │   guest_validation  │
+              └─────────────────────┘       └─────────────────────┘       └─────────────────────┘     │             │ │                     │
+                          │                               │                               │             │ (complete)  │ │ (new conversation)  │
+                          │                               │                               │             └─────────────┘ └─────────────────────┘
+                          └───────────────────────────────┼───────────────────────────────┘
+                                                          │
+                                                          ▼
+                                              ┌─────────────────────────┐
+                                              │   intent_classification │
+                                              │                         │
+                                              │ (continue conversation  │
+                                              │  flow loop)             │
+                                              └─────────────────────────┘
+
+=====================================================================================
+KEY EXECUTION PHASES AND FLOW DETAILS
+=====================================================================================
+
+Phase 1: ENTRY & GUEST VALIDATION
+    - START → guest_validation
+    - Captures and validates room number
+    - Routes: room_needed → END, room_captured/validated → intent_classification
+
+Phase 2: INTENT CLASSIFICATION & ROUTING  
+    - Analyzes user message for intent (menu, order, general, confirmation)
+    - Routes to specialized agents based on classified intent
+    - Central hub for conversation flow management
+
+Phase 3: SPECIALIZED AGENT PROCESSING
+    - menu_retrieval_agent: Handles menu queries using RAG
+    - order_management_agent: Manages order cart operations  
+    - general_agent: Handles non-food related inquiries
+    - Each agent can trigger tool execution if needed
+
+Phase 4: TOOL EXECUTION
+    - MenuRetrievalTool: RAG pipeline for menu information
+    - OrderUpdateTool: Cart management (add/remove items)
+    - OrderPlacementTool: Final order API submission
+    - Routes back to appropriate agent based on last intent
+
+Phase 5: ORDER PROCESSING & COMPLETION
+    - order_validation: Validates complete order and room number
+    - order_placement_tools: Final order submission and confirmation
+    - Routes to END (completion) or back to guest_validation (new conversation)
+
+=====================================================================================
+CONDITIONAL EDGE ROUTING LOGIC
+=====================================================================================
+
+1. guest_validation → route_after_guest_validation()
+   - "room_needed" → END (wait for user input)
+   - "room_captured"/"room_validated" → intent_classification
+
+2. intent_classification → route_after_intent_classification() 
+   - "menu_inquiry" → menu_retrieval_agent
+   - "order_placement"/"order_modification" → order_management_agent
+   - "order_confirmation" → order_validation
+   - "general_inquiry" → general_agent
+
+3. specialized_agents → should_continue_to_tools()
+   - has tool_calls → tools
+   - no tool_calls → intent_classification
+
+4. tools → route_from_tools()
+   - Routes back to appropriate agent based on stored intent
+
+5. order_validation → route_after_order_validation()
+   - "valid" → order_placement_tools
+   - "missing_room" → guest_validation  
+   - "empty_order" → order_management_agent
+
+6. order_placement_tools → should_end_conversation()
+   - "completed" → END
+   - default → guest_validation (new conversation)
+
+=====================================================================================
+ENHANCED STATE TRACKING
+=====================================================================================
+
+AgentState now includes:
+- conversation_phase: Detailed phase tracking
+- last_agent: Track active specialized agent
+- order_confirmed: Confirmation status
+- error_count: Error handling and fallback
+- Enhanced validation_status and intent tracking
+
+This provides comprehensive conversation flow management with clear phase transitions,
+robust error handling, and flexible routing between specialized processing nodes.
