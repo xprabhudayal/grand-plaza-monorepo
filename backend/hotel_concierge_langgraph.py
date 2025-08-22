@@ -46,6 +46,13 @@ configure_logging()
 
 from loguru import logger
 
+# LangSmith Integration
+from langsmith import traceable, Client
+
+# Import Daily room configuration
+from runner import configure
+
+os.environ["LANGSMITH_PROJECT"] = "voice-ai-concierge"
 
 # ============================================================================
 # LangGraph Integration Handler
@@ -60,20 +67,52 @@ class LangGraphHandler:
             "messages": [],
             "room_number": None,
             "order_summary": {},
-            "tool_output": None
+            "tool_output": None,
+            "conversation_phase": "greeting",
+            "session_id": str(uuid.uuid4()),
+            "start_time": datetime.now()
         }
+        # Initialize LangSmith client for voice pipeline
+        self.langsmith_client = Client(
+            api_key=os.getenv("LANGSMITH_API_KEY"),
+        )
         
+    @traceable(
+        name="agent_initialization",
+        metadata={"component": "voice_pipeline", "interface": "initialization"},
+        tags=["initialization", "voice", "agent"]
+    )
     async def initialize_agent(self):
         """Initialize the LangGraph agent"""
         try:
             self.agent = get_concierge_agent()
+            
+            # Log initialization metrics
+            self.langsmith_client.log_metrics({
+                "voice_pipeline_initialization": 1,
+                "session_id": self.conversation_state["session_id"],
+                "initialization_time": (datetime.now() - self.conversation_state["start_time"]).total_seconds()
+            })
+            
             logger.info("LangGraph agent initialized successfully")
         except Exception as e:
+            # Track initialization errors
+            self.langsmith_client.log_metrics({
+                "voice_pipeline_init_error": 1,
+                "error_type": type(e).__name__
+            })
             logger.error(f"Failed to initialize LangGraph agent: {e}")
             raise
     
+    @traceable(
+        name="voice_input_processing",
+        metadata={"interface": "voice", "component": "voice_pipeline"},
+        tags=["voice", "real-time", "stt", "processing"]
+    )
     async def process_user_input(self, message: str) -> str:
-        """Process user input through LangGraph agent"""
+        """Process user input through LangGraph agent with comprehensive tracking"""
+        start_time = datetime.now()
+        
         try:
             if not self.agent:
                 await self.initialize_agent()
@@ -84,6 +123,21 @@ class LangGraphHandler:
             # Update conversation state
             self.conversation_state = result
             
+            # Calculate processing time
+            processing_time = (datetime.now() - start_time).total_seconds() * 1000
+            
+            # Track voice processing metrics
+            self.langsmith_client.log_metrics({
+                "voice_processing_latency_ms": processing_time,
+                "input_length_chars": len(message),
+                "session_id": self.conversation_state.get("session_id"),
+                "conversation_phase": result.get("conversation_phase", "unknown"),
+                "room_validated": bool(result.get("room_number")),
+                "order_items_count": len(result.get("order_summary", {})),
+                "intent": result.get("intent", "unknown"),
+                "voice_to_response_success": 1
+            })
+            
             # Extract the last AI message
             if result.get("messages"):
                 last_message = result["messages"][-1]
@@ -92,12 +146,29 @@ class LangGraphHandler:
                 else:
                     response = str(last_message)
                     
+                # Track response metrics
+                self.langsmith_client.log_metrics({
+                    "response_length_chars": len(response),
+                    "response_generated": 1
+                })
+                    
                 logger.info(f"LangGraph response: {response}")
                 return response
             
             return "I'm here to help with your room service order. How can I assist you today?"
             
         except Exception as e:
+            # Track voice processing errors
+            error_time = (datetime.now() - start_time).total_seconds() * 1000
+            
+            self.langsmith_client.log_metrics({
+                "voice_processing_error": 1,
+                "error_type": type(e).__name__,
+                "error_latency_ms": error_time,
+                "input_length_chars": len(message),
+                "session_id": self.conversation_state.get("session_id")
+            })
+            
             logger.error(f"Error processing user input: {e}")
             return "I apologize, but I'm having some technical difficulties. Please contact the front desk for assistance."
     
@@ -315,6 +386,22 @@ async def main():
                         logger.debug(f"[Transcript] {message.role}: {message.content[:100]}...")
                 except Exception as e:
                     logger.error(f"Failed to log transcript: {e}")
+
+            @transcript.event_handler("on_conversation_end")
+            async def collect_feedback(*args):
+                """Collect implicit feedback for LangSmith"""
+                try:
+                    client = Client()
+                    # Track conversation metrics
+                    client.create_feedback(
+                        run_id=session_id,
+                        key="conversation_completed",
+                        score=1.0 if lang_handler.get_order_summary() else 0.5,
+                        comment=f"Order placed: {bool(lang_handler.get_order_summary())}"
+                    )
+                    logger.info(f"LangSmith feedback collected for session {session_id}")
+                except Exception as e:
+                    logger.error(f"Failed to collect LangSmith feedback: {e}")
 
             # Event handlers
             if use_daily:

@@ -1,6 +1,7 @@
 """
 RAG Pipeline for Hotel Menu System
 Handles both CSV and PDF document processing with ChromaDB
+Enhanced with LangSmith tracing and evaluation capabilities
 """
 
 import os
@@ -14,9 +15,15 @@ from langchain_mistralai import MistralAIEmbeddings
 from langchain.schema import Document
 from loguru import logger
 import re
+from datetime import datetime
+
+# LangSmith Integration
+from langsmith import traceable, Client
+
+os.environ["LANGSMITH_PROJECT"] = "voice-ai-concierge"
 
 class MenuRAGPipeline:
-    """RAG Pipeline for menu information retrieval"""
+    """RAG Pipeline for menu information retrieval with LangSmith tracking"""
     
     def __init__(self, 
                  persist_directory: str = "./chroma_db",
@@ -26,6 +33,11 @@ class MenuRAGPipeline:
         self.embeddings = None
         self.vectorstore = None
         self.documents = []
+        
+        # Initialize LangSmith client for RAG tracking
+        self.langsmith_client = Client(
+            api_key=os.getenv("LANGSMITH_API_KEY"),
+        )
         
     def initialize_embeddings(self, api_key: Optional[str] = None):
         """Initialize Mistral embeddings"""
@@ -210,37 +222,119 @@ class MenuRAGPipeline:
             )
             logger.info(f"New vectorstore created with {len(self.documents)} documents.")
     
+    @traceable(
+        name="rag_retrieve",
+        metadata={"pipeline": "menu_rag", "component": "retrieval"},
+        tags=["rag", "retrieval", "menu", "vectorstore"]
+    )
     def retrieve(self, query: str, k: int = 3) -> List[Dict[str, Any]]:
-        """Retrieve relevant menu information"""
+        """Retrieve relevant menu information with comprehensive tracking"""
+        start_time = datetime.now()
+        
         if not self.vectorstore:
             raise ValueError("Vectorstore not initialized")
         
-        # Perform similarity search
-        results = self.vectorstore.similarity_search_with_score(query, k=k)
-        
-        # Format results
-        formatted_results = []
-        for doc, score in results:
-            formatted_results.append({
-                "content": doc.page_content,
-                "metadata": doc.metadata,
-                "relevance_score": score
+        try:
+            # Perform similarity search
+            results = self.vectorstore.similarity_search_with_score(query, k=k)
+            
+            # Calculate retrieval time
+            retrieval_time = (datetime.now() - start_time).total_seconds() * 1000
+            
+            # Format results
+            formatted_results = []
+            for doc, score in results:
+                formatted_results.append({
+                    "content": doc.page_content,
+                    "metadata": doc.metadata,
+                    "relevance_score": score
+                })
+            
+            # Track retrieval metrics
+            self.langsmith_client.log_metrics({
+                "retrieval_latency_ms": retrieval_time,
+                "query_length": len(query),
+                "retrieved_documents": len(formatted_results),
+                "top_relevance_score": formatted_results[0]["relevance_score"] if formatted_results else 0,
+                "avg_relevance_score": sum(r["relevance_score"] for r in formatted_results) / len(formatted_results) if formatted_results else 0,
+                "k_parameter": k,
+                "retrieval_success": 1
             })
-        
-        return formatted_results
+            
+            return formatted_results
+            
+        except Exception as e:
+            # Track retrieval errors
+            error_time = (datetime.now() - start_time).total_seconds() * 1000
+            
+            self.langsmith_client.log_metrics({
+                "retrieval_error": 1,
+                "error_type": type(e).__name__,
+                "error_latency_ms": error_time,
+                "query_length": len(query),
+                "k_parameter": k
+            })
+            
+            logger.error(f"Error in RAG retrieval: {e}")
+            raise
     
+    @traceable(
+        name="context_generation",
+        metadata={"pipeline": "menu_rag", "component": "context_formatting"},
+        tags=["rag", "context", "formatting", "llm_input"]
+    )
     def get_context_for_query(self, query: str, k: int = 3) -> str:
-        """Get formatted context for LLM from query"""
-        results = self.retrieve(query, k)
+        """Get formatted context for LLM from query with tracking"""
+        start_time = datetime.now()
         
-        if not results:
-            return "No relevant menu information found."
-        
-        context = "Here is the relevant menu information:\n\n"
-        for i, result in enumerate(results, 1):
-            context += f"{i}. {result['content']}\n\n"
-        
-        return context.strip()
+        try:
+            results = self.retrieve(query, k)
+            
+            if not results:
+                # Track empty results
+                self.langsmith_client.log_metrics({
+                    "context_generation_empty": 1,
+                    "query_length": len(query),
+                    "k_parameter": k
+                })
+                return "No relevant menu information found."
+            
+            # Generate context
+            context = "Here is the relevant menu information:\n\n"
+            for i, result in enumerate(results, 1):
+                context += f"{i}. {result['content']}\n\n"
+            
+            formatted_context = context.strip()
+            
+            # Calculate context generation time
+            generation_time = (datetime.now() - start_time).total_seconds() * 1000
+            
+            # Track context generation metrics
+            self.langsmith_client.log_metrics({
+                "context_generation_latency_ms": generation_time,
+                "context_length_chars": len(formatted_context),
+                "context_sections": len(results),
+                "query_length": len(query),
+                "k_parameter": k,
+                "context_generation_success": 1
+            })
+            
+            return formatted_context
+            
+        except Exception as e:
+            # Track context generation errors
+            error_time = (datetime.now() - start_time).total_seconds() * 1000
+            
+            self.langsmith_client.log_metrics({
+                "context_generation_error": 1,
+                "error_type": type(e).__name__,
+                "error_latency_ms": error_time,
+                "query_length": len(query),
+                "k_parameter": k
+            })
+            
+            logger.error(f"Error in context generation: {e}")
+            raise
 
 # Initialize the RAG pipeline singleton
 _rag_pipeline = None

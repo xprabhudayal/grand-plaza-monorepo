@@ -19,6 +19,9 @@ from langchain.tools import BaseTool
 from pydantic import BaseModel, Field
 
 from loguru import logger
+from langsmith import traceable, Client
+# from langsmith.run_helpers import traceable_wrapper
+from langsmith.evaluation import evaluate
 
 # Try to import RAG pipeline - make it optional
 try:
@@ -30,6 +33,9 @@ except ImportError as e:
     def get_rag_pipeline():
         raise ImportError("RAG pipeline dependencies not installed")
 
+
+# setup the project name for LangSmith
+os.environ["LANGSMITH_PROJECT"] = "voice-ai-concierge"
 
 # ============================================================================
 # Agent State Definition
@@ -65,6 +71,11 @@ class MenuRetrievalTool(BaseTool):
     description: str = "Retrieve relevant menu information based on user queries using RAG pipeline"
     args_schema: type[BaseModel] = MenuRetrievalInput
     
+    @traceable(
+        name="rag_retrieve",
+        metadata={"pipeline": "menu_rag", "tool": "menu_retrieval"},
+        tags=["rag", "retrieval", "menu"]
+    )
     def _run(self, query: str) -> str:
         """Execute the RAG pipeline with error handling"""
         try:
@@ -153,6 +164,11 @@ class OrderPlacementTool(BaseTool):
     description: str = "Place an order by making POST request to /api/v1/orders/ endpoint"
     args_schema: type[BaseModel] = OrderPlacementInput
     
+    @traceable(
+        name="order_placement",
+        metadata={"tool": "order_placement", "interface": "api"},
+        tags=["order", "placement", "api"]
+    )
     async def _arun(self, order_summary: str, room_number: str) -> str:
         """Place order asynchronously"""
         try:
@@ -215,6 +231,11 @@ class OrderUpdateTool(BaseTool):
     description: str = "Add or remove items from the current order cart"
     args_schema: type[BaseModel] = OrderUpdateInput
     
+    @traceable(
+        name="order_update",
+        metadata={"tool": "order_update"},
+        tags=["order", "cart", "update"]
+    )
     def _run(self, action: str, item_name: str, quantity: int = 1) -> str:
         """Update the order summary"""
         try:
@@ -233,6 +254,11 @@ class OrderUpdateTool(BaseTool):
 # Agent Nodes & Decision Functions
 # ============================================================================
 
+@traceable(
+    name="guest_validation",
+    metadata={"node_type": "validation", "agent_component": "guest_validation"},
+    tags=["validation", "guest", "room"]
+)
 def guest_validation_node(state: AgentState) -> Dict[str, Any]:
     """Validate guest information and room number"""
     last_message = state["messages"][-1] if state["messages"] else None
@@ -260,6 +286,11 @@ def guest_validation_node(state: AgentState) -> Dict[str, Any]:
     }
 
 
+@traceable(
+    name="intent_classification",
+    metadata={"node_type": "classification", "agent_component": "intent_classification"},
+    tags=["intent", "classification", "routing"]
+)
 def intent_classification_node(state: AgentState) -> Dict[str, Any]:
     """Classify user intent for routing"""
     last_message = state["messages"][-1] if state["messages"] else None
@@ -287,6 +318,11 @@ def intent_classification_node(state: AgentState) -> Dict[str, Any]:
         return {"intent": "general_inquiry"}
 
 
+@traceable(
+    name="order_validation",
+    metadata={"node_type": "validation", "agent_component": "order_validation"},
+    tags=["validation", "order", "placement"]
+)
 def order_validation_node(state: AgentState) -> Dict[str, Any]:
     """Validate order before placement"""
     order_summary = state.get("order_summary", {})
@@ -509,6 +545,11 @@ Guest room number: {room_number}
     return agent_node
 
 
+@traceable(
+    name="tool_execution",
+    metadata={"node_type": "tool_execution", "agent_component": "tool_executor"},
+    tags=["tools", "execution", "state_update"]
+)
 def tool_executor_node(state: AgentState) -> Dict[str, Any]:
     """Execute the requested tool and update state if necessary"""
     
@@ -592,13 +633,36 @@ class HotelConciergeAgent:
             groq_api_key = os.getenv("GROQ_API_KEY")
         if not groq_api_key:
             raise ValueError("GROQ_API_KEY not found in environment variables")
+
+        # Add LangSmith client initialization with enhanced configuration
+        self.langsmith_client = Client(
+            api_key=os.getenv("LANGSMITH_API_KEY"),
+            api_url=os.getenv("LANGSMITH_ENDPOINT", "https://api.smith.langchain.com")
+        )
         
-        # Initialize LLM
+        # Track initialization metrics
+        self.langsmith_client.log_metrics({
+            "agent_initialization": 1,
+            "model_name": "qwen/qwen3-32b",
+            "environment": os.getenv("LANGSMITH_RUN_ENVIRONMENT", "development")
+        })
+        
+        # Initialize LLM with enhanced tracing
         self.llm = ChatGroq(
             groq_api_key=groq_api_key,
             model_name="qwen/qwen3-32b",  # Updated model name
             temperature=0.1,
             max_tokens=1000
+        ).with_config(
+            {
+                "callbacks": [self.langsmith_client.get_tracer()],
+                "tags": ["hotel_concierge", "langraph", "voice_ai"],
+                "metadata": {
+                    "agent_type": "hotel_concierge",
+                    "version": "2.0",
+                    "environment": os.getenv("LANGSMITH_RUN_ENVIRONMENT", "development")
+                }
+            }
         )
         
         # Initialize tools
@@ -742,11 +806,23 @@ class HotelConciergeAgent:
         
         logger.info("Enhanced LangGraph workflow compiled successfully with detailed phase management")
     
+    @traceable(
+        name="process_message",
+        metadata={
+            "agent_type": "concierge",
+            "interface": "conversation",
+            "version": "2.0"
+        },
+        tags=["conversation", "message_processing", "hotel_concierge"]
+    )
     async def process_message(self, message: str, current_state: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
-        """Process a user message and return the response"""
+        """Process a user message and return the response with comprehensive tracking"""
         
         if not self.app:
             raise ValueError("Agent not initialized. Call initialize() first.")
+        
+        # Track conversation start time for latency monitoring
+        start_time = datetime.now()
         
         # Initialize state if not provided
         if current_state is None:
@@ -754,16 +830,48 @@ class HotelConciergeAgent:
                 "messages": [],
                 "room_number": None,
                 "order_summary": {},
-                "tool_output": None
+                "tool_output": None,
+                "conversation_phase": "greeting",
+                "error_count": 0
             }
         
         # Add user message to state
         current_state["messages"].append(HumanMessage(content=message))
         
-        # Process through the graph
-        result = await self.app.ainvoke(current_state)
-        
-        return result
+        try:
+            # Process through the graph
+            result = await self.app.ainvoke(current_state)
+            
+            # Calculate processing time
+            processing_time = (datetime.now() - start_time).total_seconds() * 1000
+            
+            # Log performance metrics
+            self.langsmith_client.log_metrics({
+                "latency_ms": processing_time,
+                "message_length": len(message),
+                "conversation_turn": len(result.get("messages", [])),
+                "room_validated": bool(result.get("room_number")),
+                "order_items_count": len(result.get("order_summary", {})),
+                "conversation_phase": result.get("conversation_phase", "unknown"),
+                "intent": result.get("intent", "unknown"),
+                "validation_status": result.get("validation_status", "unknown")
+            })
+            
+            return result
+            
+        except Exception as e:
+            # Track errors for debugging
+            error_time = (datetime.now() - start_time).total_seconds() * 1000
+            
+            self.langsmith_client.log_metrics({
+                "error_occurred": 1,
+                "error_type": type(e).__name__,
+                "error_latency_ms": error_time,
+                "message_length": len(message)
+            })
+            
+            logger.error(f"Error processing message: {e}")
+            raise
     
     def process_message_sync(self, message: str, current_state: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """Synchronous version of process_message"""
