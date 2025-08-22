@@ -1,0 +1,61 @@
+{
+  "name": "Hotel Concierge Agent",
+  "description": "Minimal LangFlow implementation of the hotel concierge agent",
+  "nodes": [
+    {
+      "id": "start",
+      "type": "input",
+      "name": "User Input",
+      "description": "User message input"
+    },
+    {
+      "id": "langgraph_agent",
+      "type": "custom",
+      "name": "Concierge Agent",
+      "description": "LangGraph agent processing",
+      "parameters": {
+        "module": "langgraph_agent",
+        "function": "get_concierge_agent"
+      }
+    },
+    {
+      "id": "rag_tool",
+      "type": "custom",
+      "name": "RAG Tool",
+      "description": "Menu retrieval tool",
+      "parameters": {
+        "module": "rag_pipeline",
+        "function": "get_rag_pipeline"
+      }
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "name": "Agent Response",
+      "description": "Agent's response output"
+    }
+  ],
+  "edges": [
+    {
+      "source": "start",
+      "target": "langgraph_agent"
+    },
+    {
+      "source": "langgraph_agent",
+      "target": "rag_tool",
+      "condition": "needs_rag"
+    },
+    {
+      "source": "rag_tool",
+      "target": "langgraph_agent"
+    },
+    {
+      "source": "langgraph_agent",
+      "target": "output"
+    }
+  ],
+  "config": {
+    "enable_tracing": true,
+    "langsmith_project": "voice-ai-concierge"
+  }
+}

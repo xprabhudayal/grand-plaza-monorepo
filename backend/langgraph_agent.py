@@ -640,12 +640,8 @@ class HotelConciergeAgent:
             api_url=os.getenv("LANGSMITH_ENDPOINT", "https://api.smith.langchain.com")
         )
         
-        # Track initialization metrics
-        self.langsmith_client.log_metrics({
-            "agent_initialization": 1,
-            "model_name": "qwen/qwen3-32b",
-            "environment": os.getenv("LANGSMITH_RUN_ENVIRONMENT", "development")
-        })
+        # Track initialization metrics (commented out - using @traceable decorators instead)
+        # Note: log_metrics is not part of the official LangSmith API
         
         # Initialize LLM with enhanced tracing
         self.llm = ChatGroq(
@@ -811,7 +807,8 @@ class HotelConciergeAgent:
         metadata={
             "agent_type": "concierge",
             "interface": "conversation",
-            "version": "2.0"
+            "version": "2.0",
+            "component": "langgraph_agent"
         },
         tags=["conversation", "message_processing", "hotel_concierge"]
     )
@@ -845,17 +842,9 @@ class HotelConciergeAgent:
             # Calculate processing time
             processing_time = (datetime.now() - start_time).total_seconds() * 1000
             
-            # Log performance metrics
-            self.langsmith_client.log_metrics({
-                "latency_ms": processing_time,
-                "message_length": len(message),
-                "conversation_turn": len(result.get("messages", [])),
-                "room_validated": bool(result.get("room_number")),
-                "order_items_count": len(result.get("order_summary", {})),
-                "conversation_phase": result.get("conversation_phase", "unknown"),
-                "intent": result.get("intent", "unknown"),
-                "validation_status": result.get("validation_status", "unknown")
-            })
+            # Performance metrics are tracked via @traceable decorator metadata above
+            # Additional metrics can be logged to langsmith through enhanced tracing
+            logger.info(f"Message processed in {processing_time:.2f}ms - Phase: {result.get('conversation_phase', 'unknown')}")
             
             return result
             
@@ -863,12 +852,8 @@ class HotelConciergeAgent:
             # Track errors for debugging
             error_time = (datetime.now() - start_time).total_seconds() * 1000
             
-            self.langsmith_client.log_metrics({
-                "error_occurred": 1,
-                "error_type": type(e).__name__,
-                "error_latency_ms": error_time,
-                "message_length": len(message)
-            })
+            # Error tracking via logs (log_metrics is not available in LangSmith API)
+            logger.error(f"Processing error: {type(e).__name__} after {error_time:.2f}ms")
             
             logger.error(f"Error processing message: {e}")
             raise

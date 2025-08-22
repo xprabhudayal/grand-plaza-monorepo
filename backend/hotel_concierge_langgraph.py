@@ -87,20 +87,13 @@ class LangGraphHandler:
         try:
             self.agent = get_concierge_agent()
             
-            # Log initialization metrics
-            self.langsmith_client.log_metrics({
-                "voice_pipeline_initialization": 1,
-                "session_id": self.conversation_state["session_id"],
-                "initialization_time": (datetime.now() - self.conversation_state["start_time"]).total_seconds()
-            })
+            # Initialization metrics tracked via @traceable decorators
+            logger.info(f"Voice pipeline initialized for session {self.conversation_state['session_id']}")
             
             logger.info("LangGraph agent initialized successfully")
         except Exception as e:
-            # Track initialization errors
-            self.langsmith_client.log_metrics({
-                "voice_pipeline_init_error": 1,
-                "error_type": type(e).__name__
-            })
+            # Error tracking via logs (log_metrics not available in LangSmith API)
+            logger.error(f"Voice pipeline init error: {type(e).__name__}")
             logger.error(f"Failed to initialize LangGraph agent: {e}")
             raise
     
@@ -126,17 +119,8 @@ class LangGraphHandler:
             # Calculate processing time
             processing_time = (datetime.now() - start_time).total_seconds() * 1000
             
-            # Track voice processing metrics
-            self.langsmith_client.log_metrics({
-                "voice_processing_latency_ms": processing_time,
-                "input_length_chars": len(message),
-                "session_id": self.conversation_state.get("session_id"),
-                "conversation_phase": result.get("conversation_phase", "unknown"),
-                "room_validated": bool(result.get("room_number")),
-                "order_items_count": len(result.get("order_summary", {})),
-                "intent": result.get("intent", "unknown"),
-                "voice_to_response_success": 1
-            })
+            # Voice processing metrics tracked via @traceable decorator
+            logger.info(f"Processed voice message in {processing_time:.2f}ms")
             
             # Extract the last AI message
             if result.get("messages"):
@@ -146,11 +130,8 @@ class LangGraphHandler:
                 else:
                     response = str(last_message)
                     
-                # Track response metrics
-                self.langsmith_client.log_metrics({
-                    "response_length_chars": len(response),
-                    "response_generated": 1
-                })
+                # Response metrics tracked via @traceable decorator
+                logger.info(f"Generated response: {len(response)} chars")
                     
                 logger.info(f"LangGraph response: {response}")
                 return response
@@ -161,13 +142,8 @@ class LangGraphHandler:
             # Track voice processing errors
             error_time = (datetime.now() - start_time).total_seconds() * 1000
             
-            self.langsmith_client.log_metrics({
-                "voice_processing_error": 1,
-                "error_type": type(e).__name__,
-                "error_latency_ms": error_time,
-                "input_length_chars": len(message),
-                "session_id": self.conversation_state.get("session_id")
-            })
+            # Voice processing error tracking via logs
+            logger.error(f"Voice processing error: {type(e).__name__} after {error_time:.2f}ms")
             
             logger.error(f"Error processing user input: {e}")
             return "I apologize, but I'm having some technical difficulties. Please contact the front desk for assistance."

@@ -1,0 +1,233 @@
+{  
+  "data": {  
+    "edges": [  
+      {  
+        "source": "ChatInput-1",  
+        "sourceHandle": "ChatInput-1-output-message",  
+        "target": "Prompt-greeting",  
+        "targetHandle": "Prompt-greeting-input-user_message",  
+        "id": "edge-1"  
+      },  
+      {  
+        "source": "Prompt-greeting",   
+        "sourceHandle": "Prompt-greeting-output-prompt",  
+        "target": "OpenAI-greeter",  
+        "targetHandle": "OpenAI-greeter-input-input_value",  
+        "id": "edge-2"  
+      },  
+      {  
+        "source": "OpenAI-greeter",  
+        "sourceHandle": "OpenAI-greeter-output-text_output",   
+        "target": "ChatOutput-1",  
+        "targetHandle": "ChatOutput-1-input-input_value",  
+        "id": "edge-3"  
+      }  
+    ],  
+    "nodes": [  
+      {  
+        "data": {  
+          "id": "ChatInput-1",  
+          "node": {  
+            "base_classes": ["Message"],  
+            "description": "Get chat inputs from the Playground.",  
+            "display_name": "Chat Input",  
+            "template": {  
+              "input_value": {  
+                "_input_type": "MultilineInput",  
+                "display_name": "Text",  
+                "info": "Message to be passed as input.",  
+                "name": "input_value",  
+                "required": false,  
+                "show": true,  
+                "type": "str",  
+                "value": ""  
+              },  
+              "sender": {  
+                "_input_type": "DropdownInput",  
+                "display_name": "Sender Type",  
+                "info": "Type of sender.",  
+                "name": "sender",  
+                "options": ["Machine", "User"],  
+                "required": false,  
+                "show": true,  
+                "type": "str",  
+                "value": "User"  
+              },  
+              "sender_name": {  
+                "_input_type": "StrInput",  
+                "display_name": "Sender Name",   
+                "info": "Name of the sender.",  
+                "name": "sender_name",  
+                "required": false,  
+                "show": true,  
+                "type": "str",  
+                "value": "User"  
+              },  
+              "session_id": {  
+                "_input_type": "StrInput",  
+                "display_name": "Session ID",  
+                "info": "Session ID for the chat.",  
+                "name": "session_id",   
+                "required": false,  
+                "show": true,  
+                "type": "str",  
+                "value": ""  
+              }  
+            }  
+          },  
+          "type": "ChatInput"  
+        },  
+        "id": "ChatInput-1",  
+        "position": {"x": 100, "y": 100},  
+        "type": "genericNode"  
+      },  
+      {  
+        "data": {  
+          "id": "Prompt-greeting",  
+          "node": {  
+            "base_classes": ["Message"],  
+            "description": "Create a prompt template with dynamic variables.",  
+            "display_name": "Prompt",  
+            "template": {  
+              "template": {  
+                "_input_type": "PromptInput",  
+                "display_name": "Template",  
+                "info": "Template for the prompt.",  
+                "name": "template",  
+                "required": true,  
+                "show": true,  
+                "type": "prompt",  
+                "value": "You are a friendly hotel concierge assistant.\n\nAnalyze the user message: {user_message}\n\nProvide a helpful response."  
+              },  
+              "user_message": {  
+                "_input_type": "MessageTextInput",  
+                "display_name": "User Message",  
+                "info": "User message input.",  
+                "input_types": ["Message"],  
+                "name": "user_message",  
+                "required": false,  
+                "show": true,  
+                "type": "str",  
+                "value": ""  
+              }  
+            }  
+          },  
+          "type": "Prompt"  
+        },  
+        "id": "Prompt-greeting",  
+        "position": {"x": 300, "y": 100},  
+        "type": "genericNode"  
+      },  
+      {  
+        "data": {  
+          "id": "OpenAI-greeter",  
+          "node": {  
+            "base_classes": ["BaseLanguageModel"],  
+            "description": "Generate text using OpenAI LLMs.",  
+            "display_name": "OpenAI",  
+            "template": {  
+              "api_key": {  
+                "_input_type": "SecretStrInput",  
+                "display_name": "OpenAI API Key",  
+                "info": "The OpenAI API Key to use for the OpenAI model.",  
+                "name": "api_key",  
+                "password": true,  
+                "required": false,  
+                "show": true,  
+                "type": "str",  
+                "value": ""  
+              },  
+              "input_value": {  
+                "_input_type": "MessageInput",  
+                "display_name": "Input",  
+                "info": "Input to the language model.",  
+                "input_types": ["Message"],  
+                "name": "input_value",  
+                "required": true,  
+                "show": true,  
+                "type": "str",  
+                "value": ""  
+              },  
+              "model_name": {  
+                "_input_type": "DropdownInput",  
+                "display_name": "Model Name",  
+                "info": "The name of the model to use.",  
+                "name": "model_name",  
+                "options": ["gpt-4", "gpt-3.5-turbo"],  
+                "required": false,  
+                "show": true,  
+                "type": "str",  
+                "value": "gpt-3.5-turbo"  
+              },  
+              "temperature": {  
+                "_input_type": "FloatInput",  
+                "display_name": "Temperature",  
+                "info": "Controls randomness in the model's output.",  
+                "name": "temperature",  
+                "required": false,  
+                "show": true,  
+                "type": "float",  
+                "value": 0.1  
+              }  
+            }  
+          },  
+          "type": "OpenAI"  
+        },  
+        "id": "OpenAI-greeter",  
+        "position": {"x": 500, "y": 100},  
+        "type": "genericNode"  
+      },  
+      {  
+        "data": {  
+          "id": "ChatOutput-1",  
+          "node": {  
+            "base_classes": ["Message"],  
+            "description": "Display a chat message in the Playground.",  
+            "display_name": "Chat Output",  
+            "template": {  
+              "input_value": {  
+                "_input_type": "MessageInput",  
+                "display_name": "Text",  
+                "info": "Message to be passed as output.",  
+                "input_types": ["Message"],  
+                "name": "input_value",  
+                "required": true,  
+                "show": true,  
+                "type": "str",  
+                "value": ""  
+              },  
+              "sender": {  
+                "_input_type": "DropdownInput",  
+                "display_name": "Sender Type",  
+                "info": "Type of sender.",  
+                "name": "sender",  
+                "options": ["Machine", "User"],  
+                "required": false,  
+                "show": true,  
+                "type": "str",  
+                "value": "Machine"  
+              },  
+              "sender_name": {  
+                "_input_type": "StrInput",  
+                "display_name": "Sender Name",  
+                "info": "Name of the sender.",  
+                "name": "sender_name",  
+                "required": false,  
+                "show": true,  
+                "type": "str",  
+                "value": "Hotel Concierge"  
+              }  
+            }  
+          },  
+          "type": "ChatOutput"  
+        },  
+        "id": "ChatOutput-1",  
+        "position": {"x": 700, "y": 100},  
+        "type": "genericNode"  
+      }  
+    ]  
+  },  
+  "description": "Simple hotel concierge assistant",  
+  "name": "Hotel Concierge Basic",  
+  "id": "hotel-concierge-basic"  
+}

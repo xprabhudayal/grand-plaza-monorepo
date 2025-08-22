@@ -1,0 +1,477 @@
+{
+  "data": {
+    "edges": [
+      {
+        "source": "ChatInput-1",
+        "sourceHandle": "ChatInput-1-output-message",
+        "target": "Prompt-greeting",
+        "targetHandle": "Prompt-greeting-input-user_message",
+        "id": "edge-1"
+      },
+      {
+        "source": "Prompt-greeting",
+        "sourceHandle": "Prompt-greeting-output-prompt",
+        "target": "OpenAIModel-greeter",
+        "targetHandle": "OpenAIModel-greeter-input-input_value",
+        "id": "edge-2"
+      },
+      {
+        "source": "OpenAIModel-greeter",
+        "sourceHandle": "OpenAIModel-greeter-output-text",
+        "target": "ConditionalRouter-intent",
+        "targetHandle": "ConditionalRouter-intent-input-input_text",
+        "id": "edge-3"
+      },
+      {
+        "source": "ConditionalRouter-intent",
+        "sourceHandle": "ConditionalRouter-intent-output-menu_inquiry",
+        "target": "AstraDB-rag",
+        "targetHandle": "AstraDB-rag-input-search_input",
+        "id": "edge-4"
+      },
+      {
+        "source": "ConditionalRouter-intent",
+        "sourceHandle": "ConditionalRouter-intent-output-order_placement",
+        "target": "Memory-cart",
+        "targetHandle": "Memory-cart-input-input_text",
+        "id": "edge-5"
+      },
+      {
+        "source": "ConditionalRouter-intent",
+        "sourceHandle": "ConditionalRouter-intent-output-place_order",
+        "target": "ParseData-order",
+        "targetHandle": "ParseData-order-input-text",
+        "id": "edge-6"
+      },
+      {
+        "source": "AstraDB-rag",
+        "sourceHandle": "AstraDB-rag-output-search_results",
+        "target": "Prompt-rag-response",
+        "targetHandle": "Prompt-rag-response-input-rag_context",
+        "id": "edge-7"
+      },
+      {
+        "source": "ChatInput-1",
+        "sourceHandle": "ChatInput-1-output-message",
+        "target": "Prompt-rag-response",
+        "targetHandle": "Prompt-rag-response-input-user_query",
+        "id": "edge-8"
+      },
+      {
+        "source": "Prompt-rag-response",
+        "sourceHandle": "Prompt-rag-response-output-prompt",
+        "target": "OpenAIModel-rag-responder",
+        "targetHandle": "OpenAIModel-rag-responder-input-input_value",
+        "id": "edge-9"
+      },
+      {
+        "source": "OpenAIModel-rag-responder",
+        "sourceHandle": "OpenAIModel-rag-responder-output-text",
+        "target": "Memory-cart",
+        "targetHandle": "Memory-cart-input-input_text",
+        "id": "edge-10"
+      },
+      {
+        "source": "Memory-cart",
+        "sourceHandle": "Memory-cart-output-response",
+        "target": "ChatOutput-1",
+        "targetHandle": "ChatOutput-1-input-input_value",
+        "id": "edge-11"
+      },
+      {
+        "source": "ParseData-order",
+        "sourceHandle": "ParseData-order-output-text",
+        "target": "ChatOutput-1",
+        "targetHandle": "ChatOutput-1-input-input_value",
+        "id": "edge-12"
+      }
+    ],
+    "nodes": [
+      {
+        "data": {
+          "type": "ChatInput",
+          "node": {
+            "template": {
+              "files": {
+                "display_name": "Files",
+                "type": "file",
+                "value": ""
+              },
+              "input_value": {
+                "display_name": "Text",
+                "type": "str",
+                "value": ""
+              },
+              "sender": {
+                "display_name": "Sender Type",
+                "options": ["Machine", "User"],
+                "type": "str",
+                "value": "User"
+              },
+              "sender_name": {
+                "display_name": "Sender Name",
+                "type": "str",
+                "value": "User"
+              },
+              "session_id": {
+                "display_name": "Session ID",
+                "type": "str",
+                "value": ""
+              }
+            },
+            "description": "Get chat input from the user.",
+            "base_classes": ["Message"],
+            "display_name": "Chat Input"
+          },
+          "id": "ChatInput-1"
+        },
+        "id": "ChatInput-1",
+        "position": {
+          "x": 100,
+          "y": 100
+        },
+        "type": "genericNode"
+      },
+      {
+        "data": {
+          "type": "Prompt",
+          "node": {
+            "template": {
+              "template": {
+                "display_name": "Template",
+                "type": "prompt",
+                "value": "You are a friendly hotel concierge assistant.\n\nAnalyze the user message: {user_message}\n\nClassify the intent:\n- If asking about menu, food, dining: respond with 'INTENT: menu_inquiry'\n- If wanting to add/order items: respond with 'INTENT: order_placement'\n- If saying 'place order', 'checkout': respond with 'INTENT: place_order'\n\nIf first interaction, greet warmly first."
+              },
+              "user_message": {
+                "display_name": "User Message",
+                "type": "str",
+                "value": ""
+              }
+            },
+            "description": "Create a prompt template with multiple inputs.",
+            "base_classes": ["BasePromptTemplate"],
+            "display_name": "Prompt"
+          },
+          "id": "Prompt-greeting"
+        },
+        "id": "Prompt-greeting",
+        "position": {
+          "x": 300,
+          "y": 100
+        },
+        "type": "genericNode"
+      },
+      {
+        "data": {
+          "type": "OpenAIModel",
+          "node": {
+            "template": {
+              "api_key": {
+                "display_name": "OpenAI API Key",
+                "password": true,
+                "type": "str",
+                "value": ""
+              },
+              "input_value": {
+                "display_name": "Input",
+                "type": "str",
+                "value": ""
+              },
+              "max_tokens": {
+                "display_name": "Max Tokens",
+                "type": "int",
+                "value": 256
+              },
+              "model_name": {
+                "display_name": "Model Name",
+                "options": ["gpt-4", "gpt-3.5-turbo"],
+                "type": "str",
+                "value": "gpt-3.5-turbo"
+              },
+              "temperature": {
+                "display_name": "Temperature",
+                "type": "float",
+                "value": 0.1
+              }
+            },
+            "description": "Generate text using OpenAI LLMs.",
+            "base_classes": ["BaseLanguageModel"],
+            "display_name": "OpenAI"
+          },
+          "id": "OpenAIModel-greeter"
+        },
+        "id": "OpenAIModel-greeter",
+        "position": {
+          "x": 500,
+          "y": 100
+        },
+        "type": "genericNode"
+      },
+      {
+        "data": {
+          "type": "ConditionalRouter",
+          "node": {
+            "template": {
+              "input_text": {
+                "display_name": "Text Input",
+                "type": "str",
+                "value": ""
+              },
+              "routes": {
+                "display_name": "Routes",
+                "type": "code",
+                "value": "[\n  {\n    \"condition\": \"INTENT: menu_inquiry\",\n    \"route\": \"menu_inquiry\"\n  },\n  {\n    \"condition\": \"INTENT: order_placement\",\n    \"route\": \"order_placement\"\n  },\n  {\n    \"condition\": \"INTENT: place_order\",\n    \"route\": \"place_order\"\n  }\n]"
+              }
+            },
+            "description": "Route input to different outputs based on text content.",
+            "base_classes": ["ConditionalRouter"],
+            "display_name": "Conditional Router"
+          },
+          "id": "ConditionalRouter-intent"
+        },
+        "id": "ConditionalRouter-intent",
+        "position": {
+          "x": 700,
+          "y": 100
+        },
+        "type": "genericNode"
+      },
+      {
+        "data": {
+          "type": "AstraDB",
+          "node": {
+            "template": {
+              "api_endpoint": {
+                "display_name": "API Endpoint",
+                "type": "str",
+                "value": "https://07315f61-86e9-4b67-a7a9-4fcaad19c86b-us-east1.apps.astra.datastax.com"
+              },
+              "token": {
+                "display_name": "Application Token",
+                "password": true,
+                "type": "str",
+                "value": ""
+              },
+              "collection_name": {
+                "display_name": "Collection Name",
+                "type": "str",
+                "value": "hotel"
+              },
+              "keyspace": {
+                "display_name": "Keyspace",
+                "type": "str",
+                "value": "default_keyspace"
+              },
+              "search_input": {
+                "display_name": "Search Input",
+                "type": "str",
+                "value": ""
+              },
+              "number_of_results": {
+                "display_name": "Number of Results",
+                "type": "int",
+                "value": 5
+              }
+            },
+            "description": "Vector search using Astra DB.",
+            "base_classes": ["VectorStore"],
+            "display_name": "Astra DB"
+          },
+          "id": "AstraDB-rag"
+        },
+        "id": "AstraDB-rag",
+        "position": {
+          "x": 900,
+          "y": 50
+        },
+        "type": "genericNode"
+      },
+      {
+        "data": {
+          "type": "Prompt",
+          "node": {
+            "template": {
+              "template": {
+                "display_name": "Template",
+                "type": "prompt",
+                "value": "You are a hotel concierge assistant.\n\nUser Query: {user_query}\n\nMenu Information: {rag_context}\n\nProvide a helpful response about the menu items. Include prices and descriptions. Ask if they'd like to add anything to their order."
+              },
+              "user_query": {
+                "display_name": "User Query",
+                "type": "str",
+                "value": ""
+              },
+              "rag_context": {
+                "display_name": "RAG Context",
+                "type": "str",
+                "value": ""
+              }
+            },
+            "description": "Create a prompt template with multiple inputs.",
+            "base_classes": ["BasePromptTemplate"],
+            "display_name": "Prompt"
+          },
+          "id": "Prompt-rag-response"
+        },
+        "id": "Prompt-rag-response",
+        "position": {
+          "x": 1100,
+          "y": 50
+        },
+        "type": "genericNode"
+      },
+      {
+        "data": {
+          "type": "OpenAIModel",
+          "node": {
+            "template": {
+              "api_key": {
+                "display_name": "OpenAI API Key",
+                "password": true,
+                "type": "str",
+                "value": ""
+              },
+              "input_value": {
+                "display_name": "Input",
+                "type": "str",
+                "value": ""
+              },
+              "max_tokens": {
+                "display_name": "Max Tokens",
+                "type": "int",
+                "value": 512
+              },
+              "model_name": {
+                "display_name": "Model Name",
+                "options": ["gpt-4", "gpt-3.5-turbo"],
+                "type": "str",
+                "value": "gpt-3.5-turbo"
+              },
+              "temperature": {
+                "display_name": "Temperature",
+                "type": "float",
+                "value": 0.2
+              }
+            },
+            "description": "Generate text using OpenAI LLMs.",
+            "base_classes": ["BaseLanguageModel"],
+            "display_name": "OpenAI"
+          },
+          "id": "OpenAIModel-rag-responder"
+        },
+        "id": "OpenAIModel-rag-responder",
+        "position": {
+          "x": 1300,
+          "y": 50
+        },
+        "type": "genericNode"
+      },
+      {
+        "data": {
+          "type": "Memory",
+          "node": {
+            "template": {
+              "input_text": {
+                "display_name": "Input Text",
+                "type": "str",
+                "value": ""
+              },
+              "memory_key": {
+                "display_name": "Memory Key",
+                "type": "str",
+                "value": "cart_history"
+              },
+              "template": {
+                "display_name": "Template",
+                "type": "prompt",
+                "value": "Maintain a cart for hotel room service. Extract food items and add to cart. Respond with: 'Added [item] to cart. Current cart: [list]. Add more or place order?'"
+              }
+            },
+            "description": "Store and retrieve chat messages.",
+            "base_classes": ["BaseMemory"],
+            "display_name": "Chat Memory"
+          },
+          "id": "Memory-cart"
+        },
+        "id": "Memory-cart",
+        "position": {
+          "x": 1500,
+          "y": 200
+        },
+        "type": "genericNode"
+      },
+      {
+        "data": {
+          "type": "ParseData",
+          "node": {
+            "template": {
+              "text": {
+                "display_name": "Text",
+                "type": "str",
+                "value": ""
+              },
+              "template": {
+                "display_name": "Template",
+                "type": "prompt",
+                "value": "Format as JSON POST request:\n\n```json\n{\n  \"endpoint\": \"POST /api/v1/orders\",\n  \"body\": {\n    \"guest_room\": \"[ROOM]\",\n    \"items\": [{\"name\": \"[ITEM]\", \"quantity\": 1}],\n    \"order_status\": \"pending\",\n    \"total_amount\": 0.0\n  }\n}\n```\n\nOrder placed! Delivery: 25-30 min."
+              }
+            },
+            "description": "Parse and format input data.",
+            "base_classes": ["ParseData"],
+            "display_name": "Parse Data"
+          },
+          "id": "ParseData-order"
+        },
+        "id": "ParseData-order",
+        "position": {
+          "x": 900,
+          "y": 300
+        },
+        "type": "genericNode"
+      },
+      {
+        "data": {
+          "type": "ChatOutput",
+          "node": {
+            "template": {
+              "input_value": {
+                "display_name": "Text",
+                "type": "str",
+                "value": ""
+              },
+              "sender": {
+                "display_name": "Sender Type",
+                "options": ["Machine", "User"],
+                "type": "str",
+                "value": "Machine"
+              },
+              "sender_name": {
+                "display_name": "Sender Name",
+                "type": "str",
+                "value": "Hotel Concierge"
+              },
+              "session_id": {
+                "display_name": "Session ID",
+                "type": "str",
+                "value": ""
+              }
+            },
+            "description": "Display a chat message in the Playground.",
+            "base_classes": ["Message"],
+            "display_name": "Chat Output"
+          },
+          "id": "ChatOutput-1"
+        },
+        "id": "ChatOutput-1",
+        "position": {
+          "x": 1700,
+          "y": 200
+        },
+        "type": "genericNode"
+      }
+    ]
+  },
+  "description": "Hotel concierge with naive RAG, intent detection, cart management, and order placement",
+  "name": "Hotel Concierge RAG",
+  "id": "hotel-concierge-rag"
+}

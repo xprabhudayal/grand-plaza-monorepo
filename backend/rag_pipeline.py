@@ -250,16 +250,8 @@ class MenuRAGPipeline:
                     "relevance_score": score
                 })
             
-            # Track retrieval metrics
-            self.langsmith_client.log_metrics({
-                "retrieval_latency_ms": retrieval_time,
-                "query_length": len(query),
-                "retrieved_documents": len(formatted_results),
-                "top_relevance_score": formatted_results[0]["relevance_score"] if formatted_results else 0,
-                "avg_relevance_score": sum(r["relevance_score"] for r in formatted_results) / len(formatted_results) if formatted_results else 0,
-                "k_parameter": k,
-                "retrieval_success": 1
-            })
+            # Retrieval metrics tracked via @traceable decorator metadata
+            logger.info(f"Retrieved {len(formatted_results)} docs in {retrieval_time:.2f}ms")
             
             return formatted_results
             
@@ -267,13 +259,8 @@ class MenuRAGPipeline:
             # Track retrieval errors
             error_time = (datetime.now() - start_time).total_seconds() * 1000
             
-            self.langsmith_client.log_metrics({
-                "retrieval_error": 1,
-                "error_type": type(e).__name__,
-                "error_latency_ms": error_time,
-                "query_length": len(query),
-                "k_parameter": k
-            })
+            # Error tracking via logs (log_metrics not available in LangSmith API)
+            logger.error(f"RAG retrieval error: {type(e).__name__} after {error_time:.2f}ms")
             
             logger.error(f"Error in RAG retrieval: {e}")
             raise
@@ -291,12 +278,8 @@ class MenuRAGPipeline:
             results = self.retrieve(query, k)
             
             if not results:
-                # Track empty results
-                self.langsmith_client.log_metrics({
-                    "context_generation_empty": 1,
-                    "query_length": len(query),
-                    "k_parameter": k
-                })
+                # Empty results tracked via logs
+                logger.warning(f"No relevant results for query: {query}")
                 return "No relevant menu information found."
             
             # Generate context
@@ -309,15 +292,8 @@ class MenuRAGPipeline:
             # Calculate context generation time
             generation_time = (datetime.now() - start_time).total_seconds() * 1000
             
-            # Track context generation metrics
-            self.langsmith_client.log_metrics({
-                "context_generation_latency_ms": generation_time,
-                "context_length_chars": len(formatted_context),
-                "context_sections": len(results),
-                "query_length": len(query),
-                "k_parameter": k,
-                "context_generation_success": 1
-            })
+            # Context generation metrics tracked via @traceable decorator
+            logger.info(f"Generated context with {len(results)} sections in {generation_time:.2f}ms")
             
             return formatted_context
             
@@ -325,13 +301,8 @@ class MenuRAGPipeline:
             # Track context generation errors
             error_time = (datetime.now() - start_time).total_seconds() * 1000
             
-            self.langsmith_client.log_metrics({
-                "context_generation_error": 1,
-                "error_type": type(e).__name__,
-                "error_latency_ms": error_time,
-                "query_length": len(query),
-                "k_parameter": k
-            })
+            # Context generation error tracking via logs
+            logger.error(f"Context generation error: {type(e).__name__} after {error_time:.2f}ms")
             
             logger.error(f"Error in context generation: {e}")
             raise
