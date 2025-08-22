@@ -1,0 +1,37 @@
+# STT Evaluation Requirements
+# Install these packages to run the evaluation framework
+
+# Core dependencies
+numpy>=1.20.0
+asyncio-mqtt>=0.11.0
+
+# HTTP clients for API calls  
+aiohttp>=3.8.0
+requests>=2.28.0
+
+# STT Provider SDKs (install as needed)
+# Uncomment and install the providers you want to use:
+
+# Deepgram
+# deepgram-sdk>=3.0.0
+
+# AssemblyAI  
+# assemblyai>=0.17.0
+
+# Groq (for Whisper)
+# groq>=0.4.0
+
+# OpenAI (alternative Whisper access)
+# openai>=1.0.0
+
+# Optional: Enhanced semantic similarity (requires transformers)
+# sentence-transformers>=2.2.0
+# torch>=1.12.0
+
+# Optional: Audio processing utilities
+# librosa>=0.10.0
+# soundfile>=0.12.0
+
+# Development and testing
+pytest>=7.0.0
+pytest-asyncio>=0.21.0

@@ -147,8 +147,8 @@ class MenuRAGPipeline:
                 
                 # Also add the full text as chunks for general queries
                 text_splitter = RecursiveCharacterTextSplitter(
-                    chunk_size=500,
-                    chunk_overlap=50
+                    chunk_size=200,
+                    chunk_overlap=10
                 )
                 
                 chunks = text_splitter.split_text(full_text)
@@ -185,24 +185,30 @@ class MenuRAGPipeline:
         logger.info(f"Loaded {len(self.documents)} documents total")
     
     def create_vectorstore(self):
-        """Create ChromaDB vectorstore from documents"""
+        """Create or load ChromaDB vectorstore"""
         if not self.embeddings:
             raise ValueError("Embeddings not initialized. Call initialize_embeddings first.")
-        
-        if not self.documents:
-            raise ValueError("No documents loaded. Call load_documents first.")
-        
-        logger.info("Creating vectorstore...")
-        
-        # Create or load vectorstore
-        self.vectorstore = Chroma.from_documents(
-            documents=self.documents,
-            embedding=self.embeddings,
-            persist_directory=self.persist_directory,
-            collection_name=self.collection_name
-        )
-        
-        logger.info(f"Vectorstore created with {len(self.documents)} documents")
+
+        if Path(self.persist_directory).exists():
+            logger.info(f"Loading existing vectorstore from {self.persist_directory}...")
+            self.vectorstore = Chroma(
+                persist_directory=self.persist_directory,
+                embedding_function=self.embeddings,
+                collection_name=self.collection_name
+            )
+            logger.info("Existing vectorstore loaded.")
+        else:
+            if not self.documents:
+                raise ValueError("No documents loaded to create a new vectorstore.")
+
+            logger.info("Creating new vectorstore...")
+            self.vectorstore = Chroma.from_documents(
+                documents=self.documents,
+                embedding=self.embeddings,
+                persist_directory=self.persist_directory,
+                collection_name=self.collection_name
+            )
+            logger.info(f"New vectorstore created with {len(self.documents)} documents.")
     
     def retrieve(self, query: str, k: int = 3) -> List[Dict[str, Any]]:
         """Retrieve relevant menu information"""
@@ -244,19 +250,15 @@ def get_rag_pipeline() -> MenuRAGPipeline:
     global _rag_pipeline
     if _rag_pipeline is None:
         _rag_pipeline = MenuRAGPipeline()
-        
-        # Initialize with Mistral embeddings
         _rag_pipeline.initialize_embeddings()
+
+        # Only load documents if the vectorstore doesn't exist
+        if not Path(_rag_pipeline.persist_directory).exists():
+            logger.info("No existing vectorstore found. Loading documents to create a new one.")
+            document_path = os.getenv("RAG_DOCUMENT_PATH", "/Users/prada/Desktop/coding/PYTHON/voice_ai_concierge/backend/RAG_DOCS/menu-items.csv")
+            _rag_pipeline.load_documents(document_path)
         
-        # ENTER_YOUR_DOCUMENT_PATH - Choose CSV or PDF
-        document_path = "./RAG_DOCS/menu-items.csv"  # or "./RAG_DOCS/menu.pdf"
-        
-        # Load documents
-        _rag_pipeline.load_documents(document_path)
-        
-        # Create vectorstore
         _rag_pipeline.create_vectorstore()
-        
         logger.info("RAG pipeline initialized successfully")
-    
+
     return _rag_pipeline

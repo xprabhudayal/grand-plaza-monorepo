@@ -1,0 +1,44 @@
+{
+  "providers": {
+    "soniox": {
+      "api_key": "your_soniox_api_key_here",
+      "model": "en_v2_lowlatency",
+      "base_url": "https://api.soniox.com/transcribe-async"
+    },
+    "deepgram": {
+      "api_key": "your_deepgram_api_key_here", 
+      "model": "nova-2",
+      "language": "en-US",
+      "base_url": "https://api.deepgram.com/v1/listen"
+    },
+    "assemblyai": {
+      "api_key": "your_assemblyai_api_key_here",
+      "model": "best",
+      "language_detection": false,
+      "base_url": "https://api.assemblyai.com/v2"
+    },
+    "groq_whisper": {
+      "api_key": "your_groq_api_key_here",
+      "model": "whisper-large-v3-turbo",
+      "language": "en",
+      "base_url": "https://api.groq.com/openai/v1"
+    }
+  },
+  "audio_base_path": "evaluation_audio/",
+  "results_dir": "evaluation_results",
+  "enabled_providers": [
+    "deepgram",
+    "assemblyai", 
+    "groq_whisper"
+  ],
+  "evaluation_settings": {
+    "concurrent_requests": 3,
+    "retry_attempts": 2,
+    "timeout_seconds": 30
+  },
+  "metrics_config": {
+    "sema_score_alpha": 0.5,
+    "normalize_text": true,
+    "calculate_confidence_intervals": false
+  }
+}

@@ -16,6 +16,7 @@ import aiohttp
 from dotenv import load_dotenv
 from loguru import logger
 from pipecat.audio.vad.silero import SileroVADAnalyzer
+from pipecat.processors.transcript_processor import TranscriptProcessor
 
 from pipecat.pipeline.pipeline import Pipeline
 from pipecat.pipeline.runner import PipelineRunner
@@ -35,15 +36,15 @@ from pipecat.frames.frames import TextFrame, LLMFullResponseStartFrame, LLMFullR
 # Import LangGraph agent
 from langgraph_agent import get_concierge_agent
 
-sys.path.append(str(Path(__file__).parent.parent))
-from runner import configure
-sys.path.append(str(Path(__file__).parent))
-from app.schemas import OrderStatus
+# Import transcript logger
+from transcript_logger import TranscriptLogger
+import uuid
 
-load_dotenv(override=True)
+# Configure logging at the very beginning
+from logging_config import configure_logging
+configure_logging()
 
-logger.remove(0)
-logger.add(sys.stderr, level="DEBUG")
+from loguru import logger
 
 
 # ============================================================================
@@ -189,6 +190,12 @@ async def main():
             # Initialize LangGraph handler
             lang_handler = LangGraphHandler()
             await lang_handler.initialize_agent()
+            
+            # Initialize transcript logging
+            session_id = str(uuid.uuid4())
+            transcript_logger = TranscriptLogger()
+            transcript = TranscriptProcessor()
+            logger.info(f"Session started with ID: {session_id}")
 
             # Custom LLM service that integrates with LangGraph
             class LangGraphLLMService(GroqLLMService):
@@ -265,10 +272,11 @@ async def main():
             context = OpenAILLMContext()
             context_aggregator = llm.create_context_aggregator(context)
 
-            # Build pipeline
+            # Build pipeline with transcript processors
             pipeline_components = [
                 transport.input(),
                 stt,
+                transcript.user(),           # Capture user transcripts
                 context_aggregator.user(),
                 llm,
                 tts,
@@ -277,12 +285,36 @@ async def main():
                 pipeline_components.append(tavus_service)
             
             pipeline_components.append(transport.output())
+            pipeline_components.append(transcript.assistant())  # Capture assistant transcripts
             pipeline_components.append(context_aggregator.assistant())
             
             pipeline = Pipeline(pipeline_components)
             logger.info(f"Pipeline created with {'Tavus video avatar' if tavus_service else 'audio only'}")
 
             task = PipelineTask(pipeline, params=PipelineParams(allow_interruptions=True))
+            
+            # Transcript event handler
+            @transcript.event_handler("on_transcript_update")
+            async def handle_transcript_update(processor, frame):
+                """Save transcripts to CSV log file"""
+                try:
+                    for message in frame.messages:
+                        # Get room number from LangGraph state
+                        room_number = lang_handler.get_room_number()
+                        
+                        # Log to CSV
+                        await transcript_logger.alog_message(
+                            session_id=session_id,
+                            role=message.role,
+                            content=message.content,
+                            room_number=room_number,
+                            confidence_score=getattr(message, 'confidence', None),
+                            processing_time_ms=getattr(message, 'processing_time', None)
+                        )
+                        
+                        logger.debug(f"[Transcript] {message.role}: {message.content[:100]}...")
+                except Exception as e:
+                    logger.error(f"Failed to log transcript: {e}")
 
             # Event handlers
             if use_daily:
@@ -344,6 +376,15 @@ async def main():
     finally:
         # Clean up
         logger.info("Cleaning up voice session")
+        
+        # Close transcript logger
+        if 'transcript_logger' in locals():
+            transcript_logger.close()
+            
+            # Log session summary
+            transcripts = transcript_logger.get_session_transcripts(session_id)
+            logger.info(f"Session {session_id} completed with {len(transcripts)} messages")
+        
         logger.info("Voice session completed")
 
 
