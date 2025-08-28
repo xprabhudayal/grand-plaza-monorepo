@@ -73,7 +73,7 @@ class MenuRAGPipeline:
             calories = row.get('Calories (kcal)', '')
             price = row.get('Price (USD)', '')
             
-            # Create comprehensive text for each item
+            # Create concise text for each item (avoid repetition)
             content = f"""
             Category: {current_section}
             Item: {item_name}
@@ -81,10 +81,6 @@ class MenuRAGPipeline:
             Type: {veg_status}
             Calories: {calories}
             Price: {price}
-            
-            This {item_name} is a {veg_status.lower()} item from our {current_section.lower()} menu.
-            {description}
-            It contains {calories} calories and costs {price}.
             """
             
             # Create metadata for filtering
@@ -117,8 +113,8 @@ class MenuRAGPipeline:
                     full_text += f"\nPage {page_num + 1}:\n{text}\n"
                 
                 # Extract table data using regex patterns
-                # Pattern for menu items in table format
-                table_pattern = r'([A-Za-z\s]+?)\s+\$?(\d+\.?\d*)\s+([\w\s,.-]+)'
+                # Pattern for menu items in table format (currently not used but kept for future enhancement)
+                # table_pattern = r'([A-Za-z\s]+?)\s+\$?(\d+\.?\d*)\s+([\w\s,.-]+)'
                 
                 # Split text into sections if identifiable
                 sections = re.split(r'\n(?=[A-Z][A-Za-z\s]+:)', full_text)
@@ -322,7 +318,20 @@ def get_rag_pipeline() -> MenuRAGPipeline:
         # Only load documents if the vectorstore doesn't exist
         if not Path(_rag_pipeline.persist_directory).exists():
             logger.info("No existing vectorstore found. Loading documents to create a new one.")
-            document_path = os.getenv("RAG_DOCUMENT_PATH", str(RAG_PIPELINE_DIR / "RAG_DOCS" / "menu-items.csv"))
+            document_path = os.getenv("RAG_DOCUMENT_PATH")
+            
+            if not document_path:
+                # Use relative path as fallback
+                default_path = RAG_PIPELINE_DIR / "RAG_DOCS" / "menu-items.csv"
+                if default_path.exists():
+                    document_path = str(default_path)
+                    logger.info(f"Using default document path: {document_path}")
+                else:
+                    raise FileNotFoundError(
+                        "RAG_DOCUMENT_PATH environment variable not set and default path not found. "
+                        f"Please set RAG_DOCUMENT_PATH or place menu-items.csv at {default_path}"
+                    )
+            
             _rag_pipeline.load_documents(document_path)
         
         _rag_pipeline.create_vectorstore()
