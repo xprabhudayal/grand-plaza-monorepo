@@ -1,0 +1,502 @@
+{
+  "name": "Voice AI Concierge v2",
+  "description": "Intent-based concierge with RAG menu retrieval and order management",
+  "endpoint_name": null,
+  "is_component": false,
+  "updated_at": "2025-01-01T00:00:00",
+  "nodes": [
+    {
+      "id": "ChatInput-A1B2C",
+      "type": "ChatInput",
+      "data": {
+        "node": {
+          "template": {
+            "input_value": {
+              "type": "str",
+              "required": false,
+              "placeholder": "User message",
+              "display_name": "Message",
+              "advanced": false,
+              "value": ""
+            },
+            "should_store_message": {
+              "type": "bool",
+              "required": false,
+              "display_name": "Store Messages",
+              "value": true
+            },
+            "sender": {
+              "type": "str",
+              "required": false,
+              "display_name": "Sender",
+              "value": "User"
+            },
+            "session_id": {
+              "type": "str",
+              "required": false,
+              "display_name": "Session ID",
+              "value": ""
+            }
+          },
+          "description": "Voice input from user",
+          "display_name": "Chat Input"
+        }
+      },
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "GroqModel-D3E4F",
+      "type": "GroqModel",
+      "data": {
+        "node": {
+          "template": {
+            "groq_api_key": {
+              "type": "str",
+              "required": true,
+              "display_name": "Groq API Key",
+              "password": true,
+              "value": "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"
+            },
+            "model_name": {
+              "type": "str",
+              "required": true,
+              "display_name": "Model Name",
+              "value": "qwen/qwen3-32b"
+            },
+            "temperature": {
+              "type": "float",
+              "required": false,
+              "display_name": "Temperature",
+              "value": 0.3
+            },
+            "max_tokens": {
+              "type": "int",
+              "required": false,
+              "display_name": "Max Tokens",
+              "value": 2048
+            },
+            "system_message": {
+              "type": "str",
+              "required": false,
+              "display_name": "System Message",
+              "multiline": true,
+              "value": "You are a helpful AI concierge assistant for a hotel. You help guests with menu inquiries and order management. Always respond in plain text suitable for text-to-speech conversion. Never use emojis, bullet points, or numbered lists. Keep responses natural and conversational."
+            }
+          },
+          "description": "Groq LLM for intent classification and response generation",
+          "display_name": "Groq Model"
+        }
+      },
+      "position": {
+        "x": 800,
+        "y": 300
+      }
+    },
+    {
+      "id": "AstraDB-G5H6I",
+      "type": "AstraDB",
+      "data": {
+        "node": {
+          "template": {
+            "api_endpoint": {
+              "type": "str",
+              "required": true,
+              "display_name": "API Endpoint",
+              "value": "https://07315f61-86e9-4b67-a7a9-4fcaad19c86b-us-east1.apps.astra.datastax.com"
+            },
+            "token": {
+              "type": "str",
+              "required": true,
+              "display_name": "Token",
+              "password": true,
+              "value": "AstraCS:PUkORwKXUDMDFREbrsOuBmqo:2ecc7a7046ac27ffef348b8a0c742a06b0db3ca533d581aa8827f94ad4a8a025"
+            },
+            "collection_name": {
+              "type": "str",
+              "required": true,
+              "display_name": "Collection Name",
+              "value": "menu_items"
+            },
+            "namespace": {
+              "type": "str",
+              "required": false,
+              "display_name": "Namespace",
+              "value": "default_keyspace"
+            },
+            "embedding_dimension": {
+              "type": "int",
+              "required": true,
+              "display_name": "Embedding Dimension",
+              "value": 1024
+            },
+            "metric": {
+              "type": "str",
+              "required": false,
+              "display_name": "Metric",
+              "value": "cosine"
+            },
+            "batch_size": {
+              "type": "int",
+              "required": false,
+              "display_name": "Batch Size",
+              "value": 100
+            },
+            "number_of_results": {
+              "type": "int",
+              "required": false,
+              "display_name": "Number of Results",
+              "value": 4
+            },
+            "search_type": {
+              "type": "str",
+              "required": false,
+              "display_name": "Search Type",
+              "value": "similarity"
+            }
+          },
+          "description": "Astra DB Vector Store for menu RAG",
+          "display_name": "Astra DB"
+        }
+      },
+      "position": {
+        "x": 500,
+        "y": 500
+      }
+    },
+    {
+      "id": "MistralEmbeddings-J7K8L",
+      "type": "MistralAIEmbeddings",
+      "data": {
+        "node": {
+          "template": {
+            "mistral_api_key": {
+              "type": "str",
+              "required": true,
+              "display_name": "Mistral API Key",
+              "password": true,
+              "value": "4uXQxv9pF1Am4QZdneDpwyTBfBO8IXmp"
+            },
+            "model": {
+              "type": "str",
+              "required": true,
+              "display_name": "Model",
+              "value": "mistral-embed"
+            }
+          },
+          "description": "Mistral embeddings for RAG",
+          "display_name": "Mistral Embeddings"
+        }
+      },
+      "position": {
+        "x": 300,
+        "y": 500
+      }
+    },
+    {
+      "id": "CustomComponent-M9N0O",
+      "type": "CustomComponent",
+      "data": {
+        "node": {
+          "template": {
+            "code": {
+              "type": "code",
+              "required": true,
+              "display_name": "Code",
+              "value": "from langflow.custom import CustomComponent\nfrom langflow.io import MessageTextInput, Output\nfrom langflow.schema import Data\nimport json\nimport re\n\nclass IntentClassifier(CustomComponent):\n    display_name = \"Intent Classifier\"\n    description = \"Classifies user intent and routes accordingly\"\n    \n    def build_config(self):\n        return {\n            \"user_message\": {\n                \"display_name\": \"User Message\",\n                \"field_type\": \"str\",\n            },\n            \"order_state\": {\n                \"display_name\": \"Order State\",\n                \"field_type\": \"str\",\n                \"value\": \"{}\"\n            }\n        }\n    \n    def build(\n        self,\n        user_message: str,\n        order_state: str = \"{}\"\n    ) -> Data:\n        message_lower = user_message.lower()\n        \n        # Intent patterns\n        menu_keywords = ['menu', 'what do you have', 'options', 'food', 'drink', 'serve', 'available']\n        order_keywords = ['order', 'want', 'like', 'get', 'add', 'remove', 'cancel', 'change']\n        \n        intent = 'general'\n        \n        if any(keyword in message_lower for keyword in menu_keywords):\n            intent = 'menu_inquiry'\n        elif any(keyword in message_lower for keyword in order_keywords):\n            intent = 'order_management'\n        \n        # Parse current order state\n        try:\n            order_dict = json.loads(order_state) if order_state else {}\n        except:\n            order_dict = {}\n        \n        result = {\n            \"intent\": intent,\n            \"user_message\": user_message,\n            \"order_state\": json.dumps(order_dict)\n        }\n        \n        self.status = f\"Intent: {intent}\"\n        return Data(data=result)"
+            }
+          },
+          "description": "Custom intent classification",
+          "display_name": "Intent Classifier"
+        }
+      },
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "CustomComponent-P1Q2R",
+      "type": "CustomComponent",
+      "data": {
+        "node": {
+          "template": {
+            "code": {
+              "type": "code",
+              "required": true,
+              "display_name": "Code",
+              "value": "from langflow.custom import CustomComponent\nfrom langflow.io import MessageTextInput, Output\nfrom langflow.schema import Data\nimport json\nimport re\n\nclass OrderManager(CustomComponent):\n    display_name = \"Order Manager\"\n    description = \"Manages order state (add/remove items)\"\n    \n    def build_config(self):\n        return {\n            \"user_message\": {\n                \"display_name\": \"User Message\",\n                \"field_type\": \"str\",\n            },\n            \"order_state\": {\n                \"display_name\": \"Current Order State\",\n                \"field_type\": \"str\",\n                \"value\": \"{}\"\n            }\n        }\n    \n    def build(\n        self,\n        user_message: str,\n        order_state: str = \"{}\"\n    ) -> Data:\n        # Parse current order\n        try:\n            order_dict = json.loads(order_state) if order_state else {}\n        except:\n            order_dict = {}\n        \n        message_lower = user_message.lower()\n        response = \"\"\n        \n        # Extract items and quantities\n        add_patterns = r'(?:add|order|want|get)\\s+(?:(\\d+)\\s+)?([\\w\\s]+?)(?:\\s+to|\\s+please|$)'\n        remove_patterns = r'(?:remove|cancel|delete)\\s+(?:(\\d+)\\s+)?([\\w\\s]+?)(?:\\s+from|\\s+please|$)'\n        \n        # Process additions\n        for match in re.finditer(add_patterns, message_lower):\n            quantity = int(match.group(1)) if match.group(1) else 1\n            item = match.group(2).strip()\n            \n            if item in order_dict:\n                order_dict[item] += quantity\n            else:\n                order_dict[item] = quantity\n            \n            response += f\"Added {quantity} {item} to your order. \"\n        \n        # Process removals\n        for match in re.finditer(remove_patterns, message_lower):\n            quantity = int(match.group(1)) if match.group(1) else None\n            item = match.group(2).strip()\n            \n            if item in order_dict:\n                if quantity:\n                    order_dict[item] = max(0, order_dict[item] - quantity)\n                    if order_dict[item] == 0:\n                        del order_dict[item]\n                else:\n                    del order_dict[item]\n                response += f\"Removed {item} from your order. \"\n        \n        # Generate order summary\n        if order_dict:\n            summary = \"Your current order includes \"\n            items = [f\"{qty} {item}\" for item, qty in order_dict.items()]\n            if len(items) == 1:\n                summary += items[0]\n            elif len(items) == 2:\n                summary += f\"{items[0]} and {items[1]}\"\n            else:\n                summary += \", \".join(items[:-1]) + f\" and {items[-1]}\"\n            response += summary + \".\"\n        else:\n            response += \"Your order is currently empty.\"\n        \n        result = {\n            \"response\": response,\n            \"order_state\": json.dumps(order_dict)\n        }\n        \n        return Data(data=result)"
+            }
+          },
+          "description": "Order state management",
+          "display_name": "Order Manager"
+        }
+      },
+      "position": {
+        "x": 500,
+        "y": 700
+      }
+    },
+    {
+      "id": "PromptTemplate-S3T4U",
+      "type": "PromptTemplate",
+      "data": {
+        "node": {
+          "template": {
+            "template": {
+              "type": "str",
+              "required": true,
+              "display_name": "Template",
+              "multiline": true,
+              "value": "You are a hotel concierge assistant. Based on the user's intent and query, provide a helpful response.\n\nUser Intent: {intent}\nUser Query: {user_message}\n\nContext from menu database:\n{context}\n\nCurrent Order State: {order_state}\n\nIMPORTANT INSTRUCTIONS FOR TEXT-TO-SPEECH OUTPUT:\n- Respond in natural, conversational sentences\n- Do NOT use any emojis or special characters\n- Do NOT use bullet points or numbered lists\n- Do NOT use asterisks or formatting marks\n- Keep the response flowing as continuous speech\n- If listing multiple items, use natural language like 'We have pasta, pizza, and salad'\n\nResponse:"
+            },
+            "intent": {
+              "type": "str",
+              "required": false,
+              "display_name": "Intent",
+              "value": ""
+            },
+            "user_message": {
+              "type": "str",
+              "required": false,
+              "display_name": "User Message",
+              "value": ""
+            },
+            "context": {
+              "type": "str",
+              "required": false,
+              "display_name": "Context",
+              "value": ""
+            },
+            "order_state": {
+              "type": "str",
+              "required": false,
+              "display_name": "Order State",
+              "value": "{}"
+            }
+          },
+          "description": "Format prompt for LLM",
+          "display_name": "Prompt Template"
+        }
+      },
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    },
+    {
+      "id": "CustomComponent-V5W6X",
+      "type": "CustomComponent",
+      "data": {
+        "node": {
+          "template": {
+            "code": {
+              "type": "code",
+              "required": true,
+              "display_name": "Code",
+              "value": "from langflow.custom import CustomComponent\nfrom langflow.io import MessageTextInput, Output\nfrom langflow.schema import Data\nimport re\n\nclass TTSFormatter(CustomComponent):\n    display_name = \"TTS Output Formatter\"\n    description = \"Formats output for text-to-speech\"\n    \n    def build_config(self):\n        return {\n            \"llm_response\": {\n                \"display_name\": \"LLM Response\",\n                \"field_type\": \"str\",\n            }\n        }\n    \n    def build(\n        self,\n        llm_response: str\n    ) -> Data:\n        # Clean the response for TTS\n        cleaned = llm_response\n        \n        # Remove any markdown formatting\n        cleaned = re.sub(r'\\*\\*(.+?)\\*\\*', r'\\1', cleaned)  # Bold\n        cleaned = re.sub(r'\\*(.+?)\\*', r'\\1', cleaned)  # Italic\n        cleaned = re.sub(r'#+\\s', '', cleaned)  # Headers\n        cleaned = re.sub(r'\\n\\s*[-*]\\s+', ', ', cleaned)  # Bullet points\n        cleaned = re.sub(r'\\n\\s*\\d+\\.\\s+', ', ', cleaned)  # Numbered lists\n        \n        # Remove emojis\n        emoji_pattern = re.compile(\n            \"[\"\n            u\"\\U0001F600-\\U0001F64F\"\n            u\"\\U0001F300-\\U0001F5FF\"\n            u\"\\U0001F680-\\U0001F6FF\"\n            u\"\\U0001F1E0-\\U0001F1FF\"\n            u\"\\U00002702-\\U000027B0\"\n            u\"\\U000024C2-\\U0001F251\"\n            \"]+\", flags=re.UNICODE\n        )\n        cleaned = emoji_pattern.sub('', cleaned)\n        \n        # Clean up whitespace\n        cleaned = re.sub(r'\\s+', ' ', cleaned)\n        cleaned = cleaned.strip()\n        \n        # Ensure natural speech flow\n        cleaned = cleaned.replace(' , ', ', ')\n        cleaned = cleaned.replace(' . ', '. ')\n        \n        result = {\n            \"tts_output\": cleaned,\n            \"original_response\": llm_response\n        }\n        \n        return Data(data=result)"
+            }
+          },
+          "description": "Format output for TTS",
+          "display_name": "TTS Formatter"
+        }
+      },
+      "position": {
+        "x": 1000,
+        "y": 300
+      }
+    },
+    {
+      "id": "ChatOutput-Y7Z8A",
+      "type": "ChatOutput",
+      "data": {
+        "node": {
+          "template": {
+            "input_value": {
+              "type": "str",
+              "required": true,
+              "display_name": "Message",
+              "value": ""
+            },
+            "should_store_message": {
+              "type": "bool",
+              "required": false,
+              "display_name": "Store Messages",
+              "value": true
+            },
+            "sender": {
+              "type": "str",
+              "required": false,
+              "display_name": "Sender",
+              "value": "AI"
+            },
+            "sender_name": {
+              "type": "str",
+              "required": false,
+              "display_name": "Sender Name",
+              "value": "Concierge"
+            },
+            "session_id": {
+              "type": "str",
+              "required": false,
+              "display_name": "Session ID",
+              "value": ""
+            },
+            "return_type": {
+              "type": "str",
+              "required": false,
+              "display_name": "Return Type",
+              "value": "json"
+            }
+          },
+          "description": "TTS-ready output",
+          "display_name": "Chat Output"
+        }
+      },
+      "position": {
+        "x": 1200,
+        "y": 300
+      }
+    },
+    {
+      "id": "TextSplitter-B9C0D",
+      "type": "RecursiveCharacterTextSplitter",
+      "data": {
+        "node": {
+          "template": {
+            "chunk_size": {
+              "type": "int",
+              "required": true,
+              "display_name": "Chunk Size",
+              "value": 300
+            },
+            "chunk_overlap": {
+              "type": "int",
+              "required": true,
+              "display_name": "Chunk Overlap",
+              "value": 50
+            },
+            "separators": {
+              "type": "list",
+              "required": false,
+              "display_name": "Separators",
+              "value": ["\\n\\n", "\\n", ".", "!", "?", ";", ":", " ", ""]
+            }
+          },
+          "description": "Optimized text splitter for menu items",
+          "display_name": "Text Splitter"
+        }
+      },
+      "position": {
+        "x": 300,
+        "y": 600
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-1",
+      "source": "ChatInput-A1B2C",
+      "sourceHandle": "message",
+      "target": "CustomComponent-M9N0O",
+      "targetHandle": "user_message"
+    },
+    {
+      "id": "edge-2",
+      "source": "CustomComponent-M9N0O",
+      "sourceHandle": "output",
+      "target": "PromptTemplate-S3T4U",
+      "targetHandle": "intent"
+    },
+    {
+      "id": "edge-3",
+      "source": "ChatInput-A1B2C",
+      "sourceHandle": "message",
+      "target": "PromptTemplate-S3T4U",
+      "targetHandle": "user_message"
+    },
+    {
+      "id": "edge-4",
+      "source": "MistralEmbeddings-J7K8L",
+      "sourceHandle": "embeddings",
+      "target": "AstraDB-G5H6I",
+      "targetHandle": "embedding"
+    },
+    {
+      "id": "edge-5",
+      "source": "ChatInput-A1B2C",
+      "sourceHandle": "message",
+      "target": "AstraDB-G5H6I",
+      "targetHandle": "search_query"
+    },
+    {
+      "id": "edge-6",
+      "source": "AstraDB-G5H6I",
+      "sourceHandle": "retriever",
+      "target": "PromptTemplate-S3T4U",
+      "targetHandle": "context"
+    },
+    {
+      "id": "edge-7",
+      "source": "CustomComponent-M9N0O",
+      "sourceHandle": "order_state",
+      "target": "CustomComponent-P1Q2R",
+      "targetHandle": "order_state",
+      "condition": "intent == 'order_management'"
+    },
+    {
+      "id": "edge-8",
+      "source": "ChatInput-A1B2C",
+      "sourceHandle": "message",
+      "target": "CustomComponent-P1Q2R",
+      "targetHandle": "user_message",
+      "condition": "intent == 'order_management'"
+    },
+    {
+      "id": "edge-9",
+      "source": "CustomComponent-P1Q2R",
+      "sourceHandle": "order_state",
+      "target": "PromptTemplate-S3T4U",
+      "targetHandle": "order_state"
+    },
+    {
+      "id": "edge-10",
+      "source": "PromptTemplate-S3T4U",
+      "sourceHandle": "prompt",
+      "target": "GroqModel-D3E4F",
+      "targetHandle": "input"
+    },
+    {
+      "id": "edge-11",
+      "source": "GroqModel-D3E4F",
+      "sourceHandle": "text",
+      "target": "CustomComponent-V5W6X",
+      "targetHandle": "llm_response"
+    },
+    {
+      "id": "edge-12",
+      "source": "CustomComponent-V5W6X",
+      "sourceHandle": "tts_output",
+      "target": "ChatOutput-Y7Z8A",
+      "targetHandle": "input_value"
+    },
+    {
+      "id": "edge-13",
+      "source": "TextSplitter-B9C0D",
+      "sourceHandle": "splits",
+      "target": "AstraDB-G5H6I",
+      "targetHandle": "documents"
+    }
+  ],
+  "metadata": {
+    "viewport": {
+      "zoom": 0.8,
+      "x": 0,
+      "y": 0
+    },
+    "description": "Voice AI Concierge with Intent Detection and RAG",
+    "gradient": "linear-gradient(90deg, #667eea 0%, #764ba2 100%)"
+  }
+}

@@ -1,0 +1,3 @@
+timestamp,session_id,room_number,role,content,confidence_score,processing_time_ms
+2025-08-23T16:19:45.003190,ba66736b-f6e2-4094-a53c-d0ed29f0a5d2,,user,"Hello, hello, hello.",,
+2025-08-23T16:19:53.280508,ba66736b-f6e2-4094-a53c-d0ed29f0a5d2,,user, Hallo.,,

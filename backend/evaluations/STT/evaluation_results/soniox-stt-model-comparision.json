@@ -1,0 +1,812 @@
+{
+  "evaluation_timestamp": "2025-08-26T18:37:16.228685",
+  "configuration": {
+    "providers": [
+      "Soniox"
+    ],
+    "total_cases": 17,
+    "successful_cases": 17
+  },
+  "individual_results": [
+    {
+      "audio_file": "Audio/New Recording 1.m4a",
+      "ground_truth": "Hello, how are you doing today?",
+      "provider_results": {
+        "Soniox": {
+          "transcript": "Hello, how are you doing today?",
+          "confidence": 0.9592487215995789,
+          "processing_time": 4.496937990188599,
+          "metadata": {
+            "model": "stt-async-preview",
+            "language_hints": [
+              "en"
+            ],
+            "enable_speaker_diarization": false,
+            "context": null,
+            "transcription_id": "15d1f291-7231-4fbe-94c9-5ae61ac86c50",
+            "audio_file": "Audio/New Recording 1.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "clear_001",
+        "scenario_type": "clear_speech",
+        "description": "Basic greeting with clear pronunciation",
+        "expected_challenges": [],
+        "metadata": {
+          "speaker": "native_english",
+          "duration_seconds": 3
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 2.m4a",
+      "ground_truth": "The weather is beautiful today. It's sunny with a temperature of seventy-five degrees.",
+      "provider_results": {
+        "Soniox": {
+          "transcript": "The weather is beautiful today. It's sunny with a temperature of 75 degrees.",
+          "confidence": 0.9615622560183207,
+          "processing_time": 4.030853986740112,
+          "metadata": {
+            "model": "stt-async-preview",
+            "language_hints": [
+              "en"
+            ],
+            "enable_speaker_diarization": false,
+            "context": null,
+            "transcription_id": "fa19bc58-fbb6-4857-8a76-2dc10fbbd5a2",
+            "audio_file": "Audio/New Recording 2.m4a"
+          },
+          "metrics": {
+            "wer": 0.07142857142857142,
+            "cer": 0.13095238095238096,
+            "semantic_similarity": 0.8571428571428571,
+            "sema_score": 0.8928571428571428,
+            "word_accuracy": 0.9285714285714286,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 1
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "clear_002",
+        "scenario_type": "clear_speech",
+        "description": "Weather description with numbers",
+        "expected_challenges": [
+          "number_transcription"
+        ],
+        "metadata": {
+          "speaker": "native_english",
+          "duration_seconds": 6
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 11.m4a",
+      "ground_truth": "I'm terribly sorry, but I can't find my lift key anywhere in my flat.",
+      "provider_results": {
+        "Soniox": {
+          "transcript": "I'm terribly sorry, but I can't find my lift key anywhere in my flat.",
+          "confidence": 0.9763457642661201,
+          "processing_time": 3.746047258377075,
+          "metadata": {
+            "model": "stt-async-preview",
+            "language_hints": [
+              "en"
+            ],
+            "enable_speaker_diarization": false,
+            "context": null,
+            "transcription_id": "c155186d-5bdb-4cdf-bf63-e254ce1d83be",
+            "audio_file": "Audio/New Recording 11.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "accent_001",
+        "scenario_type": "accented_speech",
+        "description": "British English with regional vocabulary",
+        "expected_challenges": [
+          "accent_recognition",
+          "regional_vocabulary",
+          "pronunciation_variants"
+        ],
+        "metadata": {
+          "speaker": "british_english",
+          "duration_seconds": 4
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 12.m4a",
+      "ground_truth": "Please schedule the meeting for tomorrow morning and send the agenda to all participants.",
+      "provider_results": {
+        "Soniox": {
+          "transcript": "Please schedule the meeting for tomorrow morning and send the agenda to all participants.",
+          "confidence": 0.9930126323149755,
+          "processing_time": 4.801539897918701,
+          "metadata": {
+            "model": "stt-async-preview",
+            "language_hints": [
+              "en"
+            ],
+            "enable_speaker_diarization": false,
+            "context": null,
+            "transcription_id": "d0f41d38-7cfc-4237-b338-a7b16ccca8a7",
+            "audio_file": "Audio/New Recording 12.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "accent_002",
+        "scenario_type": "accented_speech",
+        "description": "Indian English accent",
+        "expected_challenges": [
+          "accent_recognition",
+          "pronunciation_patterns"
+        ],
+        "metadata": {
+          "speaker": "indian_english",
+          "duration_seconds": 5
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 17.m4a",
+      "ground_truth": "I'll have the grilled salmon with vegetables and a glass of white wine, please.",
+      "provider_results": {
+        "Soniox": {
+          "transcript": "I'll have the grilled salmon with the vegetables and a glass of white wine, please.",
+          "confidence": 0.9817625962454697,
+          "processing_time": 5.080683946609497,
+          "metadata": {
+            "model": "stt-async-preview",
+            "language_hints": [
+              "en"
+            ],
+            "enable_speaker_diarization": false,
+            "context": null,
+            "transcription_id": "97329509-ba1f-4a43-af19-23d393afc604",
+            "audio_file": "Audio/New Recording 17.m4a"
+          },
+          "metrics": {
+            "wer": 0.06666666666666667,
+            "cer": 0.05063291139240506,
+            "semantic_similarity": 1.0,
+            "sema_score": 0.9666666666666667,
+            "word_accuracy": 0.9333333333333333,
+            "insertions": 1,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "noisy_001",
+        "scenario_type": "noisy_background",
+        "description": "Restaurant order with background noise",
+        "expected_challenges": [
+          "background_noise",
+          "food_terminology",
+          "service_context"
+        ],
+        "metadata": {
+          "background": "restaurant_ambiance",
+          "noise_level": "moderate",
+          "duration_seconds": 5
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 3.m4a",
+      "ground_truth": "I need to configure the REST API endpoint with JSON authentication tokens.",
+      "provider_results": {
+        "Soniox": {
+          "transcript": "I need to configure the REST API endpoint with JSON authentication tokens.",
+          "confidence": 0.9889838077403881,
+          "processing_time": 3.915418863296509,
+          "metadata": {
+            "model": "stt-async-preview",
+            "language_hints": [
+              "en"
+            ],
+            "enable_speaker_diarization": false,
+            "context": null,
+            "transcription_id": "d00ba531-e4a0-4f09-b5d3-0a0ae46c267d",
+            "audio_file": "Audio/New Recording 3.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "tech_001",
+        "scenario_type": "technical_terms",
+        "description": "Technical programming terminology",
+        "expected_challenges": [
+          "technical_acronyms",
+          "proper_case_sensitivity"
+        ],
+        "metadata": {
+          "speaker": "software_developer",
+          "duration_seconds": 5
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 4.m4a",
+      "ground_truth": "The patient has hypertension and requires antihypertensive medication.",
+      "provider_results": {
+        "Soniox": {
+          "transcript": "The patient has hypertension and requires antihypertensive medication.",
+          "confidence": 0.9753753003619966,
+          "processing_time": 3.290585994720459,
+          "metadata": {
+            "model": "stt-async-preview",
+            "language_hints": [
+              "en"
+            ],
+            "enable_speaker_diarization": false,
+            "context": null,
+            "transcription_id": "48feef9b-824a-4387-962c-b83977d1bd7b",
+            "audio_file": "Audio/New Recording 4.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "tech_002",
+        "scenario_type": "technical_terms",
+        "description": "Medical terminology",
+        "expected_challenges": [
+          "medical_terms",
+          "pronunciation_variants"
+        ],
+        "metadata": {
+          "speaker": "medical_professional",
+          "duration_seconds": 4
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 5.m4a",
+      "ground_truth": "Please call me at five five five, one two three, four five six seven.",
+      "provider_results": {
+        "Soniox": {
+          "transcript": "Please call me at 555-123-4567.",
+          "confidence": 0.9916310182639531,
+          "processing_time": 3.4599249362945557,
+          "metadata": {
+            "model": "stt-async-preview",
+            "language_hints": [
+              "en"
+            ],
+            "enable_speaker_diarization": false,
+            "context": null,
+            "transcription_id": "b562e459-d7aa-4552-bed0-9f9531cb6c8c",
+            "audio_file": "Audio/New Recording 5.m4a"
+          },
+          "metrics": {
+            "wer": 0.7142857142857143,
+            "cer": 0.7272727272727273,
+            "semantic_similarity": 0.3333333333333333,
+            "sema_score": 0.30952380952380953,
+            "word_accuracy": 0.2857142857142857,
+            "insertions": 0,
+            "deletions": 9,
+            "substitutions": 1
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "numbers_001",
+        "scenario_type": "numbers_dates",
+        "description": "Phone number dictation",
+        "expected_challenges": [
+          "number_formatting",
+          "digit_vs_word_choice"
+        ],
+        "metadata": {
+          "speaker": "business_context",
+          "duration_seconds": 5
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 6.m4a",
+      "ground_truth": "I'd like to speak with Dr. Rajesh Patel or Ms. Chen Wei about the appointment.",
+      "provider_results": {
+        "Soniox": {
+          "transcript": "I'd like to speak with Dr. Rajesh Patel or Ms. Chen Wee about the appointment.",
+          "confidence": 0.9049971539240617,
+          "processing_time": 3.605769157409668,
+          "metadata": {
+            "model": "stt-async-preview",
+            "language_hints": [
+              "en"
+            ],
+            "enable_speaker_diarization": false,
+            "context": null,
+            "transcription_id": "f76dc19e-478b-4301-bb7a-381a812b6b0d",
+            "audio_file": "Audio/New Recording 6.m4a"
+          },
+          "metrics": {
+            "wer": 0.06666666666666667,
+            "cer": 0.013513513513513514,
+            "semantic_similarity": 0.875,
+            "sema_score": 0.9041666666666667,
+            "word_accuracy": 0.9333333333333333,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 1
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "names_001",
+        "scenario_type": "proper_names",
+        "description": "International names with titles",
+        "expected_challenges": [
+          "name_spelling",
+          "cultural_pronunciations",
+          "title_recognition"
+        ],
+        "metadata": {
+          "speaker": "receptionist",
+          "duration_seconds": 5
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 7.m4a",
+      "ground_truth": "The package needs to be delivered to New York City, specifically to Brooklyn Heights.",
+      "provider_results": {
+        "Soniox": {
+          "transcript": "The package needs to be delivered to New York City, specifically to Brooklyn Heights.",
+          "confidence": 0.9799972039002639,
+          "processing_time": 3.9427807331085205,
+          "metadata": {
+            "model": "stt-async-preview",
+            "language_hints": [
+              "en"
+            ],
+            "enable_speaker_diarization": false,
+            "context": null,
+            "transcription_id": "f4c50d0f-0e1a-4411-b3de-bd18d95ab70c",
+            "audio_file": "Audio/New Recording 7.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "names_002",
+        "scenario_type": "proper_names",
+        "description": "Geographic locations and places",
+        "expected_challenges": [
+          "place_name_accuracy",
+          "geographic_context"
+        ],
+        "metadata": {
+          "speaker": "logistics_coordinator",
+          "duration_seconds": 4
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 13.m4a",
+      "ground_truth": "Take the first left, then go straight for about two miles, and you'll see the building on your right after the traffic light.",
+      "provider_results": {
+        "Soniox": {
+          "transcript": "Take the first left, then go straight for about two miles, and you will see the building on your right after the traffic light.",
+          "confidence": 0.9748604347308477,
+          "processing_time": 3.6753339767456055,
+          "metadata": {
+            "model": "stt-async-preview",
+            "language_hints": [
+              "en"
+            ],
+            "enable_speaker_diarization": false,
+            "context": null,
+            "transcription_id": "ae8e17a7-5ed2-410e-8e86-d758daad6c5f",
+            "audio_file": "Audio/New Recording 13.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "fast_001",
+        "scenario_type": "fast_speech",
+        "description": "Rapid directions with spatial terms",
+        "expected_challenges": [
+          "speech_rate",
+          "directional_terms",
+          "distance_measures"
+        ],
+        "metadata": {
+          "speaker": "local_resident",
+          "duration_seconds": 6,
+          "speech_rate": "fast"
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 14.m4a",
+      "ground_truth": "Speaker A: Let's discuss the quarterly results. Speaker B: The revenue increased by fifteen percent. Speaker A: That's excellent news.",
+      "provider_results": {
+        "Soniox": {
+          "transcript": "Speaker A, let's discuss the quarterly results. Speaker B, the revenue increased by 15%. Speaker A, that's excellent news.",
+          "confidence": 0.9767020746719005,
+          "processing_time": 4.775781154632568,
+          "metadata": {
+            "model": "stt-async-preview",
+            "language_hints": [
+              "en"
+            ],
+            "enable_speaker_diarization": false,
+            "context": null,
+            "transcription_id": "a57a1ecd-c741-40c7-8e4b-3d56712e4697",
+            "audio_file": "Audio/New Recording 14.m4a"
+          },
+          "metrics": {
+            "wer": 0.1,
+            "cer": 0.11904761904761904,
+            "semantic_similarity": 0.8235294117647058,
+            "sema_score": 0.861764705882353,
+            "word_accuracy": 0.9,
+            "insertions": 0,
+            "deletions": 1,
+            "substitutions": 1
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "multi_001",
+        "scenario_type": "multiple_speakers",
+        "description": "Two speakers in business meeting",
+        "expected_challenges": [
+          "speaker_diarization",
+          "context_switching",
+          "overlapping_speech"
+        ],
+        "metadata": {
+          "speakers": 2,
+          "context": "business_meeting",
+          "duration_seconds": 8
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 15.m4a",
+      "ground_truth": "Oh my goodness, this is absolutely incredible! I can't believe how amazing this experience has been!",
+      "provider_results": {
+        "Soniox": {
+          "transcript": "Oh my goodness! This is absolutely incredible. I can't believe how amazing this experience has been.",
+          "confidence": 0.9445056521123455,
+          "processing_time": 3.2306671142578125,
+          "metadata": {
+            "model": "stt-async-preview",
+            "language_hints": [
+              "en"
+            ],
+            "enable_speaker_diarization": false,
+            "context": null,
+            "transcription_id": "93294692-ffe5-42f3-9a34-0b5acb5d2f05",
+            "audio_file": "Audio/New Recording 15.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "emotion_001",
+        "scenario_type": "emotional_speech",
+        "description": "Excited, high-energy speech",
+        "expected_challenges": [
+          "emotional_prosody",
+          "exclamations",
+          "speech_dynamics"
+        ],
+        "metadata": {
+          "emotion": "excitement",
+          "energy_level": "high",
+          "duration_seconds": 5
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 16.m4a",
+      "ground_truth": "I'm really frustrated with this situation. This is the third time I've had to call about the same issue.",
+      "provider_results": {
+        "Soniox": {
+          "transcript": "I am really frustrated with this situation. This is the third time I have had to call about the same issue.",
+          "confidence": 0.9585930396009374,
+          "processing_time": 3.578280210494995,
+          "metadata": {
+            "model": "stt-async-preview",
+            "language_hints": [
+              "en"
+            ],
+            "enable_speaker_diarization": false,
+            "context": null,
+            "transcription_id": "6e26d758-3acc-4744-a1cd-6a83f97f41dc",
+            "audio_file": "Audio/New Recording 16.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "emotion_002",
+        "scenario_type": "emotional_speech",
+        "description": "Frustrated, complaint speech",
+        "expected_challenges": [
+          "emotional_stress",
+          "complaint_context",
+          "repetition_emphasis"
+        ],
+        "metadata": {
+          "emotion": "frustration",
+          "context": "customer_service",
+          "duration_seconds": 6
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 8.m4a",
+      "ground_truth": "I'd like to make a reservation for two guests from December tenth to December twelfth.",
+      "provider_results": {
+        "Soniox": {
+          "transcript": "I did like to make a reservation for two guests from December 10th to December 12th.",
+          "confidence": 0.9732321786880493,
+          "processing_time": 3.4271621704101562,
+          "metadata": {
+            "model": "stt-async-preview",
+            "language_hints": [
+              "en"
+            ],
+            "enable_speaker_diarization": false,
+            "context": null,
+            "transcription_id": "4ac24353-af47-476d-a0b3-cacbe671e08e",
+            "audio_file": "Audio/New Recording 8.m4a"
+          },
+          "metrics": {
+            "wer": 0.26666666666666666,
+            "cer": 0.13095238095238096,
+            "semantic_similarity": 0.5882352941176471,
+            "sema_score": 0.6607843137254903,
+            "word_accuracy": 0.7333333333333334,
+            "insertions": 1,
+            "deletions": 0,
+            "substitutions": 3
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "hotel_001",
+        "scenario_type": "hotel_context",
+        "description": "Hotel reservation request",
+        "expected_challenges": [
+          "date_parsing",
+          "guest_count",
+          "hospitality_terminology"
+        ],
+        "metadata": {
+          "speaker": "hotel_guest",
+          "duration_seconds": 5
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 9.m4a",
+      "ground_truth": "Could you please send room service to room four twenty-seven? I'd like to order a Caesar salad and a bottle of Pinot Grigio.",
+      "provider_results": {
+        "Soniox": {
+          "transcript": "Could you please send room service to room 427? I'd really like to order Caesar salad and a bottle of Pinot Grigio.",
+          "confidence": 0.9471045218408107,
+          "processing_time": 3.5181472301483154,
+          "metadata": {
+            "model": "stt-async-preview",
+            "language_hints": [
+              "en"
+            ],
+            "enable_speaker_diarization": false,
+            "context": null,
+            "transcription_id": "06968f09-8e18-4637-83a0-7b147c1f2406",
+            "audio_file": "Audio/New Recording 9.m4a"
+          },
+          "metrics": {
+            "wer": 0.17391304347826086,
+            "cer": 0.15833333333333333,
+            "semantic_similarity": 0.8181818181818182,
+            "sema_score": 0.8221343873517787,
+            "word_accuracy": 0.8260869565217391,
+            "insertions": 0,
+            "deletions": 1,
+            "substitutions": 3
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "hotel_002",
+        "scenario_type": "hotel_context",
+        "description": "Room service order",
+        "expected_challenges": [
+          "room_number_format",
+          "food_items",
+          "wine_names"
+        ],
+        "metadata": {
+          "speaker": "hotel_guest",
+          "duration_seconds": 8
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 10.m4a",
+      "ground_truth": "Can the concierge help me book tickets for the Broadway show Hamilton tomorrow evening?",
+      "provider_results": {
+        "Soniox": {
+          "transcript": "Can the concierge help me book tickets for the Broadway show, Hamilton, tomorrow evening?",
+          "confidence": 0.9391934094684464,
+          "processing_time": 3.666141986846924,
+          "metadata": {
+            "model": "stt-async-preview",
+            "language_hints": [
+              "en"
+            ],
+            "enable_speaker_diarization": false,
+            "context": null,
+            "transcription_id": "8bca4761-90bb-4d6b-95e4-d27d85eeed5c",
+            "audio_file": "Audio/New Recording 10.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "hotel_003",
+        "scenario_type": "hotel_context",
+        "description": "Concierge service request",
+        "expected_challenges": [
+          "service_terminology",
+          "proper_names",
+          "entertainment_context"
+        ],
+        "metadata": {
+          "speaker": "hotel_guest",
+          "duration_seconds": 6
+        }
+      }
+    }
+  ],
+  "comparison_report": {
+    "summary": {
+      "Soniox": {
+        "mean_wer": 0.08586043112897333,
+        "median_wer": 0.0,
+        "mean_cer": 0.07827675685084472,
+        "median_cer": 0.0,
+        "mean_semantic_similarity": 0.8997307479141389,
+        "mean_sema_score": 0.9069351583925828,
+        "mean_word_accuracy": 0.9141395688710267,
+        "total_insertions": 2,
+        "total_deletions": 11,
+        "total_substitutions": 10,
+        "avg_processing_time": 3.8965915651882397,
+        "avg_confidence": 0.9663004568087333,
+        "error_rate": 0.0,
+        "success_rate": 1.0
+      }
+    },
+    "total_test_cases": 17,
+    "providers_evaluated": [
+      "Soniox"
+    ]
+  }
+}

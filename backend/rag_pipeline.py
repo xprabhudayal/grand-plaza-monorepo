@@ -1,8 +1,7 @@
-"""
-RAG Pipeline for Hotel Menu System
-Handles both CSV and PDF document processing with ChromaDB
-Enhanced with LangSmith tracing and evaluation capabilities
-"""
+# "\n"RAG Pipeline for Hotel Menu System
+# Handles both CSV and PDF document processing with ChromaDB
+# Enhanced with LangSmith tracing and evaluation capabilities
+# "
 
 import os
 import pandas as pd
@@ -22,11 +21,13 @@ from langsmith import traceable, Client
 
 os.environ["LANGSMITH_PROJECT"] = "voice-ai-concierge"
 
+RAG_PIPELINE_DIR = Path(__file__).resolve().parent
+
 class MenuRAGPipeline:
     """RAG Pipeline for menu information retrieval with LangSmith tracking"""
     
     def __init__(self, 
-                 persist_directory: str = "./chroma_db",
+                 persist_directory: str = str(RAG_PIPELINE_DIR / "chroma_db"),
                  collection_name: str = "hotel_menu"):
         self.persist_directory = persist_directory
         self.collection_name = collection_name
@@ -201,7 +202,8 @@ class MenuRAGPipeline:
         if not self.embeddings:
             raise ValueError("Embeddings not initialized. Call initialize_embeddings first.")
 
-        if Path(self.persist_directory).exists():
+        db_path = Path(self.persist_directory)
+        if db_path.exists() and any(db_path.iterdir()):
             logger.info(f"Loading existing vectorstore from {self.persist_directory}...")
             self.vectorstore = Chroma(
                 persist_directory=self.persist_directory,
@@ -320,7 +322,7 @@ def get_rag_pipeline() -> MenuRAGPipeline:
         # Only load documents if the vectorstore doesn't exist
         if not Path(_rag_pipeline.persist_directory).exists():
             logger.info("No existing vectorstore found. Loading documents to create a new one.")
-            document_path = os.getenv("RAG_DOCUMENT_PATH", "/Users/prada/Desktop/coding/PYTHON/voice_ai_concierge/backend/RAG_DOCS/menu-items.csv")
+            document_path = os.getenv("RAG_DOCUMENT_PATH", str(RAG_PIPELINE_DIR / "RAG_DOCS" / "menu-items.csv"))
             _rag_pipeline.load_documents(document_path)
         
         _rag_pipeline.create_vectorstore()

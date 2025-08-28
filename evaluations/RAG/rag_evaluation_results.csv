@@ -1,9 +1,0 @@
-user_input,retrieved_contexts,response,reference,nv_context_relevance,context_precision,faithfulness,answer_relevancy,context_recall
-What vegetarian pizza options are available?,['No context retrieved'],Error generating answer,The vegetarian pizza options are the Margherita and the Veggie Supreme.,,0.0,,0.0,0.0
-How much does the BBQ Chicken pizza cost?,['No context retrieved'],Error generating answer,The BBQ Chicken pizza costs $15.50.,0.0,0.0,,0.0,0.0
-What are the ingredients in the Classic Club sandwich?,['No context retrieved'],Error generating answer,"The Classic Club sandwich contains turkey, bacon, lettuce, tomato, and mayonnaise.",,0.0,,0.0,0.0
-Which beverages are non-alcoholic?,['No context retrieved'],Error generating answer,"The non-alcoholic beverages are Classic Lemonade, Green Smoothie, Mango Lassi, and Sparkling Water. The Iced Mocha can also be considered non-alcoholic.",,,,0.0,0.0
-What is the calorie count of the Quinoa Salad?,['No context retrieved'],Error generating answer,The Quinoa Salad has 450 calories.,0.0,,,0.0,0.0
-Is the Spicy Tofu Banh Mi vegan?,['No context retrieved'],Error generating answer,"The Spicy Tofu Banh Mi is a vegetarian sandwich. The description does not explicitly state if it is vegan, but it contains marinated spicy tofu, pickled carrots, and cilantro.",0.0,,,0.0,0.0
-What's on the Chicago Dog?,['No context retrieved'],Error generating answer,"The Chicago Dog comes with yellow mustard, chopped onions, relish, tomato slices, and a pickle.",0.0,0.0,,0.0,0.0
-Do you have any healthy meal options for someone who doesn't eat meat?,['No context retrieved'],Error generating answer,"Yes, the healthy meal options that do not contain meat are the Quinoa Salad, Lentil Soup, and the Buddha Bowl.",0.0,0.0,,0.0,0.0

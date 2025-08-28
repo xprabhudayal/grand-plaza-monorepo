@@ -95,118 +95,101 @@ class MenuRetrievalTool(BaseTool):
             return self._get_fallback_menu_info(query)
     
     def _get_fallback_menu_info(self, query: str) -> str:
-        """Provide fallback menu information when RAG is unavailable"""
-        query_lower = query.lower()
+        """Provide minimal fallback menu information when RAG is unavailable"""
+        logger.warning(f"RAG unavailable, providing minimal fallback for query: {query}")
         
-        if any(word in query_lower for word in ["breakfast", "morning", "cereal", "eggs", "pancake"]):
-            return """Breakfast Menu:
-            - American Breakfast: Eggs, bacon, toast, hash browns - $12
-            - Continental Breakfast: Pastries, fruits, cereals - $8
-            - Pancakes: Stack of 3 with syrup and butter - $9
-            - Omelet: Choice of fillings (cheese, vegetables, meat) - $11"""
-            
-        elif any(word in query_lower for word in ["appetizer", "starter", "soup", "salad"]):
-            return """Appetizers & Salads:
-            - Caesar Salad: Crisp romaine, parmesan, croutons - $8
-            - Soup of the Day: Ask for today's selection - $6
-            - Chicken Wings: Buffalo or BBQ style - $10
-            - Garlic Bread: Fresh baked with herbs - $5"""
-            
-        elif any(word in query_lower for word in ["main", "entree", "dinner", "lunch"]):
-            return """Main Courses:
-            - Grilled Chicken: With vegetables and rice - $18
-            - Beef Steak: 8oz sirloin with potato - $24
-            - Pasta Marinara: Fresh tomato sauce - $14
-            - Fish & Chips: Beer battered cod - $16"""
-            
-        elif any(word in query_lower for word in ["sandwich", "burger", "wrap"]):
-            return """Sandwiches & Wraps:
-            - Club Sandwich: Turkey, bacon, lettuce, tomato - $12
-            - Cheeseburger: Beef patty with cheese and fries - $14
-            - Chicken Wrap: Grilled chicken with vegetables - $11
-            - Veggie Sandwich: Fresh vegetables and hummus - $9"""
-            
-        elif any(word in query_lower for word in ["dessert", "sweet", "cake", "ice cream"]):
-            return """Desserts:
-            - Chocolate Cake: Rich chocolate layer cake - $7
-            - Ice Cream: Vanilla, chocolate, or strawberry - $5
-            - Apple Pie: Classic with vanilla ice cream - $6
-            - Fruit Salad: Fresh seasonal fruits - $5"""
-            
-        elif any(word in query_lower for word in ["drink", "beverage", "coffee", "tea", "juice"]):
-            return """Beverages:
-            - Coffee: Fresh brewed, espresso drinks - $3-5
-            - Tea: Various herbal and black teas - $3
-            - Fresh Juices: Orange, apple, cranberry - $4
-            - Soft Drinks: Coke, Pepsi, Sprite - $3"""
-            
-        else:
-            return """Our full menu includes:
-            - Breakfast: Eggs, pancakes, cereals, pastries
-            - Appetizers & Salads: Soups, salads, wings, bread
-            - Main Courses: Chicken, beef, pasta, seafood
-            - Sandwiches: Burgers, wraps, club sandwiches
-            - Desserts: Cakes, ice cream, pies, fruit
-            - Beverages: Coffee, tea, juices, soft drinks
-            
-            What category would you like to know more about?"""
+        return """I'm sorry, our menu system is temporarily unavailable right now. However, I can tell you that we offer a wonderful variety of delicious options including fresh pizzas with various toppings, hearty sandwiches and wraps, healthy salads and soups, classic breakfast items, refreshing beverages, and tasty desserts. 
+
+For specific details about ingredients, prices, and availability, please contact room service directly at extension one two three four, and they'll be happy to help you with your order. Is there anything else I can assist you with today?"""
 
 
 class OrderPlacementInput(BaseModel):
     """Input for placing an order"""
-    order_summary: str = Field(description="Complete order summary with items and quantities")
+    order_summary: Dict[str, int] = Field(description="Complete order summary as a JSON object with items and quantities")
     room_number: str = Field(description="Validated guest room number")
 
 
 class OrderPlacementTool(BaseTool):
-    """Tool for placing orders via API"""
-    name: str = "place_order"
-    description: str = "Place an order by making POST request to /api/v1/orders/ endpoint"
+    """Tool for placing orders by sending a payload to a webhook"""
+    name: str = "place_order_webhook"
+    description: str = "Place a final order by sending the complete order payload to a pre-configured webhook URL."
     args_schema: type[BaseModel] = OrderPlacementInput
-    
-    @traceable(
-        name="order_placement",
-        metadata={"tool": "order_placement", "interface": "api"},
-        tags=["order", "placement", "api"]
-    )
-    async def _arun(self, order_summary: str, room_number: str) -> str:
-        """Place order asynchronously"""
+
+    def _get_price_from_rag(self, item_name: str) -> float:
+        """Get item price using RAG pipeline"""
         try:
-            api_base_url = os.getenv("API_BASE_URL", "http://localhost:8000")
+            if not RAG_AVAILABLE:
+                logger.warning(f"RAG not available, defaulting price for '{item_name}' to 12.00")
+                return 12.00
+                
+            rag_pipeline = get_rag_pipeline()
+            price_query = f"What is the price of {item_name}? Show me the exact price in USD."
+            context = rag_pipeline.get_context_for_query(price_query, k=3)
             
-            # Parse order summary to create order data
+            if context and "$" in context:
+                # Extract price from context using regex
+                import re
+                price_matches = re.findall(r'\$([0-9]+\.?[0-9]*)', context)
+                if price_matches:
+                    # Find the most relevant price by checking if item name appears near the price
+                    for match in price_matches:
+                        price = float(match)
+                        if price > 0:
+                            return price
+            
+            logger.warning(f"Could not extract price from RAG for '{item_name}', using default")
+            return 12.00
+            
+        except Exception as e:
+            logger.error(f"Error getting price from RAG for '{item_name}': {e}")
+            return 12.00
+
+    @traceable(
+        name="order_placement_webhook",
+        metadata={"tool": "order_placement_webhook", "interface": "webhook"},
+        tags=["order", "placement", "webhook"]
+    )
+    async def _arun(self, order_summary: Dict[str, int], room_number: str) -> str:
+        """Place order asynchronously by sending data to a webhook."""
+        webhook_url = os.getenv("WEBHOOK_URL")
+        if not webhook_url:
+            logger.error("WEBHOOK_URL environment variable not set. Cannot place order.")
+            return "I'm sorry, the ordering system is currently unavailable due to a configuration issue. Please contact the front desk for assistance."
+
+        try:
+            # Consolidate order details for the webhook payload
+            item_names = ", ".join(order_summary.keys())
+            total_quantity = sum(order_summary.values())
+
+            # Get prices using RAG pipeline instead of hardcoded values
+            total_price = sum(self._get_price_from_rag(name) * qty for name, qty in order_summary.items())
+
             order_data = {
                 "guest_room": room_number,
-                "items": [],
-                "order_status": "pending",
-                "total_amount": 0.0,
-                "special_instructions": ""
+                "name": item_names,
+                "quantity": total_quantity,
+                "consolidated_pricing": total_price,
+                "order_status": "pending"
             }
-            
-            # This is a simplified order parsing - in production, you'd want more robust parsing
-            # For now, we'll pass the order summary as special instructions
-            order_data["special_instructions"] = f"Order: {order_summary}"
-            
+
             async with aiohttp.ClientSession() as session:
                 async with session.post(
-                    f"{api_base_url}/api/v1/orders/",
+                    webhook_url,
                     json=order_data,
                     headers={"Content-Type": "application/json"}
                 ) as response:
-                    if response.status == 201 or response.status == 200:
-                        result = await response.json()
-                        order_id = result.get("id", "unknown")
-                        return f"Order placed successfully! Your order ID is {order_id}. Estimated delivery time is 25-30 minutes."
+                    if response.status >= 200 and response.status < 300:
+                        return f"Great news! Your order has been successfully placed for room {room_number}. You can expect your delicious food to arrive in about 25 to 30 minutes. Is there anything else I can help you with today?"
                     else:
                         error_text = await response.text()
-                        logger.error(f"Order placement failed: {response.status} - {error_text}")
-                        return f"Sorry, I couldn't place your order right now. Please try again or contact the front desk."
-                        
+                        logger.error(f"Order placement webhook failed: {response.status} - {error_text}")
+                        return f"I apologize, but I'm having some difficulty placing your order at the moment. There seems to be a technical issue with our ordering system. Please try again in a few moments, or feel free to call the front desk and they'll be happy to assist you with your order."
+
         except Exception as e:
-            logger.error(f"Error placing order: {e}")
-            return "I'm having trouble placing your order right now. Please contact the front desk for assistance."
-    
-    def _run(self, order_summary: str, room_number: str) -> str:
+            logger.error(f"Error sending order to webhook: {e}")
+            return "I'm having trouble placing your order right now due to a technical issue. Please contact the front desk for assistance."
+
+    def _run(self, order_summary: Dict[str, int], room_number: str) -> str:
         """Synchronous wrapper"""
         import asyncio
         try:
@@ -214,21 +197,21 @@ class OrderPlacementTool(BaseTool):
         except RuntimeError:
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
-        
+
         return loop.run_until_complete(self._arun(order_summary, room_number))
 
 
 class OrderUpdateInput(BaseModel):
     """Input for updating order"""
-    action: str = Field(description="Action to perform: 'add' or 'remove'")
-    item_name: str = Field(description="Name of the item to add or remove")
+    action: str = Field(description="Action to perform: 'add', 'remove', or 'set' to a specific quantity")
+    item_name: str = Field(description="Name of the item to add, remove, or set")
     quantity: int = Field(description="Quantity of the item", default=1)
 
 
 class OrderUpdateTool(BaseTool):
     """Tool for managing the order cart"""
     name: str = "update_order"
-    description: str = "Add or remove items from the current order cart"
+    description: str = "Add, remove, or set the quantity of items in the current order cart"
     args_schema: type[BaseModel] = OrderUpdateInput
     
     @traceable(
@@ -435,9 +418,11 @@ def create_specialized_agent_nodes(llm, tools):
         messages = state["messages"]
         room_number = state.get("room_number", "")
         
-        system_context = f"""You are a menu specialist for hotel room service in room {room_number}. 
-        Your role is to help guests browse the menu, answer questions about food items, 
-        ingredients, prices, and availability. Use the retrieve_menu_info tool to retrieve current menu items."""
+        system_context = f"""You are a friendly menu specialist for hotel room service talking to a guest in room {room_number}. You're having a natural conversation over the phone, so speak warmly and conversationally. 
+        
+Your role is to help guests browse our menu, answer questions about food items, ingredients, prices, and availability. Always use the retrieve_menu_info tool to get current and accurate information - never guess or provide information from memory. 
+        
+Speak naturally as if you're talking to someone on the phone. Use plain text without special formatting, bullet points, or symbols since this will be read aloud by text-to-speech. Be conversational, helpful, and enthusiastic about our menu offerings."""
         
         system_message = SystemMessage(content=system_context)
         full_messages = [system_message] + messages
@@ -451,15 +436,18 @@ def create_specialized_agent_nodes(llm, tools):
         room_number = state.get("room_number", "")
         order_summary = state.get("order_summary", {})
         
-        system_context = f"""You are an order specialist for hotel room service in room {room_number}.
-        Current order: {order_summary if order_summary else 'Empty'}
-        Your role is to help guests add items to their order, modify quantities, remove items,
-        and manage their current order. Use order management tools as needed."""
+        system_context = f"""You are a helpful order specialist for hotel room service talking to a guest in room {room_number}. You're having a natural conversation over the phone, so speak warmly and conversationally.
+        
+Current order: {order_summary if order_summary else 'Empty'}
+        
+Your role is to help guests add items to their order, modify quantities, remove items, and manage their current order. Always use the retrieve_menu_info tool when guests ask about menu items to get accurate information - never guess prices or details.
+        
+Speak naturally as if you're talking to someone on the phone. Use plain text without special formatting, bullet points, or symbols since this will be read aloud by text-to-speech. Be conversational, helpful, and confirm each change to their order clearly."""
         
         system_message = SystemMessage(content=system_context)
         full_messages = [system_message] + messages
         
-        order_tools = [tool for tool in tools if tool.name in ["update_order"]]
+        order_tools = [tool for tool in tools if tool.name in ["update_order", "retrieve_menu_info"]]
         response = llm.bind_tools(order_tools).invoke(full_messages)
         return {"messages": [response], "conversation_phase": "ordering"}
     
@@ -468,10 +456,11 @@ def create_specialized_agent_nodes(llm, tools):
         messages = state["messages"]
         room_number = state.get("room_number", "")
         
-        system_context = f"""You are a helpful hotel concierge assistant for room {room_number}.
-        Handle general inquiries, provide information about hotel services, and maintain 
-        a friendly, professional conversation. If the guest wants to order food, 
-        guide them appropriately."""
+        system_context = f"""You are a friendly hotel concierge assistant talking to a guest in room {room_number}. You're having a natural conversation over the phone, so speak warmly and conversationally.
+        
+Handle general inquiries, provide information about hotel services, and maintain a friendly, professional conversation. If the guest wants to order food, guide them appropriately to our room service options.
+        
+Speak naturally as if you're talking to someone on the phone. Use plain text without special formatting, bullet points, or symbols since this will be read aloud by text-to-speech. Be conversational, helpful, and make the guest feel welcome."""
         
         system_message = SystemMessage(content=system_context)
         full_messages = [system_message] + messages
@@ -485,15 +474,20 @@ def create_specialized_agent_nodes(llm, tools):
         room_number = state.get("room_number", "")
         
         if order_summary and room_number:
-            # This would integrate with actual order placement system
-            confirmation_msg = f"Order placed successfully for room {room_number}! Your items: {list(order_summary.keys())}. Estimated delivery: 25-30 minutes."
+            # Instantiate and run the order placement tool
+            placement_tool = OrderPlacementTool()
+            result_message = placement_tool._run(
+                order_summary=order_summary,
+                room_number=room_number
+            )
+            
             return {
-                "messages": [AIMessage(content=confirmation_msg)],
+                "messages": [AIMessage(content=result_message)],
                 "conversation_phase": "completed"
             }
         else:
             return {
-                "messages": [AIMessage(content="Unable to place order. Missing information.")],
+                "messages": [AIMessage(content="Unable to place order. Missing room number or order is empty.")],
                 "conversation_phase": "ordering"
             }
     
@@ -590,6 +584,14 @@ def tool_executor_node(state: AgentState) -> Dict[str, Any]:
                         logger.info(f"Order summary updated: removed {quantity}x {item_name}")
                     else:
                         logger.warning(f"Attempted to remove item not in order: {item_name}")
+                elif update_data['action'] == 'set':
+                    if quantity > 0:
+                        updated_order_summary[item_name] = quantity
+                        logger.info(f"Order summary updated: set {item_name} quantity to {quantity}")
+                    else:
+                        if item_name in updated_order_summary:
+                            del updated_order_summary[item_name]
+                            logger.info(f"Order summary updated: removed {item_name} by setting quantity to {quantity}")
 
             except (json.JSONDecodeError, KeyError) as e:
                 logger.error(f"Could not parse tool output for order update: {e} - content: {tool_message.content}")
@@ -625,7 +627,17 @@ class HotelConciergeAgent:
         self.tools = None
         self.graph = None
         self.app = None
-        
+
+    # Initialize LLM with enhanced tracing
+    @traceable(
+        name = "llm_node",
+        metadata = {
+            "agent_type": "hotel_concierge",
+            "version": "2.0",
+            "environment": os.getenv("LANGSMITH_RUN_ENVIRONMENT", "development")
+        },
+        tags=["hotel_concierge", "llm"]
+    )    
     def initialize(self, groq_api_key: Optional[str] = None):
         """Initialize the agent with LLM and tools"""
         
@@ -643,23 +655,14 @@ class HotelConciergeAgent:
         # Track initialization metrics (commented out - using @traceable decorators instead)
         # Note: log_metrics is not part of the official LangSmith API
         
-        # Initialize LLM with enhanced tracing
+       
         self.llm = ChatGroq(
             groq_api_key=groq_api_key,
             model_name="qwen/qwen3-32b",  # Updated model name
             temperature=0.1,
             max_tokens=1000
-        ).with_config(
-            {
-                "callbacks": [self.langsmith_client.get_tracer()],
-                "tags": ["hotel_concierge", "langraph", "voice_ai"],
-                "metadata": {
-                    "agent_type": "hotel_concierge",
-                    "version": "2.0",
-                    "environment": os.getenv("LANGSMITH_RUN_ENVIRONMENT", "development")
-                }
-            }
         )
+        
         
         # Initialize tools
         self.tools = [
@@ -735,25 +738,25 @@ class HotelConciergeAgent:
             }
         )
         
-        # menu_retrieval_agent -> [tools | intent_classification]
-        # Tool execution for menu queries or back to intent classification
+        # menu_retrieval_agent -> [tools | END]
+        # If no tool is called, the agent has responded and the turn should end.
         workflow.add_conditional_edges(
             "menu_retrieval_agent",
             should_continue_to_tools,
             {
                 "tools": "tools",
-                "intent_classification": "intent_classification"
+                "intent_classification": END
             }
         )
         
-        # order_management_agent -> [tools | intent_classification]
-        # Tool execution for order management or back to intent classification
+        # order_management_agent -> [tools | END]
+        # If no tool is called, the agent has responded and the turn should end.
         workflow.add_conditional_edges(
             "order_management_agent",
             should_continue_to_tools,
             {
                 "tools": "tools",
-                "intent_classification": "intent_classification"
+                "intent_classification": END
             }
         )
         

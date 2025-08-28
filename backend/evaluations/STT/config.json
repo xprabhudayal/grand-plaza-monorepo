@@ -1,0 +1,22 @@
+{
+  "providers": {
+    "soniox": {
+      "api_key": "e038d1bd3430126815878a95ffa2a592670283325c899d71d5355976953970e2",
+      "model": "stt-async-preview",
+      "language_hints": ["en"],
+      "enable_speaker_diarization": false,
+      "context": null
+    }
+  },
+  "evaluation": {
+    "output_dir": "./results",
+    "save_detailed_results": true,
+    "calculate_aggregate_metrics": true
+  },
+  "api_keys_help": {
+    "deepgram": "Get your API key from: https://console.deepgram.com/",
+    "assemblyai": "Get your API key from: https://www.assemblyai.com/",
+    "soniox": "Get your API key from: https://console.soniox.com/",
+    "groq": "Get your API key from: https://console.groq.com/"
+  }
+}

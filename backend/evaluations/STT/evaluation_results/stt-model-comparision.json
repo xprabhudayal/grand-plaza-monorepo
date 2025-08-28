@@ -1,0 +1,1706 @@
+{
+  "evaluation_timestamp": "2025-08-26T13:39:03.835695",
+  "configuration": {
+    "providers": [
+      "Soniox",
+      "Deepgram",
+      "AssemblyAI",
+      "GroqWhisper"
+    ],
+    "total_cases": 17,
+    "successful_cases": 17
+  },
+  "individual_results": [
+    {
+      "audio_file": "Audio/New Recording 1.m4a",
+      "ground_truth": "Hello, how are you doing today?",
+      "provider_results": {
+        "Soniox": {
+          "error": "400 Client Error: Bad Request for url: https://api.soniox.com/v1/transcriptions",
+          "transcript": "",
+          "metrics": null
+        },
+        "Deepgram": {
+          "transcript": "Hello. How are you doing today?",
+          "confidence": 0.999902,
+          "processing_time": 2.29351806640625,
+          "metadata": {
+            "model": "nova-2",
+            "language": "en-US",
+            "smart_format": true,
+            "punctuate": true,
+            "diarize": false,
+            "audio_file": "Audio/New Recording 1.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        },
+        "AssemblyAI": {
+          "transcript": "Hello. How are you doing today?",
+          "confidence": 0.85,
+          "processing_time": 6.137273788452148,
+          "metadata": {
+            "language_detection": false,
+            "punctuate": true,
+            "format_text": true,
+            "speaker_labels": false,
+            "transcript_id": "46ebfbce-d786-4cd9-8fed-ad70b2f61bdf",
+            "audio_file": "Audio/New Recording 1.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        },
+        "GroqWhisper": {
+          "transcript": " Hello, how are you doing today?",
+          "confidence": 0.85,
+          "processing_time": 0.7769131660461426,
+          "metadata": {
+            "model": "whisper-large-v3-turbo",
+            "language": "en",
+            "response_format": "json",
+            "temperature": 0,
+            "audio_file": "Audio/New Recording 1.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "clear_001",
+        "scenario_type": "clear_speech",
+        "description": "Basic greeting with clear pronunciation",
+        "expected_challenges": [],
+        "metadata": {
+          "speaker": "native_english",
+          "duration_seconds": 3
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 2.m4a",
+      "ground_truth": "The weather is beautiful today. It's sunny with a temperature of seventy-five degrees.",
+      "provider_results": {
+        "Soniox": {
+          "error": "400 Client Error: Bad Request for url: https://api.soniox.com/v1/transcriptions",
+          "transcript": "",
+          "metrics": null
+        },
+        "Deepgram": {
+          "transcript": "The weather is beautiful today. It's sunny with a temperature of 75 degrees.",
+          "confidence": 0.99946743,
+          "processing_time": 2.15120792388916,
+          "metadata": {
+            "model": "nova-2",
+            "language": "en-US",
+            "smart_format": true,
+            "punctuate": true,
+            "diarize": false,
+            "audio_file": "Audio/New Recording 2.m4a"
+          },
+          "metrics": {
+            "wer": 0.07142857142857142,
+            "cer": 0.13095238095238096,
+            "semantic_similarity": 0.8571428571428571,
+            "sema_score": 0.8928571428571428,
+            "word_accuracy": 0.9285714285714286,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 1
+          },
+          "error": null
+        },
+        "AssemblyAI": {
+          "transcript": "The weather is beautiful today. It's sunny with a temperature of 75 degrees.",
+          "confidence": 0.85,
+          "processing_time": 5.65700101852417,
+          "metadata": {
+            "language_detection": false,
+            "punctuate": true,
+            "format_text": true,
+            "speaker_labels": false,
+            "transcript_id": "9f8a6856-fe0e-4362-a59f-dc96f7cd879c",
+            "audio_file": "Audio/New Recording 2.m4a"
+          },
+          "metrics": {
+            "wer": 0.07142857142857142,
+            "cer": 0.13095238095238096,
+            "semantic_similarity": 0.8571428571428571,
+            "sema_score": 0.8928571428571428,
+            "word_accuracy": 0.9285714285714286,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 1
+          },
+          "error": null
+        },
+        "GroqWhisper": {
+          "transcript": " The weather is beautiful today. It's sunny with a temperature of 75 degrees.",
+          "confidence": 0.85,
+          "processing_time": 0.47118592262268066,
+          "metadata": {
+            "model": "whisper-large-v3-turbo",
+            "language": "en",
+            "response_format": "json",
+            "temperature": 0,
+            "audio_file": "Audio/New Recording 2.m4a"
+          },
+          "metrics": {
+            "wer": 0.07142857142857142,
+            "cer": 0.13095238095238096,
+            "semantic_similarity": 0.8571428571428571,
+            "sema_score": 0.8928571428571428,
+            "word_accuracy": 0.9285714285714286,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 1
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "clear_002",
+        "scenario_type": "clear_speech",
+        "description": "Weather description with numbers",
+        "expected_challenges": [
+          "number_transcription"
+        ],
+        "metadata": {
+          "speaker": "native_english",
+          "duration_seconds": 6
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 11.m4a",
+      "ground_truth": "I'm terribly sorry, but I can't find my lift key anywhere in my flat.",
+      "provider_results": {
+        "Soniox": {
+          "error": "400 Client Error: Bad Request for url: https://api.soniox.com/v1/transcriptions",
+          "transcript": "",
+          "metrics": null
+        },
+        "Deepgram": {
+          "transcript": "I'm terribly sorry, but I can't find my left key anywhere in my flat.",
+          "confidence": 0.9995105,
+          "processing_time": 2.64107084274292,
+          "metadata": {
+            "model": "nova-2",
+            "language": "en-US",
+            "smart_format": true,
+            "punctuate": true,
+            "diarize": false,
+            "audio_file": "Audio/New Recording 11.m4a"
+          },
+          "metrics": {
+            "wer": 0.06666666666666667,
+            "cer": 0.014492753623188406,
+            "semantic_similarity": 0.8571428571428571,
+            "sema_score": 0.8952380952380952,
+            "word_accuracy": 0.9333333333333333,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 1
+          },
+          "error": null
+        },
+        "AssemblyAI": {
+          "transcript": "I am terribly sorry, but I can't find my lift key anywhere in my flat.",
+          "confidence": 0.85,
+          "processing_time": 5.093418121337891,
+          "metadata": {
+            "language_detection": false,
+            "punctuate": true,
+            "format_text": true,
+            "speaker_labels": false,
+            "transcript_id": "101e750d-b08d-4beb-ad90-ca711af42dcc",
+            "audio_file": "Audio/New Recording 11.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        },
+        "GroqWhisper": {
+          "transcript": " I am terribly sorry but I can't find my lift key anywhere in my flat.",
+          "confidence": 0.85,
+          "processing_time": 0.4977250099182129,
+          "metadata": {
+            "model": "whisper-large-v3-turbo",
+            "language": "en",
+            "response_format": "json",
+            "temperature": 0,
+            "audio_file": "Audio/New Recording 11.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "accent_001",
+        "scenario_type": "accented_speech",
+        "description": "British English with regional vocabulary",
+        "expected_challenges": [
+          "accent_recognition",
+          "regional_vocabulary",
+          "pronunciation_variants"
+        ],
+        "metadata": {
+          "speaker": "british_english",
+          "duration_seconds": 4
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 12.m4a",
+      "ground_truth": "Please schedule the meeting for tomorrow morning and send the agenda to all participants.",
+      "provider_results": {
+        "Soniox": {
+          "error": "400 Client Error: Bad Request for url: https://api.soniox.com/v1/transcriptions",
+          "transcript": "",
+          "metrics": null
+        },
+        "Deepgram": {
+          "transcript": "Please schedule the meeting for tomorrow morning and send the agenda to all participants.",
+          "confidence": 0.9995436,
+          "processing_time": 2.047234058380127,
+          "metadata": {
+            "model": "nova-2",
+            "language": "en-US",
+            "smart_format": true,
+            "punctuate": true,
+            "diarize": false,
+            "audio_file": "Audio/New Recording 12.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        },
+        "AssemblyAI": {
+          "transcript": "Please schedule the meeting for tomorrow morning and send the agenda to all participants.",
+          "confidence": 0.85,
+          "processing_time": 4.800775051116943,
+          "metadata": {
+            "language_detection": false,
+            "punctuate": true,
+            "format_text": true,
+            "speaker_labels": false,
+            "transcript_id": "a839ae28-a42c-46ee-8a61-a40735ef067b",
+            "audio_file": "Audio/New Recording 12.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        },
+        "GroqWhisper": {
+          "transcript": " Please schedule the meeting for tomorrow morning and send the agenda to all participants.",
+          "confidence": 0.85,
+          "processing_time": 0.7054810523986816,
+          "metadata": {
+            "model": "whisper-large-v3-turbo",
+            "language": "en",
+            "response_format": "json",
+            "temperature": 0,
+            "audio_file": "Audio/New Recording 12.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "accent_002",
+        "scenario_type": "accented_speech",
+        "description": "Indian English accent",
+        "expected_challenges": [
+          "accent_recognition",
+          "pronunciation_patterns"
+        ],
+        "metadata": {
+          "speaker": "indian_english",
+          "duration_seconds": 5
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 17.m4a",
+      "ground_truth": "I'll have the grilled salmon with vegetables and a glass of white wine, please.",
+      "provider_results": {
+        "Soniox": {
+          "error": "400 Client Error: Bad Request for url: https://api.soniox.com/v1/transcriptions",
+          "transcript": "",
+          "metrics": null
+        },
+        "Deepgram": {
+          "transcript": "I'll have the grilled salmon with the vegetables and a glass of white wine, please.",
+          "confidence": 0.99694115,
+          "processing_time": 2.5890376567840576,
+          "metadata": {
+            "model": "nova-2",
+            "language": "en-US",
+            "smart_format": true,
+            "punctuate": true,
+            "diarize": false,
+            "audio_file": "Audio/New Recording 17.m4a"
+          },
+          "metrics": {
+            "wer": 0.06666666666666667,
+            "cer": 0.05063291139240506,
+            "semantic_similarity": 1.0,
+            "sema_score": 0.9666666666666667,
+            "word_accuracy": 0.9333333333333333,
+            "insertions": 1,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        },
+        "AssemblyAI": {
+          "transcript": "I'll have the grilled salmon with the vegetables and a glass of white wine, please.",
+          "confidence": 0.85,
+          "processing_time": 4.7685160636901855,
+          "metadata": {
+            "language_detection": false,
+            "punctuate": true,
+            "format_text": true,
+            "speaker_labels": false,
+            "transcript_id": "c2c62479-8d50-43f6-990a-fd5a92eb6ea2",
+            "audio_file": "Audio/New Recording 17.m4a"
+          },
+          "metrics": {
+            "wer": 0.06666666666666667,
+            "cer": 0.05063291139240506,
+            "semantic_similarity": 1.0,
+            "sema_score": 0.9666666666666667,
+            "word_accuracy": 0.9333333333333333,
+            "insertions": 1,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        },
+        "GroqWhisper": {
+          "transcript": " I'll have the grilled salmon with the vegetables and a glass of white wine please.",
+          "confidence": 0.85,
+          "processing_time": 0.4873042106628418,
+          "metadata": {
+            "model": "whisper-large-v3-turbo",
+            "language": "en",
+            "response_format": "json",
+            "temperature": 0,
+            "audio_file": "Audio/New Recording 17.m4a"
+          },
+          "metrics": {
+            "wer": 0.06666666666666667,
+            "cer": 0.05063291139240506,
+            "semantic_similarity": 1.0,
+            "sema_score": 0.9666666666666667,
+            "word_accuracy": 0.9333333333333333,
+            "insertions": 1,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "noisy_001",
+        "scenario_type": "noisy_background",
+        "description": "Restaurant order with background noise",
+        "expected_challenges": [
+          "background_noise",
+          "food_terminology",
+          "service_context"
+        ],
+        "metadata": {
+          "background": "restaurant_ambiance",
+          "noise_level": "moderate",
+          "duration_seconds": 5
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 3.m4a",
+      "ground_truth": "I need to configure the REST API endpoint with JSON authentication tokens.",
+      "provider_results": {
+        "Soniox": {
+          "error": "400 Client Error: Bad Request for url: https://api.soniox.com/v1/transcriptions",
+          "transcript": "",
+          "metrics": null
+        },
+        "Deepgram": {
+          "transcript": "I need to configure the REST API endpoint with JSON authentication tokens.",
+          "confidence": 0.99848574,
+          "processing_time": 2.884294033050537,
+          "metadata": {
+            "model": "nova-2",
+            "language": "en-US",
+            "smart_format": true,
+            "punctuate": true,
+            "diarize": false,
+            "audio_file": "Audio/New Recording 3.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        },
+        "AssemblyAI": {
+          "transcript": "I need to configure the rest API endpoint with JSON authentication tokens.",
+          "confidence": 0.85,
+          "processing_time": 4.7890520095825195,
+          "metadata": {
+            "language_detection": false,
+            "punctuate": true,
+            "format_text": true,
+            "speaker_labels": false,
+            "transcript_id": "ccfa27f8-ea27-42a8-a521-0da1ad6478d8",
+            "audio_file": "Audio/New Recording 3.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        },
+        "GroqWhisper": {
+          "transcript": " I need to configure the REST API endpoint with JSON authentication tokens.",
+          "confidence": 0.85,
+          "processing_time": 0.5726969242095947,
+          "metadata": {
+            "model": "whisper-large-v3-turbo",
+            "language": "en",
+            "response_format": "json",
+            "temperature": 0,
+            "audio_file": "Audio/New Recording 3.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "tech_001",
+        "scenario_type": "technical_terms",
+        "description": "Technical programming terminology",
+        "expected_challenges": [
+          "technical_acronyms",
+          "proper_case_sensitivity"
+        ],
+        "metadata": {
+          "speaker": "software_developer",
+          "duration_seconds": 5
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 4.m4a",
+      "ground_truth": "The patient has hypertension and requires antihypertensive medication.",
+      "provider_results": {
+        "Soniox": {
+          "error": "400 Client Error: Bad Request for url: https://api.soniox.com/v1/transcriptions",
+          "transcript": "",
+          "metrics": null
+        },
+        "Deepgram": {
+          "transcript": "The patient has hypertension and requires antihypertensive medication.",
+          "confidence": 0.9987219,
+          "processing_time": 2.55216908454895,
+          "metadata": {
+            "model": "nova-2",
+            "language": "en-US",
+            "smart_format": true,
+            "punctuate": true,
+            "diarize": false,
+            "audio_file": "Audio/New Recording 4.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        },
+        "AssemblyAI": {
+          "transcript": "The patient has hypertension and requires antihypertensive medication.",
+          "confidence": 0.85,
+          "processing_time": 4.809107065200806,
+          "metadata": {
+            "language_detection": false,
+            "punctuate": true,
+            "format_text": true,
+            "speaker_labels": false,
+            "transcript_id": "ea684456-54d8-45d0-842f-6de6c7c17da6",
+            "audio_file": "Audio/New Recording 4.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        },
+        "GroqWhisper": {
+          "transcript": " The patient has hypertension and requires antihypertensive medication.",
+          "confidence": 0.85,
+          "processing_time": 0.48017001152038574,
+          "metadata": {
+            "model": "whisper-large-v3-turbo",
+            "language": "en",
+            "response_format": "json",
+            "temperature": 0,
+            "audio_file": "Audio/New Recording 4.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "tech_002",
+        "scenario_type": "technical_terms",
+        "description": "Medical terminology",
+        "expected_challenges": [
+          "medical_terms",
+          "pronunciation_variants"
+        ],
+        "metadata": {
+          "speaker": "medical_professional",
+          "duration_seconds": 4
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 5.m4a",
+      "ground_truth": "Please call me at five five five, one two three, four five six seven.",
+      "provider_results": {
+        "Soniox": {
+          "error": "400 Client Error: Bad Request for url: https://api.soniox.com/v1/transcriptions",
+          "transcript": "",
+          "metrics": null
+        },
+        "Deepgram": {
+          "transcript": "Please call me at (555) 123-4567.",
+          "confidence": 0.9996094,
+          "processing_time": 3.4777121543884277,
+          "metadata": {
+            "model": "nova-2",
+            "language": "en-US",
+            "smart_format": true,
+            "punctuate": true,
+            "diarize": false,
+            "audio_file": "Audio/New Recording 5.m4a"
+          },
+          "metrics": {
+            "wer": 0.7142857142857143,
+            "cer": 0.7121212121212122,
+            "semantic_similarity": 0.3076923076923077,
+            "sema_score": 0.2967032967032967,
+            "word_accuracy": 0.2857142857142857,
+            "insertions": 0,
+            "deletions": 8,
+            "substitutions": 2
+          },
+          "error": null
+        },
+        "AssemblyAI": {
+          "transcript": "Please call me at 555-12-34567.",
+          "confidence": 0.85,
+          "processing_time": 4.704386949539185,
+          "metadata": {
+            "language_detection": false,
+            "punctuate": true,
+            "format_text": true,
+            "speaker_labels": false,
+            "transcript_id": "6dbfee79-599d-4451-ba1b-c19a27202d81",
+            "audio_file": "Audio/New Recording 5.m4a"
+          },
+          "metrics": {
+            "wer": 0.7142857142857143,
+            "cer": 0.7272727272727273,
+            "semantic_similarity": 0.3333333333333333,
+            "sema_score": 0.30952380952380953,
+            "word_accuracy": 0.2857142857142857,
+            "insertions": 0,
+            "deletions": 9,
+            "substitutions": 1
+          },
+          "error": null
+        },
+        "GroqWhisper": {
+          "transcript": " Please call me at 555-123-4567",
+          "confidence": 0.85,
+          "processing_time": 0.7120130062103271,
+          "metadata": {
+            "model": "whisper-large-v3-turbo",
+            "language": "en",
+            "response_format": "json",
+            "temperature": 0,
+            "audio_file": "Audio/New Recording 5.m4a"
+          },
+          "metrics": {
+            "wer": 0.7142857142857143,
+            "cer": 0.7272727272727273,
+            "semantic_similarity": 0.3333333333333333,
+            "sema_score": 0.30952380952380953,
+            "word_accuracy": 0.2857142857142857,
+            "insertions": 0,
+            "deletions": 9,
+            "substitutions": 1
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "numbers_001",
+        "scenario_type": "numbers_dates",
+        "description": "Phone number dictation",
+        "expected_challenges": [
+          "number_formatting",
+          "digit_vs_word_choice"
+        ],
+        "metadata": {
+          "speaker": "business_context",
+          "duration_seconds": 5
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 6.m4a",
+      "ground_truth": "I'd like to speak with Dr. Rajesh Patel or Ms. Chen Wei about the appointment.",
+      "provider_results": {
+        "Soniox": {
+          "error": "400 Client Error: Bad Request for url: https://api.soniox.com/v1/transcriptions",
+          "transcript": "",
+          "metrics": null
+        },
+        "Deepgram": {
+          "transcript": "I did like to speak with doctor Rajesh Patel or miss Chen Wee about the appointment.",
+          "confidence": 0.9971692,
+          "processing_time": 2.945742130279541,
+          "metadata": {
+            "model": "nova-2",
+            "language": "en-US",
+            "smart_format": true,
+            "punctuate": true,
+            "diarize": false,
+            "audio_file": "Audio/New Recording 6.m4a"
+          },
+          "metrics": {
+            "wer": 0.3333333333333333,
+            "cer": 0.13513513513513514,
+            "semantic_similarity": 0.55,
+            "sema_score": 0.6083333333333334,
+            "word_accuracy": 0.6666666666666667,
+            "insertions": 1,
+            "deletions": 0,
+            "substitutions": 4
+          },
+          "error": null
+        },
+        "AssemblyAI": {
+          "transcript": "I'd like to speak with Dr. Rajesh Patel or Ms. Chen Wei about the appointment.",
+          "confidence": 0.85,
+          "processing_time": 5.238301038742065,
+          "metadata": {
+            "language_detection": false,
+            "punctuate": true,
+            "format_text": true,
+            "speaker_labels": false,
+            "transcript_id": "80812f9f-a238-4f12-9cb2-d142332940d2",
+            "audio_file": "Audio/New Recording 6.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        },
+        "GroqWhisper": {
+          "transcript": " I did like to speak with Dr. Rajesh Patel or Ms. Chen V about the appointment.",
+          "confidence": 0.85,
+          "processing_time": 0.4894592761993408,
+          "metadata": {
+            "model": "whisper-large-v3-turbo",
+            "language": "en",
+            "response_format": "json",
+            "temperature": 0,
+            "audio_file": "Audio/New Recording 6.m4a"
+          },
+          "metrics": {
+            "wer": 0.2,
+            "cer": 0.08108108108108109,
+            "semantic_similarity": 0.7222222222222222,
+            "sema_score": 0.7611111111111111,
+            "word_accuracy": 0.8,
+            "insertions": 1,
+            "deletions": 0,
+            "substitutions": 2
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "names_001",
+        "scenario_type": "proper_names",
+        "description": "International names with titles",
+        "expected_challenges": [
+          "name_spelling",
+          "cultural_pronunciations",
+          "title_recognition"
+        ],
+        "metadata": {
+          "speaker": "receptionist",
+          "duration_seconds": 5
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 7.m4a",
+      "ground_truth": "The package needs to be delivered to New York City, specifically to Brooklyn Heights.",
+      "provider_results": {
+        "Soniox": {
+          "error": "400 Client Error: Bad Request for url: https://api.soniox.com/v1/transcriptions",
+          "transcript": "",
+          "metrics": null
+        },
+        "Deepgram": {
+          "transcript": "The package needs to be delivered to New York City, specifically to Brooklyn Heights.",
+          "confidence": 0.9993561,
+          "processing_time": 2.429088830947876,
+          "metadata": {
+            "model": "nova-2",
+            "language": "en-US",
+            "smart_format": true,
+            "punctuate": true,
+            "diarize": false,
+            "audio_file": "Audio/New Recording 7.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        },
+        "AssemblyAI": {
+          "transcript": "The package needs to be delivered to New York City, specifically to Brooklyn Heights.",
+          "confidence": 0.85,
+          "processing_time": 5.141960859298706,
+          "metadata": {
+            "language_detection": false,
+            "punctuate": true,
+            "format_text": true,
+            "speaker_labels": false,
+            "transcript_id": "1d18bfd9-fd59-4b9d-b715-1dfea381216f",
+            "audio_file": "Audio/New Recording 7.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        },
+        "GroqWhisper": {
+          "transcript": " The package needs to be delivered to New York City, specifically to Brooklyn Heights.",
+          "confidence": 0.85,
+          "processing_time": 0.4973890781402588,
+          "metadata": {
+            "model": "whisper-large-v3-turbo",
+            "language": "en",
+            "response_format": "json",
+            "temperature": 0,
+            "audio_file": "Audio/New Recording 7.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "names_002",
+        "scenario_type": "proper_names",
+        "description": "Geographic locations and places",
+        "expected_challenges": [
+          "place_name_accuracy",
+          "geographic_context"
+        ],
+        "metadata": {
+          "speaker": "logistics_coordinator",
+          "duration_seconds": 4
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 13.m4a",
+      "ground_truth": "Take the first left, then go straight for about two miles, and you'll see the building on your right after the traffic light.",
+      "provider_results": {
+        "Soniox": {
+          "error": "400 Client Error: Bad Request for url: https://api.soniox.com/v1/transcriptions",
+          "transcript": "",
+          "metrics": null
+        },
+        "Deepgram": {
+          "transcript": "Take the first left then go straight for about two miles and you will see the building on your right after the traffic light.",
+          "confidence": 0.99578804,
+          "processing_time": 3.5735490322113037,
+          "metadata": {
+            "model": "nova-2",
+            "language": "en-US",
+            "smart_format": true,
+            "punctuate": true,
+            "diarize": false,
+            "audio_file": "Audio/New Recording 13.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        },
+        "AssemblyAI": {
+          "transcript": "Take the first left, then go straight for about two miles and you will see the building on your right after the traffic light.",
+          "confidence": 0.85,
+          "processing_time": 4.807561874389648,
+          "metadata": {
+            "language_detection": false,
+            "punctuate": true,
+            "format_text": true,
+            "speaker_labels": false,
+            "transcript_id": "726b2e8e-775c-485d-88bc-e23a950010b8",
+            "audio_file": "Audio/New Recording 13.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        },
+        "GroqWhisper": {
+          "transcript": " Take the first left then go straight for about 2 miles and you will see the building on your right after the traffic light.",
+          "confidence": 0.85,
+          "processing_time": 0.8163840770721436,
+          "metadata": {
+            "model": "whisper-large-v3-turbo",
+            "language": "en",
+            "response_format": "json",
+            "temperature": 0,
+            "audio_file": "Audio/New Recording 13.m4a"
+          },
+          "metrics": {
+            "wer": 0.041666666666666664,
+            "cer": 0.024193548387096774,
+            "semantic_similarity": 0.9130434782608695,
+            "sema_score": 0.9356884057971014,
+            "word_accuracy": 0.9583333333333334,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 1
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "fast_001",
+        "scenario_type": "fast_speech",
+        "description": "Rapid directions with spatial terms",
+        "expected_challenges": [
+          "speech_rate",
+          "directional_terms",
+          "distance_measures"
+        ],
+        "metadata": {
+          "speaker": "local_resident",
+          "duration_seconds": 6,
+          "speech_rate": "fast"
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 14.m4a",
+      "ground_truth": "Speaker A: Let's discuss the quarterly results. Speaker B: The revenue increased by fifteen percent. Speaker A: That's excellent news.",
+      "provider_results": {
+        "Soniox": {
+          "error": "400 Client Error: Bad Request for url: https://api.soniox.com/v1/transcriptions",
+          "transcript": "",
+          "metrics": null
+        },
+        "Deepgram": {
+          "transcript": "Speaker a, let's discuss the quarterly results. Speaker b, the revenue increased by 15%. Speaker a, that's excellent news.",
+          "confidence": 0.99892116,
+          "processing_time": 4.291697025299072,
+          "metadata": {
+            "model": "nova-2",
+            "language": "en-US",
+            "smart_format": true,
+            "punctuate": true,
+            "diarize": false,
+            "audio_file": "Audio/New Recording 14.m4a"
+          },
+          "metrics": {
+            "wer": 0.1,
+            "cer": 0.11904761904761904,
+            "semantic_similarity": 0.8235294117647058,
+            "sema_score": 0.861764705882353,
+            "word_accuracy": 0.9,
+            "insertions": 0,
+            "deletions": 1,
+            "substitutions": 1
+          },
+          "error": null
+        },
+        "AssemblyAI": {
+          "transcript": "Speaker A let's discuss the quarterly results. Speaker B. The revenue increased by 15%. Speaker A. That's excellent news.",
+          "confidence": 0.85,
+          "processing_time": 5.723830223083496,
+          "metadata": {
+            "language_detection": false,
+            "punctuate": true,
+            "format_text": true,
+            "speaker_labels": false,
+            "transcript_id": "94108f46-47de-48df-98de-e331abafc2fa",
+            "audio_file": "Audio/New Recording 14.m4a"
+          },
+          "metrics": {
+            "wer": 0.1,
+            "cer": 0.11904761904761904,
+            "semantic_similarity": 0.8235294117647058,
+            "sema_score": 0.861764705882353,
+            "word_accuracy": 0.9,
+            "insertions": 0,
+            "deletions": 1,
+            "substitutions": 1
+          },
+          "error": null
+        },
+        "GroqWhisper": {
+          "transcript": " Speaker A. Let's discuss the quarterly results. Speaker B. The revenue increased by 15%. Speaker A. That's excellent news.",
+          "confidence": 0.85,
+          "processing_time": 0.8124289512634277,
+          "metadata": {
+            "model": "whisper-large-v3-turbo",
+            "language": "en",
+            "response_format": "json",
+            "temperature": 0,
+            "audio_file": "Audio/New Recording 14.m4a"
+          },
+          "metrics": {
+            "wer": 0.1,
+            "cer": 0.11904761904761904,
+            "semantic_similarity": 0.8235294117647058,
+            "sema_score": 0.861764705882353,
+            "word_accuracy": 0.9,
+            "insertions": 0,
+            "deletions": 1,
+            "substitutions": 1
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "multi_001",
+        "scenario_type": "multiple_speakers",
+        "description": "Two speakers in business meeting",
+        "expected_challenges": [
+          "speaker_diarization",
+          "context_switching",
+          "overlapping_speech"
+        ],
+        "metadata": {
+          "speakers": 2,
+          "context": "business_meeting",
+          "duration_seconds": 8
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 15.m4a",
+      "ground_truth": "Oh my goodness, this is absolutely incredible! I can't believe how amazing this experience has been!",
+      "provider_results": {
+        "Soniox": {
+          "error": "400 Client Error: Bad Request for url: https://api.soniox.com/v1/transcriptions",
+          "transcript": "",
+          "metrics": null
+        },
+        "Deepgram": {
+          "transcript": "Oh my goodness. This is absolutely incredible. I can't believe how amazing this experience has been.",
+          "confidence": 0.9996232,
+          "processing_time": 3.166328191757202,
+          "metadata": {
+            "model": "nova-2",
+            "language": "en-US",
+            "smart_format": true,
+            "punctuate": true,
+            "diarize": false,
+            "audio_file": "Audio/New Recording 15.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        },
+        "AssemblyAI": {
+          "transcript": "Oh, my goodness. This is absolutely incredible. I can't believe how amazing this experience has been.",
+          "confidence": 0.85,
+          "processing_time": 5.316672086715698,
+          "metadata": {
+            "language_detection": false,
+            "punctuate": true,
+            "format_text": true,
+            "speaker_labels": false,
+            "transcript_id": "139fe434-fa97-4950-ab2d-56e3c1a8d2a5",
+            "audio_file": "Audio/New Recording 15.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        },
+        "GroqWhisper": {
+          "transcript": " Oh my goodness, this is absolutely incredible. I can't believe how amazing this experience has been.",
+          "confidence": 0.85,
+          "processing_time": 0.4747638702392578,
+          "metadata": {
+            "model": "whisper-large-v3-turbo",
+            "language": "en",
+            "response_format": "json",
+            "temperature": 0,
+            "audio_file": "Audio/New Recording 15.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "emotion_001",
+        "scenario_type": "emotional_speech",
+        "description": "Excited, high-energy speech",
+        "expected_challenges": [
+          "emotional_prosody",
+          "exclamations",
+          "speech_dynamics"
+        ],
+        "metadata": {
+          "emotion": "excitement",
+          "energy_level": "high",
+          "duration_seconds": 5
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 16.m4a",
+      "ground_truth": "I'm really frustrated with this situation. This is the third time I've had to call about the same issue.",
+      "provider_results": {
+        "Soniox": {
+          "error": "400 Client Error: Bad Request for url: https://api.soniox.com/v1/transcriptions",
+          "transcript": "",
+          "metrics": null
+        },
+        "Deepgram": {
+          "transcript": "I'm really frustrated with the situation. This is the third time I have had to call about the same issue.",
+          "confidence": 0.99900824,
+          "processing_time": 2.3521888256073,
+          "metadata": {
+            "model": "nova-2",
+            "language": "en-US",
+            "smart_format": true,
+            "punctuate": true,
+            "diarize": false,
+            "audio_file": "Audio/New Recording 16.m4a"
+          },
+          "metrics": {
+            "wer": 0.047619047619047616,
+            "cer": 0.01904761904761905,
+            "semantic_similarity": 1.0,
+            "sema_score": 0.9761904761904762,
+            "word_accuracy": 0.9523809523809523,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 1
+          },
+          "error": null
+        },
+        "AssemblyAI": {
+          "transcript": "I'm really frustrated with this situation. This is the third time I have had to call about the same issue.",
+          "confidence": 0.85,
+          "processing_time": 5.315226793289185,
+          "metadata": {
+            "language_detection": false,
+            "punctuate": true,
+            "format_text": true,
+            "speaker_labels": false,
+            "transcript_id": "cd3eeb4f-bb9e-4ed7-a2b1-9a2050f59b6f",
+            "audio_file": "Audio/New Recording 16.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        },
+        "GroqWhisper": {
+          "transcript": " I am really frustrated with this situation. This is the third time I have had to call about the same issue.",
+          "confidence": 0.85,
+          "processing_time": 0.510767936706543,
+          "metadata": {
+            "model": "whisper-large-v3-turbo",
+            "language": "en",
+            "response_format": "json",
+            "temperature": 0,
+            "audio_file": "Audio/New Recording 16.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "emotion_002",
+        "scenario_type": "emotional_speech",
+        "description": "Frustrated, complaint speech",
+        "expected_challenges": [
+          "emotional_stress",
+          "complaint_context",
+          "repetition_emphasis"
+        ],
+        "metadata": {
+          "emotion": "frustration",
+          "context": "customer_service",
+          "duration_seconds": 6
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 8.m4a",
+      "ground_truth": "I'd like to make a reservation for two guests from December tenth to December twelfth.",
+      "provider_results": {
+        "Soniox": {
+          "error": "400 Client Error: Bad Request for url: https://api.soniox.com/v1/transcriptions",
+          "transcript": "",
+          "metrics": null
+        },
+        "Deepgram": {
+          "transcript": "I did like to make a reservation for two guests from December 10 to December 12.",
+          "confidence": 0.9990716,
+          "processing_time": 2.9576597213745117,
+          "metadata": {
+            "model": "nova-2",
+            "language": "en-US",
+            "smart_format": true,
+            "punctuate": true,
+            "diarize": false,
+            "audio_file": "Audio/New Recording 8.m4a"
+          },
+          "metrics": {
+            "wer": 0.26666666666666666,
+            "cer": 0.17857142857142858,
+            "semantic_similarity": 0.5882352941176471,
+            "sema_score": 0.6607843137254903,
+            "word_accuracy": 0.7333333333333334,
+            "insertions": 1,
+            "deletions": 0,
+            "substitutions": 3
+          },
+          "error": null
+        },
+        "AssemblyAI": {
+          "transcript": "I'd like to make a reservation for two guests from December 10 to December 12.",
+          "confidence": 0.85,
+          "processing_time": 4.809962034225464,
+          "metadata": {
+            "language_detection": false,
+            "punctuate": true,
+            "format_text": true,
+            "speaker_labels": false,
+            "transcript_id": "44a1f098-de2f-4209-a338-d043628e1380",
+            "audio_file": "Audio/New Recording 8.m4a"
+          },
+          "metrics": {
+            "wer": 0.13333333333333333,
+            "cer": 0.14285714285714285,
+            "semantic_similarity": 0.7333333333333333,
+            "sema_score": 0.8,
+            "word_accuracy": 0.8666666666666667,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 2
+          },
+          "error": null
+        },
+        "GroqWhisper": {
+          "transcript": " I did like to make a reservation for two guests from December 10th to December 12th.",
+          "confidence": 0.85,
+          "processing_time": 0.4987800121307373,
+          "metadata": {
+            "model": "whisper-large-v3-turbo",
+            "language": "en",
+            "response_format": "json",
+            "temperature": 0,
+            "audio_file": "Audio/New Recording 8.m4a"
+          },
+          "metrics": {
+            "wer": 0.26666666666666666,
+            "cer": 0.13095238095238096,
+            "semantic_similarity": 0.5882352941176471,
+            "sema_score": 0.6607843137254903,
+            "word_accuracy": 0.7333333333333334,
+            "insertions": 1,
+            "deletions": 0,
+            "substitutions": 3
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "hotel_001",
+        "scenario_type": "hotel_context",
+        "description": "Hotel reservation request",
+        "expected_challenges": [
+          "date_parsing",
+          "guest_count",
+          "hospitality_terminology"
+        ],
+        "metadata": {
+          "speaker": "hotel_guest",
+          "duration_seconds": 5
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 9.m4a",
+      "ground_truth": "Could you please send room service to room four twenty-seven? I'd like to order a Caesar salad and a bottle of Pinot Grigio.",
+      "provider_results": {
+        "Soniox": {
+          "error": "400 Client Error: Bad Request for url: https://api.soniox.com/v1/transcriptions",
+          "transcript": "",
+          "metrics": null
+        },
+        "Deepgram": {
+          "transcript": "Could you please send room service to Room 427? I did we like to order Caesar salad and a bottle of peanut Greek yo.",
+          "confidence": 0.99384946,
+          "processing_time": 2.860260009765625,
+          "metadata": {
+            "model": "nova-2",
+            "language": "en-US",
+            "smart_format": true,
+            "punctuate": true,
+            "diarize": false,
+            "audio_file": "Audio/New Recording 9.m4a"
+          },
+          "metrics": {
+            "wer": 0.34782608695652173,
+            "cer": 0.225,
+            "semantic_similarity": 0.5555555555555556,
+            "sema_score": 0.6038647342995169,
+            "word_accuracy": 0.6521739130434783,
+            "insertions": 2,
+            "deletions": 1,
+            "substitutions": 5
+          },
+          "error": null
+        },
+        "AssemblyAI": {
+          "transcript": "Could you please send room service to room 427? I did. We like to order Caesar salad and a bottle of peanut Griggio.",
+          "confidence": 0.85,
+          "processing_time": 5.217625141143799,
+          "metadata": {
+            "language_detection": false,
+            "punctuate": true,
+            "format_text": true,
+            "speaker_labels": false,
+            "transcript_id": "9772eac1-d7e9-4b73-9f0a-904b1617f31c",
+            "audio_file": "Audio/New Recording 9.m4a"
+          },
+          "metrics": {
+            "wer": 0.30434782608695654,
+            "cer": 0.19166666666666668,
+            "semantic_similarity": 0.5769230769230769,
+            "sema_score": 0.6362876254180602,
+            "word_accuracy": 0.6956521739130435,
+            "insertions": 1,
+            "deletions": 1,
+            "substitutions": 5
+          },
+          "error": null
+        },
+        "GroqWhisper": {
+          "transcript": " Could you please send room service to room 427? I did be like to order Caesar salad and a bottle of Pinot Greek Gyo.",
+          "confidence": 0.85,
+          "processing_time": 0.7128770351409912,
+          "metadata": {
+            "model": "whisper-large-v3-turbo",
+            "language": "en",
+            "response_format": "json",
+            "temperature": 0,
+            "audio_file": "Audio/New Recording 9.m4a"
+          },
+          "metrics": {
+            "wer": 0.30434782608695654,
+            "cer": 0.2,
+            "semantic_similarity": 0.6153846153846154,
+            "sema_score": 0.6555183946488294,
+            "word_accuracy": 0.6956521739130435,
+            "insertions": 2,
+            "deletions": 1,
+            "substitutions": 4
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "hotel_002",
+        "scenario_type": "hotel_context",
+        "description": "Room service order",
+        "expected_challenges": [
+          "room_number_format",
+          "food_items",
+          "wine_names"
+        ],
+        "metadata": {
+          "speaker": "hotel_guest",
+          "duration_seconds": 8
+        }
+      }
+    },
+    {
+      "audio_file": "Audio/New Recording 10.m4a",
+      "ground_truth": "Can the concierge help me book tickets for the Broadway show Hamilton tomorrow evening?",
+      "provider_results": {
+        "Soniox": {
+          "error": "400 Client Error: Bad Request for url: https://api.soniox.com/v1/transcriptions",
+          "transcript": "",
+          "metrics": null
+        },
+        "Deepgram": {
+          "transcript": "Can the concierge help me book tickets for the Broadway show, Hamilton, tomorrow evening?",
+          "confidence": 0.9970938,
+          "processing_time": 3.1636831760406494,
+          "metadata": {
+            "model": "nova-2",
+            "language": "en-US",
+            "smart_format": true,
+            "punctuate": true,
+            "diarize": false,
+            "audio_file": "Audio/New Recording 10.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        },
+        "AssemblyAI": {
+          "transcript": "Can the concierge help me book tickets for the Broadway show Hamilton tomorrow evening?",
+          "confidence": 0.85,
+          "processing_time": 4.912427186965942,
+          "metadata": {
+            "language_detection": false,
+            "punctuate": true,
+            "format_text": true,
+            "speaker_labels": false,
+            "transcript_id": "eb00ca3d-1e77-4c6e-ae43-b306d130b26d",
+            "audio_file": "Audio/New Recording 10.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        },
+        "GroqWhisper": {
+          "transcript": " Can the concierge help me book tickets for the Broadway show Hamilton tomorrow evening?",
+          "confidence": 0.85,
+          "processing_time": 0.482637882232666,
+          "metadata": {
+            "model": "whisper-large-v3-turbo",
+            "language": "en",
+            "response_format": "json",
+            "temperature": 0,
+            "audio_file": "Audio/New Recording 10.m4a"
+          },
+          "metrics": {
+            "wer": 0.0,
+            "cer": 0.0,
+            "semantic_similarity": 1.0,
+            "sema_score": 1.0,
+            "word_accuracy": 1.0,
+            "insertions": 0,
+            "deletions": 0,
+            "substitutions": 0
+          },
+          "error": null
+        }
+      },
+      "test_case": {
+        "case_id": "hotel_003",
+        "scenario_type": "hotel_context",
+        "description": "Concierge service request",
+        "expected_challenges": [
+          "service_terminology",
+          "proper_names",
+          "entertainment_context"
+        ],
+        "metadata": {
+          "speaker": "hotel_guest",
+          "duration_seconds": 6
+        }
+      }
+    }
+  ],
+  "comparison_report": {
+    "summary": {
+      "Soniox": {
+        "avg_processing_time": 0,
+        "avg_confidence": 0,
+        "error_rate": 1.0,
+        "success_rate": 0.0
+      },
+      "Deepgram": {
+        "mean_wer": 0.1184995737425405,
+        "median_wer": 0.047619047619047616,
+        "mean_cer": 0.09323535646417579,
+        "median_cer": 0.014492753623188406,
+        "mean_semantic_similarity": 0.8552528402009372,
+        "mean_sema_score": 0.8683766332291983,
+        "mean_word_accuracy": 0.8815004262574595,
+        "total_insertions": 5,
+        "total_deletions": 10,
+        "total_substitutions": 18,
+        "avg_processing_time": 2.845672986086677,
+        "avg_confidence": 0.9983566188235296,
+        "error_rate": 0.0,
+        "success_rate": 1.0
+      },
+      "AssemblyAI": {
+        "mean_wer": 0.08176835951772014,
+        "median_wer": 0.0,
+        "mean_cer": 0.08014290871699659,
+        "median_cer": 0.0,
+        "mean_semantic_similarity": 0.9014271772057239,
+        "mean_sema_score": 0.9098294088440019,
+        "mean_word_accuracy": 0.9182316404822799,
+        "total_insertions": 2,
+        "total_deletions": 11,
+        "total_substitutions": 10,
+        "avg_processing_time": 5.131946900311639,
+        "avg_confidence": 0.8499999999999998,
+        "error_rate": 0.0,
+        "success_rate": 1.0
+      },
+      "GroqWhisper": {
+        "mean_wer": 0.1038271830471319,
+        "median_wer": 0.0,
+        "mean_cer": 0.08612544994621713,
+        "median_cer": 0.0,
+        "mean_semantic_similarity": 0.8736994830721324,
+        "mean_sema_score": 0.8849361500125004,
+        "mean_word_accuracy": 0.8961728169528681,
+        "total_insertions": 5,
+        "total_deletions": 11,
+        "total_substitutions": 13,
+        "avg_processing_time": 0.588175142512602,
+        "avg_confidence": 0.8499999999999998,
+        "error_rate": 0.0,
+        "success_rate": 1.0
+      }
+    },
+    "total_test_cases": 17,
+    "providers_evaluated": [
+      "Soniox",
+      "Deepgram",
+      "AssemblyAI",
+      "GroqWhisper"
+    ]
+  }
+}

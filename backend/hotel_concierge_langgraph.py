@@ -36,8 +36,8 @@ from pipecat.frames.frames import TextFrame, LLMFullResponseStartFrame, LLMFullR
 # Import LangGraph agent
 from langgraph_agent import get_concierge_agent
 
-# Import transcript logger
-from transcript_logger import TranscriptLogger
+# Import session transcript logger
+from session_transcript_logger import SessionTranscriptLogger
 import uuid
 
 # Configure logging at the very beginning
@@ -51,6 +51,18 @@ from langsmith import traceable, Client
 
 # Import Daily room configuration
 from runner import configure
+
+# Add backend to sys.path
+project_root = Path(__file__).resolve().parents[0]
+sys.path.append(str(project_root))
+
+# Load environment variables
+dotenv_path = project_root / '.env'
+if dotenv_path.exists():
+    load_dotenv(dotenv_path=dotenv_path)
+    print(f"Loaded .env file from {dotenv_path}")
+else:
+    print(f"Warning: .env file not found at {dotenv_path}")
 
 os.environ["LANGSMITH_PROJECT"] = "voice-ai-concierge"
 
@@ -76,6 +88,12 @@ class LangGraphHandler:
         self.langsmith_client = Client(
             api_key=os.getenv("LANGSMITH_API_KEY"),
         )
+        self.session_logger = None
+        self.session_id = None
+
+    def set_session_logger(self, logger, session_id):
+        self.session_logger = logger
+        self.session_id = session_id
         
     @traceable(
         name="agent_initialization",
@@ -134,6 +152,17 @@ class LangGraphHandler:
                 logger.info(f"Generated response: {len(response)} chars")
                     
                 logger.info(f"LangGraph response: {response}")
+
+                # Log the full assistant response to the CSV
+                if self.session_logger:
+                    self.session_logger.log_message(
+                        role="assistant",
+                        content=response,
+                        session_id=self.session_id,
+                        room_number=self.get_room_number()
+                    )
+                    logger.debug(f"[CSV] assistant: {response}")
+
                 return response
             
             return "I'm here to help with your room service order. How can I assist you today?"
@@ -205,6 +234,17 @@ async def main():
                     )
                 )
 
+            # Event handlers to prevent the bot from hearing itself
+            @transport.event_handler("bot_started_speaking")
+            async def on_bot_started_speaking(transport):
+                logger.debug("Bot started speaking, pausing audio input.")
+                transport.input().pause(deep=False)
+
+            @transport.event_handler("bot_stopped_speaking")
+            async def on_bot_stopped_speaking(transport):
+                logger.debug("Bot stopped speaking, resuming audio input.")
+                transport.input().unpause()
+
             # Initialize STT service
             soniox_key = os.getenv("SONIOX_API_KEY")
             if soniox_key:
@@ -238,11 +278,14 @@ async def main():
             lang_handler = LangGraphHandler()
             await lang_handler.initialize_agent()
             
-            # Initialize transcript logging
+            # Initialize session-based transcript logging
             session_id = str(uuid.uuid4())
-            transcript_logger = TranscriptLogger()
+            session_logger = SessionTranscriptLogger()
+            session_logger.start_session(session_id)
+            lang_handler.set_session_logger(session_logger, session_id)
             transcript = TranscriptProcessor()
             logger.info(f"Session started with ID: {session_id}")
+            logger.info(f"Transcript logging to: {session_logger.get_filepath()}")
 
             # Custom LLM service that integrates with LangGraph
             class LangGraphLLMService(GroqLLMService):
@@ -252,9 +295,22 @@ async def main():
                     super().__init__(**kwargs)
                     self.lang_handler = lang_handler
                     self._pattern = re.compile(r"<think>.*?</think>\s*", re.DOTALL)
+                    self._emoji_pattern = re.compile(
+                        "["
+                        "\U0001F600-\U0001F64F"  # emoticons
+                        "\U0001F300-\U0001F5FF"  # symbols & pictographs
+                        "\U0001F680-\U0001F6FF"  # transport & map symbols
+                        "\U0001F1E0-\U0001F1FF"  # flags (iOS)
+                        "\U00002702-\U000027B0"
+                        "\U000024C2-\U0001F251"
+                        "]+",
+                        flags=re.UNICODE,
+                    )
 
                 def _clean_text(self, text: str) -> str:
-                    return self._pattern.sub(' ', text).strip()
+                    no_think = self._pattern.sub(' ', text).strip()
+                    no_emoji = self._emoji_pattern.sub('', no_think)
+                    return no_emoji.strip()
                 
                 async def _process_context(self, context):
                     """Override to use LangGraph agent instead of direct LLM calls"""
@@ -343,23 +399,24 @@ async def main():
             # Transcript event handler
             @transcript.event_handler("on_transcript_update")
             async def handle_transcript_update(processor, frame):
-                """Save transcripts to CSV log file"""
+                """Save transcripts to session CSV file"""
                 try:
                     for message in frame.messages:
-                        # Get room number from LangGraph state
-                        room_number = lang_handler.get_room_number()
-                        
-                        # Log to CSV
-                        await transcript_logger.alog_message(
-                            session_id=session_id,
-                            role=message.role,
-                            content=message.content,
-                            room_number=room_number,
-                            confidence_score=getattr(message, 'confidence', None),
-                            processing_time_ms=getattr(message, 'processing_time', None)
-                        )
-                        
-                        logger.debug(f"[Transcript] {message.role}: {message.content[:100]}...")
+                        if message.role == "user":
+                            # Get room number from LangGraph state
+                            room_number = lang_handler.get_room_number()
+                            
+                            # Log to session CSV file
+                            session_logger.log_message(
+                                role=message.role,
+                                content=message.content,
+                                session_id=session_id,
+                                room_number=room_number,
+                                confidence_score=getattr(message, 'confidence', None),
+                                processing_time_ms=getattr(message, 'processing_time', None)
+                            )
+                            
+                            logger.debug(f"[CSV] {message.role}: {message.content}")
                 except Exception as e:
                     logger.error(f"Failed to log transcript: {e}")
 
@@ -440,13 +497,10 @@ async def main():
         # Clean up
         logger.info("Cleaning up voice session")
         
-        # Close transcript logger
-        if 'transcript_logger' in locals():
-            transcript_logger.close()
-            
-            # Log session summary
-            transcripts = transcript_logger.get_session_transcripts(session_id)
-            logger.info(f"Session {session_id} completed with {len(transcripts)} messages")
+        # Close session transcript logger
+        if 'session_logger' in locals():
+            session_logger.end_session()
+            logger.info(f"Session {session_id} transcript saved to: {session_logger.get_filepath()}")
         
         logger.info("Voice session completed")
 

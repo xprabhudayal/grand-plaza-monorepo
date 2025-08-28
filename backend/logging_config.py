@@ -1,61 +1,49 @@
-
 import sys
 import logging
 from loguru import logger
 
 def configure_logging():
-    """
-    Configures Loguru to capture logs from the entire application,
-    including pipecat, langgraph, and RAG modules.
-    """
-    logger.remove()  # Remove default handler to avoid duplicate outputs
+    """Configures Loguru for concise and relevant logging."""
+    
+    # Define a filter to control what gets logged
+    def log_filter(record):
+        # Allow all logs from our application modules
+        if record["name"].startswith(("langgraph_agent", "rag_pipeline", "__main__", "hotel_concierge_langgraph")):
+            return True
+        
+        # Allow INFO and above from STT/TTS services
+        if "pipecat.services" in record["name"] and ("stt" in record["name"] or "tts" in record["name"]):
+            return record["level"].no >= logger.level("INFO").no
+            
+        # Suppress DEBUG logs from other libraries (like pipecat core, httpcore)
+        if record["level"].name == "DEBUG" and not record["name"].startswith(("langgraph_agent", "rag_pipeline", "__main__")):
+            return False
+            
+        # Allow INFO and above from everything else
+        return record["level"].no >= logger.level("INFO").no
 
-    # This format shows where the log is coming from, which is crucial for debugging.
-    log_format = (
-        "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | "
-        "<level>{level: <8}</level> | "
-        "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>"
-    )
-
-    # Configure console logger for real-time, colorized output
+    # Remove default handler and add a new one with the filter
+    logger.remove()
     logger.add(
         sys.stderr,
-        level="DEBUG",
-        format=log_format,
-        colorize=True,
-        backtrace=True,  # Show full stack trace on exceptions
-        diagnose=True    # Add exception variable values for debugging
+        level="DEBUG",  # Capture all levels, let the filter decide
+        filter=log_filter,
+        format="<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | <cyan>{name}:{line}</cyan> - <level>{message}</level>"
     )
 
-    # Configure file logger to save all logs for later inspection
-    logger.add(
-        "logs/app.log",
-        level="DEBUG",
-        format=log_format,
-        rotation="10 MB",    # Rotates the log file when it reaches 10 MB
-        retention="7 days",  # Keeps log files for 7 days
-        enqueue=True,        # Makes logging thread-safe and non-blocking
-        backtrace=True,
-        diagnose=True,
-        serialize=False      # Keep logs in human-readable format
-    )
-
-    # Intercept standard logging messages from other libraries (like pipecat)
+    # Intercept standard logging to route it through Loguru
     class InterceptHandler(logging.Handler):
         def emit(self, record):
             try:
                 level = logger.level(record.levelname).name
             except ValueError:
                 level = record.levelno
-
+            
             frame, depth = logging.currentframe(), 2
             while frame and frame.f_code.co_filename == logging.__file__:
                 frame = frame.f_back
                 depth += 1
-
+            
             logger.opt(depth=depth, exception=record.exc_info).log(level, record.getMessage())
 
-    # This forces other libraries to push their logs through our interceptor
     logging.basicConfig(handlers=[InterceptHandler()], level=0, force=True)
-    
-    logger.info("Logging configured successfully. All logs will be captured and saved to logs/app.log")
