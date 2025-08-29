@@ -160,16 +160,17 @@ class SemanticIntentClassifier:
         self.intent_vectorstore.persist()
         logger.info(f"Generated and stored {len(documents)} intent embeddings in ChromaDB")
     
-    def classify_intent(self, text: str, return_confidence: bool = True) -> Dict[str, Any]:
+    def classify_intent(self, text: str, return_confidence: bool = True, include_retrieval_metadata: bool = False) -> Dict[str, Any]:
         """
-        Classify intent using ChromaDB semantic similarity search
+        Classify intent using ChromaDB semantic similarity search with retrieval routing metadata
         
         Args:
             text: Input text to classify
             return_confidence: Whether to return confidence scores
+            include_retrieval_metadata: Whether to include retrieval strategy metadata
             
         Returns:
-            Dictionary with intent classification results
+            Dictionary with intent classification results and retrieval metadata
         """
         start_time = datetime.now()
         
@@ -231,6 +232,10 @@ class SemanticIntentClassifier:
             result = self._create_classification_result(
                 best_intent, confidence, confidence_level, intent_confidences if return_confidence else None
             )
+            
+            # Add retrieval metadata if requested
+            if include_retrieval_metadata:
+                result["retrieval_metadata"] = self._generate_retrieval_metadata(best_intent, confidence, confidence_level)
             
             logger.debug(f"Intent classified: '{best_intent}' (confidence: {confidence:.3f}) in {classification_time:.2f}ms")
             
@@ -360,142 +365,82 @@ class SemanticIntentClassifier:
         self._initialize_intent_vectorstore()
         
         logger.info("Intent classifier updated successfully with ChromaDB storage")
-        
-        if confidence >= thresholds["high_confidence"]:
-            return "high"
-        elif confidence >= thresholds["medium_confidence"]:
-            return "medium"
-        elif confidence >= thresholds["low_confidence"]:
-            return "low"
-        else:
-            return "very_low"
     
-    def _get_fallback_intent(self, similarities: Dict[str, float]) -> str:
-        """Get fallback intent based on priorities when confidence is very low"""
-        # Sort intents by priority (higher = more important)
-        sorted_by_priority = sorted(
-            similarities.items(),
-            key=lambda x: (self.intent_priorities.get(x[0], 0), x[1]),
-            reverse=True
-        )
+    def _generate_retrieval_metadata(self, intent: str, confidence: float, confidence_level: str) -> Dict[str, Any]:
+        """Generate retrieval strategy metadata based on intent classification"""
         
-        return sorted_by_priority[0][0]
-    
-    def _create_classification_result(self, 
-                                    intent: str, 
-                                    confidence: float, 
-                                    confidence_level: str,
-                                    all_similarities: Optional[Dict[str, float]] = None) -> Dict[str, Any]:
-        """Create standardized classification result"""
-        result = {
-            "intent": intent,
-            "confidence": confidence,
-            "confidence_level": confidence_level,
-            "priority": self.intent_priorities.get(intent, 1),
-            "timestamp": datetime.now().isoformat()
+        # Intent-specific retrieval strategies
+        retrieval_strategies = {
+            "menu_inquiry": {
+                "chunk_size": 200,  # Precise, small chunks for factual lookup
+                "retrieval_strategy": "factual_lookup",
+                "rerank_weight": 0.8,
+                "context_window": "small"
+            },
+            "price_inquiry": {
+                "chunk_size": 150,  # Very precise for price information
+                "retrieval_strategy": "factual_lookup", 
+                "rerank_weight": 0.9,
+                "context_window": "small"
+            },
+            "ingredient_inquiry": {
+                "chunk_size": 180,  # Small chunks for ingredient details
+                "retrieval_strategy": "factual_lookup",
+                "rerank_weight": 0.85,
+                "context_window": "small"
+            },
+            "order_placement": {
+                "chunk_size": 250,  # Larger context for order understanding
+                "retrieval_strategy": "procedural",
+                "rerank_weight": 0.7,
+                "context_window": "medium"
+            },
+            "order_modification": {
+                "chunk_size": 300,  # Sequential chunk ordering for procedures
+                "retrieval_strategy": "procedural",
+                "rerank_weight": 0.75,
+                "context_window": "medium"
+            },
+            "dietary_inquiry": {
+                "chunk_size": 400,  # Larger context for comparative analysis
+                "retrieval_strategy": "comparative_analysis",
+                "rerank_weight": 0.6,
+                "context_window": "large"
+            },
+            "general_assistance": {
+                "chunk_size": 350,  # Hierarchical retrieval for conceptual explanations
+                "retrieval_strategy": "conceptual_explanation",
+                "rerank_weight": 0.5,
+                "context_window": "large"
+            }
         }
         
-        if all_similarities:
-            # Add top 3 alternative intents
-            sorted_similarities = sorted(all_similarities.items(), key=lambda x: x[1], reverse=True)
-            result["alternatives"] = [
-                {"intent": intent, "confidence": conf} 
-                for intent, conf in sorted_similarities[1:4]  # Skip the top one (already selected)
-            ]
+        # Get strategy for this intent or use default
+        strategy = retrieval_strategies.get(intent, retrieval_strategies["general_assistance"])
         
-        return result
-    
-    def batch_classify(self, texts: List[str]) -> List[Dict[str, Any]]:
-        """Classify multiple texts efficiently"""
-        if not texts:
-            return []
+        # Adjust strategy based on confidence level
+        confidence_adjustments = {
+            "high": {"rerank_weight": strategy["rerank_weight"] * 1.0, "approach": "specialized"},
+            "medium": {"rerank_weight": strategy["rerank_weight"] * 0.9, "approach": "hybrid"},
+            "low": {"rerank_weight": strategy["rerank_weight"] * 0.7, "approach": "hybrid"},
+            "very_low": {"rerank_weight": 0.3, "approach": "multi_strategy"},
+            "fallback": {"rerank_weight": 0.2, "approach": "multi_strategy"}
+        }
         
-        start_time = datetime.now()
-        
-        try:
-            # Generate embeddings for all texts at once (more efficient)
-            text_embeddings = self.model.encode([text.strip() for text in texts])
-            
-            results = []
-            for i, text in enumerate(texts):
-                if not text.strip():
-                    results.append(self._create_classification_result("general_assistance", 0.5, "empty_input"))
-                    continue
-                
-                text_embedding = text_embeddings[i]
-                
-                # Calculate similarities
-                similarities = {}
-                for intent, intent_embedding in self.intent_embeddings.items():
-                    similarity = cosine_similarity(
-                        text_embedding.reshape(1, -1),
-                        intent_embedding.reshape(1, -1)
-                    )[0][0]
-                    similarities[intent] = similarity
-                
-                # Get best match
-                best_intent = max(similarities, key=similarities.get)
-                confidence = similarities[best_intent]
-                confidence_level = self._get_confidence_level(confidence)
-                
-                if confidence_level == "very_low":
-                    best_intent = self._get_fallback_intent(similarities)
-                    confidence_level = "fallback"
-                
-                results.append(self._create_classification_result(best_intent, confidence, confidence_level))
-            
-            batch_time = (datetime.now() - start_time).total_seconds() * 1000
-            logger.info(f"Batch classified {len(texts)} texts in {batch_time:.2f}ms ({batch_time/len(texts):.2f}ms per text)")
-            
-            return results
-            
-        except Exception as e:
-            logger.error(f"Error in batch classification: {e}")
-            return [self._create_classification_result("general_assistance", 0.0, "error") for _ in texts]
-    
-    def get_intent_info(self, intent: str) -> Dict[str, Any]:
-        """Get information about a specific intent"""
-        if intent not in self.intent_examples:
-            return {"error": "Intent not found"}
+        adjustment = confidence_adjustments.get(confidence_level, confidence_adjustments["medium"])
         
         return {
             "intent": intent,
-            "description": self.intent_descriptions.get(intent, ""),
-            "priority": self.intent_priorities.get(intent, 1),
-            "example_count": len(self.intent_examples[intent]),
-            "examples": self.intent_examples[intent][:5]  # Show first 5 examples
+            "confidence": confidence,
+            "confidence_level": confidence_level,
+            "retrieval_approach": adjustment["approach"],
+            "chunk_size": strategy["chunk_size"],
+            "retrieval_strategy": strategy["retrieval_strategy"],
+            "rerank_weight": adjustment["rerank_weight"],
+            "context_window": strategy["context_window"],
+            "supports_expansion": confidence > 0.6,  # Enable query expansion for confident classifications
+            "supports_step_back": intent in ["dietary_inquiry", "general_assistance"] and confidence > 0.5
         }
-    
-    def get_statistics(self) -> Dict[str, Any]:
-        """Get classification statistics"""
-        stats = self.classification_stats.copy()
-        
-        total = stats["total_classifications"]
-        if total > 0:
-            stats["high_confidence_rate"] = stats["high_confidence_count"] / total
-            stats["medium_confidence_rate"] = stats["medium_confidence_count"] / total
-            stats["low_confidence_rate"] = stats["low_confidence_count"] / total
-            stats["fallback_rate"] = stats["fallback_count"] / total
-        
-        stats["total_intents"] = len(self.intent_embeddings)
-        stats["model_name"] = self.model_name
-        
-        return stats
-    
-    def update_training_data(self):
-        """Reload training data and regenerate embeddings"""
-        logger.info("Updating intent classifier with new training data...")
-        
-        # Reload training data
-        self.intent_examples = get_intent_examples()
-        self.intent_descriptions = get_intent_descriptions()
-        self.intent_priorities = get_intent_priorities()
-        
-        # Regenerate embeddings
-        self._generate_intent_embeddings()
-        self._cache_embeddings()
-        
-        logger.info("Intent classifier updated successfully")
 
 
 # Global classifier instance

@@ -1,0 +1,3094 @@
+[
+  {
+    "query": "what vegetarian options do you have",
+    "intent_result": {
+      "intent": "order_modification",
+      "confidence": 0.6424411607368851,
+      "confidence_level": "low",
+      "priority": 4,
+      "timestamp": "2025-08-28T22:45:45.855794",
+      "alternatives": [
+        {
+          "intent": "menu_inquiry",
+          "confidence": 0.6406717562515538
+        },
+        {
+          "intent": "order_placement",
+          "confidence": 0.6164096746231369
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "order_modification",
+        "confidence": 0.6424411607368851,
+        "confidence_level": "low",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 300,
+        "retrieval_strategy": "procedural",
+        "rerank_weight": 0.5249999999999999,
+        "context_window": "medium",
+        "supports_expansion": "True",
+        "supports_step_back": false
+      }
+    },
+    "expansion_result": {
+      "original_query": "what vegetarian options do you have",
+      "expanded_terms": [
+        "chicken",
+        "soup"
+      ],
+      "reformulated_queries": [
+        "what vegetarian options do you have",
+        "\"Do you offer any plant-based or vegan food choices?\"",
+        "\"What are my options for vegetarian meals?\"",
+        "\"Can you list the vegetarian dishes available?\""
+      ],
+      "step_back_query": null,
+      "expansion_strategy": "hybrid",
+      "confidence_score": 0.7
+    },
+    "retrieval_results": [
+      {
+        "content": "Category: Healthy Meals\n            Item: Buddha Bowl\n            Description: A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            Type: Veg\n            Calories: 520\n            Price: $13.50\n            \n            This Buddha Bowl is a veg item from our healthy meals menu.\n            A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            It contains 520 calories and costs $13.50.",
+        "metadata": {
+          "category": "Healthy Meals",
+          "price": "$13.50",
+          "item_name": "Buddha Bowl",
+          "source": "menu_csv",
+          "type": "Veg",
+          "calories": 520
+        },
+        "relevance_score": 0.3225691214203834,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Healthy Meals\n            Item: Chicken & Veggie Skewers\n            Description: Marinated chicken and mixed vegetable skewers, grilled and served with a yogurt dip.\n            Type: Non-Veg\n            Calories: 480\n            Price: $15.00\n            \n            This Chicken & Veggie Skewers is a non-veg item from our healthy meals menu.\n            Marinated chicken and mixed vegetable skewers, grilled and served with a yogurt dip.\n            It contains 480 calories and costs $15.00.",
+        "metadata": {
+          "item_name": "Chicken & Veggie Skewers",
+          "calories": 480,
+          "category": "Healthy Meals",
+          "type": "Non-Veg",
+          "price": "$15.00",
+          "source": "menu_csv"
+        },
+        "relevance_score": 0.3229908496141433,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Hotdogs\n            Item: Veggie Dog\n            Description: Plant-based sausage in a whole wheat bun with your choice of toppings.\n            Type: Veg\n            Calories: 400\n            Price: $9.00\n            \n            This Veggie Dog is a veg item from our hotdogs menu.\n            Plant-based sausage in a whole wheat bun with your choice of toppings.\n            It contains 400 calories and costs $9.00.",
+        "metadata": {
+          "category": "Hotdogs",
+          "type": "Veg",
+          "price": "$9.00",
+          "item_name": "Veggie Dog",
+          "calories": 400,
+          "source": "menu_csv"
+        },
+        "relevance_score": 0.3269775688648223,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Step-by-step information:\n\nStep 1: Category: Healthy Meals\n            Item: Buddha Bowl\n            Description: A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            Type: Veg\n            Calories: 520\n            Price: $13.50\n            \n            This Buddha Bowl is a veg item from our healthy meals menu.\n            A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            It contains 520 calories and costs $13.50.\n\nStep 2: Category: Healthy Meals\n            Item: Chicken & Veggie Skewers\n            Description: Marinated chicken and mixed vegetable skewers, grilled and served with a yogurt dip.\n            Type: Non-Veg\n            Calories: 480\n            Price: $15.00\n            \n            This Chicken & Veggie Skewers is a non-veg item from our healthy meals menu.\n            Marinated chicken and mixed vegetable skewers, grilled and served with a yogurt dip.\n            It contains 480 calories and costs $15.00.\n\nStep 3: Category: Hotdogs\n            Item: Veggie Dog\n            Description: Plant-based sausage in a whole wheat bun with your choice of toppings.\n            Type: Veg\n            Calories: 400\n            Price: $9.00\n            \n            This Veggie Dog is a veg item from our hotdogs menu.\n            Plant-based sausage in a whole wheat bun with your choice of toppings.\n            It contains 400 calories and costs $9.00.",
+    "response_time_ms": 8812.524795532227,
+    "retrieval_strategy": "procedural",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "show me the pizza menu",
+    "intent_result": {
+      "intent": "menu_inquiry",
+      "confidence": 0.6551868828644717,
+      "confidence_level": "medium",
+      "priority": 2,
+      "timestamp": "2025-08-28T22:45:54.505587",
+      "alternatives": [
+        {
+          "intent": "order_modification",
+          "confidence": 0.6242424873828514
+        },
+        {
+          "intent": "order_placement",
+          "confidence": 0.6220670968917901
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "menu_inquiry",
+        "confidence": 0.6551868828644717,
+        "confidence_level": "medium",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 200,
+        "retrieval_strategy": "factual_lookup",
+        "rerank_weight": 0.7200000000000001,
+        "context_window": "small",
+        "supports_expansion": "True",
+        "supports_step_back": false
+      }
+    },
+    "expansion_result": {
+      "original_query": "show me the pizza menu",
+      "expanded_terms": [
+        "chicken",
+        "pizza"
+      ],
+      "reformulated_queries": [
+        "show me the pizza menu",
+        "What chicken options are available?",
+        "\"what types of pizza are available?\"",
+        "Tell me about chicken on the menu",
+        "\"can you display the pizza options on the menu?\"",
+        "What pizza options are available?"
+      ],
+      "step_back_query": null,
+      "expansion_strategy": "hybrid",
+      "confidence_score": 0.7
+    },
+    "retrieval_results": [
+      {
+        "content": "Category: Pizzas\n            Item: Pepperoni\n            Description: A crowd-pleaser with generous layers of spicy pepperoni and mozzarella cheese.\n            Type: Non-Veg\n            Calories: 950\n            Price: $14.00\n            \n            This Pepperoni is a non-veg item from our pizzas menu.\n            A crowd-pleaser with generous layers of spicy pepperoni and mozzarella cheese.\n            It contains 950 calories and costs $14.00.",
+        "metadata": {
+          "source": "menu_csv",
+          "category": "Pizzas",
+          "item_name": "Pepperoni",
+          "type": "Non-Veg",
+          "price": "$14.00",
+          "calories": 950
+        },
+        "relevance_score": 0.4420943498611451,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Pizzas\n            Item: Veggie Supreme\n            Description: Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            Type: Veg\n            Calories: 810\n            Price: $13.50\n            \n            This Veggie Supreme is a veg item from our pizzas menu.\n            Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            It contains 810 calories and costs $13.50.",
+        "metadata": {
+          "price": "$13.50",
+          "item_name": "Veggie Supreme",
+          "category": "Pizzas",
+          "calories": 810,
+          "source": "menu_csv",
+          "type": "Veg"
+        },
+        "relevance_score": 0.448322868347168,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Pizzas\n            Item: Margherita\n            Description: Classic pizza with fresh mozzarella, tomato sauce, and basil on a thin crust.\n            Type: Veg\n            Calories: 720\n            Price: $12.50\n            \n            This Margherita is a veg item from our pizzas menu.\n            Classic pizza with fresh mozzarella, tomato sauce, and basil on a thin crust.\n            It contains 720 calories and costs $12.50.",
+        "metadata": {
+          "item_name": "Margherita",
+          "type": "Veg",
+          "source": "menu_csv",
+          "category": "Pizzas",
+          "calories": 720,
+          "price": "$12.50"
+        },
+        "relevance_score": 0.465682339668274,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Relevant menu information:\n\n1. Category: Pizzas\n            Item: Pepperoni\n            Description: A crowd-pleaser with generous layers of spicy pepperoni and mozzarella cheese.\n            Type: Non-Veg\n            Calories: 950\n\n2. Category: Pizzas\n            Item: Veggie Supreme\n            Description: Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            Type: Veg\n            Calories: 810\n \n\n3. Category: Pizzas\n            Item: Margherita\n            Description: Classic pizza with fresh mozzarella, tomato sauce, and basil on a thin crust.\n            Type: Veg\n            Calories: 720",
+    "response_time_ms": 7788.157939910889,
+    "retrieval_strategy": "factual_lookup",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "what salads are available",
+    "intent_result": {
+      "intent": "order_placement",
+      "confidence": 0.6424538303284315,
+      "confidence_level": "low",
+      "priority": 3,
+      "timestamp": "2025-08-28T22:46:02.287564",
+      "alternatives": [
+        {
+          "intent": "menu_inquiry",
+          "confidence": 0.6381055555022336
+        },
+        {
+          "intent": "order_modification",
+          "confidence": 0.6370726310407773
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "order_placement",
+        "confidence": 0.6424538303284315,
+        "confidence_level": "low",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 250,
+        "retrieval_strategy": "procedural",
+        "rerank_weight": 0.48999999999999994,
+        "context_window": "medium",
+        "supports_expansion": "True",
+        "supports_step_back": false
+      }
+    },
+    "expansion_result": {
+      "original_query": "what salads are available",
+      "expanded_terms": [
+        "salad",
+        "sandwich"
+      ],
+      "reformulated_queries": [
+        "\"Can you list the available salads on the menu?\"",
+        "\"What types of salads are served here?\"",
+        "\"Which salad options do you offer?\"",
+        "what salads are available"
+      ],
+      "step_back_query": null,
+      "expansion_strategy": "hybrid",
+      "confidence_score": 0.7
+    },
+    "retrieval_results": [
+      {
+        "content": "Category: Healthy Meals\n            Item: Quinoa Salad\n            Description: A vibrant salad with quinoa, chickpeas, cucumber, tomatoes, and a lemon-tahini dressing.\n            Type: Veg\n            Calories: 450\n            Price: $12.50\n            \n            This Quinoa Salad is a veg item from our healthy meals menu.\n            A vibrant salad with quinoa, chickpeas, cucumber, tomatoes, and a lemon-tahini dressing.\n            It contains 450 calories and costs $12.50.",
+        "metadata": {
+          "calories": 450,
+          "item_name": "Quinoa Salad",
+          "category": "Healthy Meals",
+          "price": "$12.50",
+          "source": "menu_csv",
+          "type": "Veg"
+        },
+        "relevance_score": 0.2979930645227432,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Healthy Meals\n            Item: Grilled Salmon\n            Description: Grilled salmon fillet served with a side of steamed asparagus and brown rice.\n            Type: Non-Veg\n            Calories: 550\n            Price: $18.00\n            \n            This Grilled Salmon is a non-veg item from our healthy meals menu.\n            Grilled salmon fillet served with a side of steamed asparagus and brown rice.\n            It contains 550 calories and costs $18.00.",
+        "metadata": {
+          "source": "menu_csv",
+          "category": "Healthy Meals",
+          "calories": 550,
+          "type": "Non-Veg",
+          "item_name": "Grilled Salmon",
+          "price": "$18.00"
+        },
+        "relevance_score": 0.3200275933742523,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Healthy Meals\n            Item: Buddha Bowl\n            Description: A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            Type: Veg\n            Calories: 520\n            Price: $13.50\n            \n            This Buddha Bowl is a veg item from our healthy meals menu.\n            A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            It contains 520 calories and costs $13.50.",
+        "metadata": {
+          "type": "Veg",
+          "calories": 520,
+          "source": "menu_csv",
+          "category": "Healthy Meals",
+          "item_name": "Buddha Bowl",
+          "price": "$13.50"
+        },
+        "relevance_score": 0.33192669749259945,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Step-by-step information:\n\nStep 1: Category: Healthy Meals\n            Item: Quinoa Salad\n            Description: A vibrant salad with quinoa, chickpeas, cucumber, tomatoes, and a lemon-tahini dressing.\n            Type: Veg\n            Calories: 450\n            Price: $12.50\n            \n            This Quinoa Salad is a veg item from our healthy meals menu.\n            A vibrant salad with quinoa, chickpeas, cucumber, tomatoes, and a lemon-tahini dressing.\n            It contains 450 calories and costs $12.50.\n\nStep 2: Category: Healthy Meals\n            Item: Grilled Salmon\n            Description: Grilled salmon fillet served with a side of steamed asparagus and brown rice.\n            Type: Non-Veg\n            Calories: 550\n            Price: $18.00\n            \n            This Grilled Salmon is a non-veg item from our healthy meals menu.\n            Grilled salmon fillet served with a side of steamed asparagus and brown rice.\n            It contains 550 calories and costs $18.00.\n\nStep 3: Category: Healthy Meals\n            Item: Buddha Bowl\n            Description: A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            Type: Veg\n            Calories: 520\n            Price: $13.50\n            \n            This Buddha Bowl is a veg item from our healthy meals menu.\n            A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            It contains 520 calories and costs $13.50.",
+    "response_time_ms": 7670.759916305542,
+    "retrieval_strategy": "procedural",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "tell me about your breakfast options",
+    "intent_result": {
+      "intent": "order_placement",
+      "confidence": 0.6114814301855159,
+      "confidence_level": "low",
+      "priority": 3,
+      "timestamp": "2025-08-28T22:46:09.760543",
+      "alternatives": [
+        {
+          "intent": "menu_inquiry",
+          "confidence": 0.5971140420112337
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "order_placement",
+        "confidence": 0.6114814301855159,
+        "confidence_level": "low",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 250,
+        "retrieval_strategy": "procedural",
+        "rerank_weight": 0.48999999999999994,
+        "context_window": "medium",
+        "supports_expansion": "True",
+        "supports_step_back": false
+      }
+    },
+    "expansion_result": {
+      "original_query": "tell me about your breakfast options",
+      "expanded_terms": [
+        "beef"
+      ],
+      "reformulated_queries": [
+        "tell me about your breakfast options",
+        "Can you describe your morning meal options?",
+        "What are the available breakfast items on your menu?",
+        "What breakfast choices do you offer?"
+      ],
+      "step_back_query": null,
+      "expansion_strategy": "hybrid",
+      "confidence_score": 0.7
+    },
+    "retrieval_results": [
+      {
+        "content": "Category: Healthy Meals\n            Item: Buddha Bowl\n            Description: A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            Type: Veg\n            Calories: 520\n            Price: $13.50\n            \n            This Buddha Bowl is a veg item from our healthy meals menu.\n            A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            It contains 520 calories and costs $13.50.",
+        "metadata": {
+          "category": "Healthy Meals",
+          "item_name": "Buddha Bowl",
+          "price": "$13.50",
+          "calories": 520,
+          "type": "Veg",
+          "source": "menu_csv"
+        },
+        "relevance_score": 0.3956738340854644,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Beverages\n            Item: Green Smoothie\n            Description: A healthy mix of spinach, banana, mango, and almond milk.\n            Type: Veg\n            Calories: 280\n            Price: $6.00\n            \n            This Green Smoothie is a veg item from our beverages menu.\n            A healthy mix of spinach, banana, mango, and almond milk.\n            It contains 280 calories and costs $6.00.",
+        "metadata": {
+          "category": "Beverages",
+          "type": "Veg",
+          "price": "$6.00",
+          "source": "menu_csv",
+          "calories": 280,
+          "item_name": "Green Smoothie"
+        },
+        "relevance_score": 0.3979656505584716,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Beverages\n            Item: Iced Mocha\n            Description: A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            Type: Veg\n            Calories: 350\n            Price: $5.50\n            \n            This Iced Mocha is a veg item from our beverages menu.\n            A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            It contains 350 calories and costs $5.50.",
+        "metadata": {
+          "source": "menu_csv",
+          "price": "$5.50",
+          "category": "Beverages",
+          "type": "Veg",
+          "item_name": "Iced Mocha",
+          "calories": 350
+        },
+        "relevance_score": 0.4017899787425994,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Healthy Meals\n            Item: Lentil Soup\n            Description: A hearty and nutritious soup made with red lentils, carrots, celery, and spices.\n            Type: Veg\n            Calories: 350\n            Price: $9.00\n            \n            This Lentil Soup is a veg item from our healthy meals menu.\n            A hearty and nutritious soup made with red lentils, carrots, celery, and spices.\n            It contains 350 calories and costs $9.00.",
+        "metadata": {
+          "item_name": "Lentil Soup",
+          "category": "Healthy Meals",
+          "calories": 350,
+          "source": "menu_csv",
+          "price": "$9.00",
+          "type": "Veg"
+        },
+        "relevance_score": 0.26834370017051695,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Healthy Meals\n            Item: Grilled Salmon\n            Description: Grilled salmon fillet served with a side of steamed asparagus and brown rice.\n            Type: Non-Veg\n            Calories: 550\n            Price: $18.00\n            \n            This Grilled Salmon is a non-veg item from our healthy meals menu.\n            Grilled salmon fillet served with a side of steamed asparagus and brown rice.\n            It contains 550 calories and costs $18.00.",
+        "metadata": {
+          "calories": 550,
+          "price": "$18.00",
+          "source": "menu_csv",
+          "category": "Healthy Meals",
+          "type": "Non-Veg",
+          "item_name": "Grilled Salmon"
+        },
+        "relevance_score": 0.2695305848121643,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Step-by-step information:\n\nStep 1: Category: Healthy Meals\n            Item: Buddha Bowl\n            Description: A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            Type: Veg\n            Calories: 520\n            Price: $13.50\n            \n            This Buddha Bowl is a veg item from our healthy meals menu.\n            A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            It contains 520 calories and costs $13.50.\n\nStep 2: Category: Beverages\n            Item: Green Smoothie\n            Description: A healthy mix of spinach, banana, mango, and almond milk.\n            Type: Veg\n            Calories: 280\n            Price: $6.00\n            \n            This Green Smoothie is a veg item from our beverages menu.\n            A healthy mix of spinach, banana, mango, and almond milk.\n            It contains 280 calories and costs $6.00.\n\nStep 3: Category: Beverages\n            Item: Iced Mocha\n            Description: A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            Type: Veg\n            Calories: 350\n            Price: $5.50\n            \n            This Iced Mocha is a veg item from our beverages menu.\n            A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            It contains 350 calories and costs $5.50.\n\nStep 4: Category: Hotdogs\n            Item: The Classic\n            Description: All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            Type: Non-Veg\n            Calories: 450\n            Price: $8.00\n            \n            This The Classic is a non-veg item from our hotdogs menu.\n            All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            It contains 450 calories and costs $8.00.",
+    "response_time_ms": 8093.416213989258,
+    "retrieval_strategy": "procedural",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "what beverages do you offer",
+    "intent_result": {
+      "intent": "menu_inquiry",
+      "confidence": 0.625123685620886,
+      "confidence_level": "low",
+      "priority": 2,
+      "timestamp": "2025-08-28T22:46:17.953788",
+      "alternatives": [
+        {
+          "intent": "order_placement",
+          "confidence": 0.6087962883321106
+        },
+        {
+          "intent": "general_assistance",
+          "confidence": 0.604501777793167
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "menu_inquiry",
+        "confidence": 0.625123685620886,
+        "confidence_level": "low",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 200,
+        "retrieval_strategy": "factual_lookup",
+        "rerank_weight": 0.5599999999999999,
+        "context_window": "small",
+        "supports_expansion": "True",
+        "supports_step_back": false
+      }
+    },
+    "expansion_result": {
+      "original_query": "what beverages do you offer",
+      "expanded_terms": [],
+      "reformulated_queries": [
+        "Do you have a selection of beverages on your menu?",
+        "what beverages do you offer",
+        "What drinks are available at your hotel?",
+        "Can you share the list of beverages served here?"
+      ],
+      "step_back_query": null,
+      "expansion_strategy": "hybrid",
+      "confidence_score": 0.7
+    },
+    "retrieval_results": [
+      {
+        "content": "Category: Beverages\n            Item: Sparkling Water\n            Description: Chilled carbonated mineral water with a slice of lime.\n            Type: Veg\n            Calories: 0\n            Price: $3.00\n            \n            This Sparkling Water is a veg item from our beverages menu.\n            Chilled carbonated mineral water with a slice of lime.\n            It contains 0 calories and costs $3.00.",
+        "metadata": {
+          "price": "$3.00",
+          "source": "menu_csv",
+          "calories": 0,
+          "type": "Veg",
+          "item_name": "Sparkling Water",
+          "category": "Beverages"
+        },
+        "relevance_score": 0.30973983287811274,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Beverages\n            Item: Classic Lemonade\n            Description: Freshly squeezed lemon juice, sweetened to perfection. Served chilled.\n            Type: Veg\n            Calories: 150\n            Price: $4.00\n            \n            This Classic Lemonade is a veg item from our beverages menu.\n            Freshly squeezed lemon juice, sweetened to perfection. Served chilled.\n            It contains 150 calories and costs $4.00.",
+        "metadata": {
+          "category": "Beverages",
+          "source": "menu_csv",
+          "calories": 150,
+          "item_name": "Classic Lemonade",
+          "type": "Veg",
+          "price": "$4.00"
+        },
+        "relevance_score": 0.34252980232238767,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Beverages\n            Item: Green Smoothie\n            Description: A healthy mix of spinach, banana, mango, and almond milk.\n            Type: Veg\n            Calories: 280\n            Price: $6.00\n            \n            This Green Smoothie is a veg item from our beverages menu.\n            A healthy mix of spinach, banana, mango, and almond milk.\n            It contains 280 calories and costs $6.00.",
+        "metadata": {
+          "item_name": "Green Smoothie",
+          "price": "$6.00",
+          "category": "Beverages",
+          "calories": 280,
+          "source": "menu_csv",
+          "type": "Veg"
+        },
+        "relevance_score": 0.3444524431228637,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Beverages\n            Item: Iced Mocha\n            Description: A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            Type: Veg\n            Calories: 350\n            Price: $5.50\n            \n            This Iced Mocha is a veg item from our beverages menu.\n            A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            It contains 350 calories and costs $5.50.",
+        "metadata": {
+          "category": "Beverages",
+          "item_name": "Iced Mocha",
+          "source": "menu_csv",
+          "price": "$5.50",
+          "calories": 350,
+          "type": "Veg"
+        },
+        "relevance_score": 0.30170877456665035,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Relevant menu information:\n\n1. Category: Beverages\n            Item: Sparkling Water\n            Description: Chilled carbonated mineral water with a slice of lime.\n            Type: Veg\n            Calories: 0\n            Price: $\n\n2. Category: Beverages\n            Item: Classic Lemonade\n            Description: Freshly squeezed lemon juice, sweetened to perfection. Served chilled.\n            Type: Veg\n            Calories: 150\n \n\n3. Category: Beverages\n            Item: Green Smoothie\n            Description: A healthy mix of spinach, banana, mango, and almond milk.\n            Type: Veg\n            Calories: 280\n            Pric",
+    "response_time_ms": 39201.7867565155,
+    "retrieval_strategy": "factual_lookup",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "how much does the pizza cost",
+    "intent_result": {
+      "intent": "menu_inquiry",
+      "confidence": 0.6463782352451221,
+      "confidence_level": "low",
+      "priority": 2,
+      "timestamp": "2025-08-28T22:46:57.638743",
+      "alternatives": [
+        {
+          "intent": "order_modification",
+          "confidence": 0.6255488635479577
+        },
+        {
+          "intent": "order_placement",
+          "confidence": 0.6207952466513633
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "menu_inquiry",
+        "confidence": 0.6463782352451221,
+        "confidence_level": "low",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 200,
+        "retrieval_strategy": "factual_lookup",
+        "rerank_weight": 0.5599999999999999,
+        "context_window": "small",
+        "supports_expansion": "True",
+        "supports_step_back": false
+      }
+    },
+    "expansion_result": {
+      "original_query": "how much does the pizza cost",
+      "expanded_terms": [
+        "chicken",
+        "pizza"
+      ],
+      "reformulated_queries": [
+        "How much does a slice of pizza cost?",
+        "how much does the pizza cost",
+        "What chicken options are available?",
+        "Can you tell me the cost of the pizza options available?",
+        "Tell me about chicken on the menu",
+        "What is the price of a pizza on the menu?"
+      ],
+      "step_back_query": null,
+      "expansion_strategy": "hybrid",
+      "confidence_score": 0.7
+    },
+    "retrieval_results": [
+      {
+        "content": "Category: Pizzas\n            Item: Veggie Supreme\n            Description: Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            Type: Veg\n            Calories: 810\n            Price: $13.50\n            \n            This Veggie Supreme is a veg item from our pizzas menu.\n            Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            It contains 810 calories and costs $13.50.",
+        "metadata": {
+          "calories": 810,
+          "item_name": "Veggie Supreme",
+          "price": "$13.50",
+          "source": "menu_csv",
+          "category": "Pizzas",
+          "type": "Veg"
+        },
+        "relevance_score": 0.28234641551971434,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Pizzas\n            Item: Pepperoni\n            Description: A crowd-pleaser with generous layers of spicy pepperoni and mozzarella cheese.\n            Type: Non-Veg\n            Calories: 950\n            Price: $14.00\n            \n            This Pepperoni is a non-veg item from our pizzas menu.\n            A crowd-pleaser with generous layers of spicy pepperoni and mozzarella cheese.\n            It contains 950 calories and costs $14.00.",
+        "metadata": {
+          "price": "$14.00",
+          "source": "menu_csv",
+          "category": "Pizzas",
+          "type": "Non-Veg",
+          "item_name": "Pepperoni",
+          "calories": 950
+        },
+        "relevance_score": 0.28966550827026366,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Pizzas\n            Item: Margherita\n            Description: Classic pizza with fresh mozzarella, tomato sauce, and basil on a thin crust.\n            Type: Veg\n            Calories: 720\n            Price: $12.50\n            \n            This Margherita is a veg item from our pizzas menu.\n            Classic pizza with fresh mozzarella, tomato sauce, and basil on a thin crust.\n            It contains 720 calories and costs $12.50.",
+        "metadata": {
+          "item_name": "Margherita",
+          "calories": 720,
+          "source": "menu_csv",
+          "price": "$12.50",
+          "type": "Veg",
+          "category": "Pizzas"
+        },
+        "relevance_score": 0.2927120733261108,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Relevant menu information:\n\n1. Category: Pizzas\n            Item: Veggie Supreme\n            Description: Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            Type: Veg\n            Calories: 810\n \n\n2. Category: Pizzas\n            Item: Pepperoni\n            Description: A crowd-pleaser with generous layers of spicy pepperoni and mozzarella cheese.\n            Type: Non-Veg\n            Calories: 950\n\n3. Category: Pizzas\n            Item: Margherita\n            Description: Classic pizza with fresh mozzarella, tomato sauce, and basil on a thin crust.\n            Type: Veg\n            Calories: 720",
+    "response_time_ms": 8515.000104904175,
+    "retrieval_strategy": "factual_lookup",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "what's the price of the burger",
+    "intent_result": {
+      "intent": "order_modification",
+      "confidence": 0.6199133085844158,
+      "confidence_level": "low",
+      "priority": 4,
+      "timestamp": "2025-08-28T22:47:05.774633",
+      "alternatives": [
+        {
+          "intent": "menu_inquiry",
+          "confidence": 0.6038064807019015
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "order_modification",
+        "confidence": 0.6199133085844158,
+        "confidence_level": "low",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 300,
+        "retrieval_strategy": "procedural",
+        "rerank_weight": 0.5249999999999999,
+        "context_window": "medium",
+        "supports_expansion": "True",
+        "supports_step_back": false
+      }
+    },
+    "expansion_result": {
+      "original_query": "what's the price of the burger",
+      "expanded_terms": [
+        "sandwich",
+        "beef",
+        "salad"
+      ],
+      "reformulated_queries": [
+        "what's the price of the burger",
+        "\"Can you tell me the price of the burger on the menu?\"",
+        "\"How much does the burger cost?\"",
+        "\"What is the current price for a burger?\""
+      ],
+      "step_back_query": null,
+      "expansion_strategy": "hybrid",
+      "confidence_score": 0.7
+    },
+    "retrieval_results": [
+      {
+        "content": "Category: Hotdogs\n            Item: The Classic\n            Description: All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            Type: Non-Veg\n            Calories: 450\n            Price: $8.00\n            \n            This The Classic is a non-veg item from our hotdogs menu.\n            All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            It contains 450 calories and costs $8.00.",
+        "metadata": {
+          "price": "$8.00",
+          "type": "Non-Veg",
+          "calories": 450,
+          "item_name": "The Classic",
+          "category": "Hotdogs",
+          "source": "menu_csv"
+        },
+        "relevance_score": 0.3500523626804351,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Sandwiches\n            Item: Philly Cheesesteak\n            Description: Thinly sliced steak, melted provolone cheese, and grilled onions in a hoagie roll.\n            Type: Non-Veg\n            Calories: 990\n            Price: $14.50\n            \n            This Philly Cheesesteak is a non-veg item from our sandwiches menu.\n            Thinly sliced steak, melted provolone cheese, and grilled onions in a hoagie roll.\n            It contains 990 calories and costs $14.50.",
+        "metadata": {
+          "type": "Non-Veg",
+          "price": "$14.50",
+          "item_name": "Philly Cheesesteak",
+          "calories": 990,
+          "source": "menu_csv",
+          "category": "Sandwiches"
+        },
+        "relevance_score": 0.3663750305771827,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Hotdogs\n            Item: Chicago Dog\n            Description: All-beef hotdog with yellow mustard, chopped onions, relish, tomato slices, and a pickle.\n            Type: Non-Veg\n            Calories: 550\n            Price: $9.50\n            \n            This Chicago Dog is a non-veg item from our hotdogs menu.\n            All-beef hotdog with yellow mustard, chopped onions, relish, tomato slices, and a pickle.\n            It contains 550 calories and costs $9.50.",
+        "metadata": {
+          "calories": 550,
+          "price": "$9.50",
+          "type": "Non-Veg",
+          "source": "menu_csv",
+          "item_name": "Chicago Dog",
+          "category": "Hotdogs"
+        },
+        "relevance_score": 0.37128468900918954,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Step-by-step information:\n\nStep 1: Category: Hotdogs\n            Item: The Classic\n            Description: All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            Type: Non-Veg\n            Calories: 450\n            Price: $8.00\n            \n            This The Classic is a non-veg item from our hotdogs menu.\n            All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            It contains 450 calories and costs $8.00.\n\nStep 2: Category: Sandwiches\n            Item: Philly Cheesesteak\n            Description: Thinly sliced steak, melted provolone cheese, and grilled onions in a hoagie roll.\n            Type: Non-Veg\n            Calories: 990\n            Price: $14.50\n            \n            This Philly Cheesesteak is a non-veg item from our sandwiches menu.\n            Thinly sliced steak, melted provolone cheese, and grilled onions in a hoagie roll.\n            It contains 990 calories and costs $14.50.\n\nStep 3: Category: Hotdogs\n            Item: Chicago Dog\n            Description: All-beef hotdog with yellow mustard, chopped onions, relish, tomato slices, and a pickle.\n            Type: Non-Veg\n            Calories: 550\n            Price: $9.50\n            \n            This Chicago Dog is a non-veg item from our hotdogs menu.\n            All-beef hotdog with yellow mustard, chopped onions, relish, tomato slices, and a pickle.\n            It contains 550 calories and costs $9.50.\n\nStep 4: Category: Beverages\n            Item: Iced Mocha\n            Description: A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            Type: Veg\n            Calories: 350\n            Price: $5.50\n            \n            This Iced Mocha is a veg item from our beverages menu.\n            A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            It contains 350 calories and costs $5.50.",
+    "response_time_ms": 37788.68508338928,
+    "retrieval_strategy": "procedural",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "how expensive is the wine",
+    "intent_result": {
+      "intent": "menu_inquiry",
+      "confidence": 0.5670643373052476,
+      "confidence_level": "low",
+      "priority": 2,
+      "timestamp": "2025-08-28T22:47:43.556799",
+      "alternatives": [
+        {
+          "intent": "order_confirmation",
+          "confidence": 0.5423483022627832
+        },
+        {
+          "intent": "order_placement",
+          "confidence": 0.5349719072416509
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "menu_inquiry",
+        "confidence": 0.5670643373052476,
+        "confidence_level": "low",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 200,
+        "retrieval_strategy": "factual_lookup",
+        "rerank_weight": 0.5599999999999999,
+        "context_window": "small",
+        "supports_expansion": "False",
+        "supports_step_back": false
+      }
+    },
+    "expansion_result": null,
+    "retrieval_results": [
+      {
+        "content": "Category: Beverages\n            Item: Sparkling Water\n            Description: Chilled carbonated mineral water with a slice of lime.\n            Type: Veg\n            Calories: 0\n            Price: $3.00\n            \n            This Sparkling Water is a veg item from our beverages menu.\n            Chilled carbonated mineral water with a slice of lime.\n            It contains 0 calories and costs $3.00.",
+        "metadata": {
+          "calories": 0,
+          "source": "menu_csv",
+          "type": "Veg",
+          "category": "Beverages",
+          "price": "$3.00",
+          "item_name": "Sparkling Water"
+        },
+        "relevance_score": 0.4379387283325195,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Beverages\n            Item: Iced Mocha\n            Description: A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            Type: Veg\n            Calories: 350\n            Price: $5.50\n            \n            This Iced Mocha is a veg item from our beverages menu.\n            A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            It contains 350 calories and costs $5.50.",
+        "metadata": {
+          "category": "Beverages",
+          "item_name": "Iced Mocha",
+          "price": "$5.50",
+          "calories": 350,
+          "type": "Veg",
+          "source": "menu_csv"
+        },
+        "relevance_score": 0.44617306232452386,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Beverages\n            Item: Classic Lemonade\n            Description: Freshly squeezed lemon juice, sweetened to perfection. Served chilled.\n            Type: Veg\n            Calories: 150\n            Price: $4.00\n            \n            This Classic Lemonade is a veg item from our beverages menu.\n            Freshly squeezed lemon juice, sweetened to perfection. Served chilled.\n            It contains 150 calories and costs $4.00.",
+        "metadata": {
+          "item_name": "Classic Lemonade",
+          "source": "menu_csv",
+          "calories": 150,
+          "price": "$4.00",
+          "category": "Beverages",
+          "type": "Veg"
+        },
+        "relevance_score": 0.44762095928192136,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Relevant menu information:\n\n1. Category: Beverages\n            Item: Sparkling Water\n            Description: Chilled carbonated mineral water with a slice of lime.\n            Type: Veg\n            Calories: 0\n            Price: $\n\n2. Category: Beverages\n            Item: Iced Mocha\n            Description: A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            Type: Veg\n            Calorie\n\n3. Category: Beverages\n            Item: Classic Lemonade\n            Description: Freshly squeezed lemon juice, sweetened to perfection. Served chilled.\n            Type: Veg\n            Calories: 150",
+    "response_time_ms": 1696.4681148529053,
+    "retrieval_strategy": "factual_lookup",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "what does the salad cost",
+    "intent_result": {
+      "intent": "order_modification",
+      "confidence": 0.6167654672251661,
+      "confidence_level": "low",
+      "priority": 4,
+      "timestamp": "2025-08-28T22:47:45.095558",
+      "alternatives": [
+        {
+          "intent": "order_placement",
+          "confidence": 0.6042364072869029
+        },
+        {
+          "intent": "menu_inquiry",
+          "confidence": 0.5875934456778796
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "order_modification",
+        "confidence": 0.6167654672251661,
+        "confidence_level": "low",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 300,
+        "retrieval_strategy": "procedural",
+        "rerank_weight": 0.5249999999999999,
+        "context_window": "medium",
+        "supports_expansion": "True",
+        "supports_step_back": false
+      }
+    },
+    "expansion_result": {
+      "original_query": "what does the salad cost",
+      "expanded_terms": [
+        "salad",
+        "sandwich"
+      ],
+      "reformulated_queries": [
+        "Could you tell me the cost of the salad?",
+        "How much does the salad cost?",
+        "what does the salad cost",
+        "What is the price of the salad on the menu?"
+      ],
+      "step_back_query": null,
+      "expansion_strategy": "hybrid",
+      "confidence_score": 0.7
+    },
+    "retrieval_results": [
+      {
+        "content": "Category: Healthy Meals\n            Item: Quinoa Salad\n            Description: A vibrant salad with quinoa, chickpeas, cucumber, tomatoes, and a lemon-tahini dressing.\n            Type: Veg\n            Calories: 450\n            Price: $12.50\n            \n            This Quinoa Salad is a veg item from our healthy meals menu.\n            A vibrant salad with quinoa, chickpeas, cucumber, tomatoes, and a lemon-tahini dressing.\n            It contains 450 calories and costs $12.50.",
+        "metadata": {
+          "item_name": "Quinoa Salad",
+          "source": "menu_csv",
+          "category": "Healthy Meals",
+          "type": "Veg",
+          "calories": 450,
+          "price": "$12.50"
+        },
+        "relevance_score": 0.31468655616044994,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Healthy Meals\n            Item: Grilled Salmon\n            Description: Grilled salmon fillet served with a side of steamed asparagus and brown rice.\n            Type: Non-Veg\n            Calories: 550\n            Price: $18.00\n            \n            This Grilled Salmon is a non-veg item from our healthy meals menu.\n            Grilled salmon fillet served with a side of steamed asparagus and brown rice.\n            It contains 550 calories and costs $18.00.",
+        "metadata": {
+          "price": "$18.00",
+          "calories": 550,
+          "source": "menu_csv",
+          "item_name": "Grilled Salmon",
+          "type": "Non-Veg",
+          "category": "Healthy Meals"
+        },
+        "relevance_score": 0.35166448652744287,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Healthy Meals\n            Item: Buddha Bowl\n            Description: A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            Type: Veg\n            Calories: 520\n            Price: $13.50\n            \n            This Buddha Bowl is a veg item from our healthy meals menu.\n            A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            It contains 520 calories and costs $13.50.",
+        "metadata": {
+          "type": "Veg",
+          "calories": 520,
+          "item_name": "Buddha Bowl",
+          "price": "$13.50",
+          "category": "Healthy Meals",
+          "source": "menu_csv"
+        },
+        "relevance_score": 0.36839279830455773,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Sandwiches\n            Item: Tuna Melt\n            Description: Classic sandwich with tuna salad and melted cheddar cheese on toasted rye bread.\n            Type: Non-Veg\n            Calories: 750\n            Price: $12.50\n            \n            This Tuna Melt is a non-veg item from our sandwiches menu.\n            Classic sandwich with tuna salad and melted cheddar cheese on toasted rye bread.\n            It contains 750 calories and costs $12.50.",
+        "metadata": {
+          "type": "Non-Veg",
+          "item_name": "Tuna Melt",
+          "source": "menu_csv",
+          "category": "Sandwiches",
+          "price": "$12.50",
+          "calories": 750
+        },
+        "relevance_score": 0.25168339312076565,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Step-by-step information:\n\nStep 1: Category: Healthy Meals\n            Item: Quinoa Salad\n            Description: A vibrant salad with quinoa, chickpeas, cucumber, tomatoes, and a lemon-tahini dressing.\n            Type: Veg\n            Calories: 450\n            Price: $12.50\n            \n            This Quinoa Salad is a veg item from our healthy meals menu.\n            A vibrant salad with quinoa, chickpeas, cucumber, tomatoes, and a lemon-tahini dressing.\n            It contains 450 calories and costs $12.50.\n\nStep 2: Category: Healthy Meals\n            Item: Grilled Salmon\n            Description: Grilled salmon fillet served with a side of steamed asparagus and brown rice.\n            Type: Non-Veg\n            Calories: 550\n            Price: $18.00\n            \n            This Grilled Salmon is a non-veg item from our healthy meals menu.\n            Grilled salmon fillet served with a side of steamed asparagus and brown rice.\n            It contains 550 calories and costs $18.00.\n\nStep 3: Category: Healthy Meals\n            Item: Buddha Bowl\n            Description: A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            Type: Veg\n            Calories: 520\n            Price: $13.50\n            \n            This Buddha Bowl is a veg item from our healthy meals menu.\n            A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            It contains 520 calories and costs $13.50.",
+    "response_time_ms": 8237.188816070557,
+    "retrieval_strategy": "procedural",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "pricing for appetizers",
+    "intent_result": {
+      "intent": "menu_inquiry",
+      "confidence": 0.6246444922874618,
+      "confidence_level": "low",
+      "priority": 2,
+      "timestamp": "2025-08-28T22:47:53.596508",
+      "alternatives": [],
+      "retrieval_metadata": {
+        "intent": "menu_inquiry",
+        "confidence": 0.6246444922874618,
+        "confidence_level": "low",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 200,
+        "retrieval_strategy": "factual_lookup",
+        "rerank_weight": 0.5599999999999999,
+        "context_window": "small",
+        "supports_expansion": "True",
+        "supports_step_back": false
+      }
+    },
+    "expansion_result": {
+      "original_query": "pricing for appetizers",
+      "expanded_terms": [
+        "chicken"
+      ],
+      "reformulated_queries": [
+        "What are the prices for starters?",
+        "How much do the appetizers cost?",
+        "What chicken options are available?",
+        "Tell me about chicken on the menu",
+        "Show me chicken dishes",
+        "pricing for appetizers"
+      ],
+      "step_back_query": null,
+      "expansion_strategy": "hybrid",
+      "confidence_score": 0.7
+    },
+    "retrieval_results": [
+      {
+        "content": "Category: Pizzas\n            Item: Pepperoni\n            Description: A crowd-pleaser with generous layers of spicy pepperoni and mozzarella cheese.\n            Type: Non-Veg\n            Calories: 950\n            Price: $14.00\n            \n            This Pepperoni is a non-veg item from our pizzas menu.\n            A crowd-pleaser with generous layers of spicy pepperoni and mozzarella cheese.\n            It contains 950 calories and costs $14.00.",
+        "metadata": {
+          "calories": 950,
+          "item_name": "Pepperoni",
+          "type": "Non-Veg",
+          "source": "menu_csv",
+          "price": "$14.00",
+          "category": "Pizzas"
+        },
+        "relevance_score": 0.35744329452514645,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Pizzas\n            Item: Veggie Supreme\n            Description: Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            Type: Veg\n            Calories: 810\n            Price: $13.50\n            \n            This Veggie Supreme is a veg item from our pizzas menu.\n            Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            It contains 810 calories and costs $13.50.",
+        "metadata": {
+          "type": "Veg",
+          "calories": 810,
+          "item_name": "Veggie Supreme",
+          "category": "Pizzas",
+          "price": "$13.50",
+          "source": "menu_csv"
+        },
+        "relevance_score": 0.3654360008239746,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Healthy Meals\n            Item: Chicken & Veggie Skewers\n            Description: Marinated chicken and mixed vegetable skewers, grilled and served with a yogurt dip.\n            Type: Non-Veg\n            Calories: 480\n            Price: $15.00\n            \n            This Chicken & Veggie Skewers is a non-veg item from our healthy meals menu.\n            Marinated chicken and mixed vegetable skewers, grilled and served with a yogurt dip.\n            It contains 480 calories and costs $15.00.",
+        "metadata": {
+          "category": "Healthy Meals",
+          "item_name": "Chicken & Veggie Skewers",
+          "price": "$15.00",
+          "calories": 480,
+          "type": "Non-Veg",
+          "source": "menu_csv"
+        },
+        "relevance_score": 0.3670476531982422,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Beverages\n            Item: Iced Mocha\n            Description: A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            Type: Veg\n            Calories: 350\n            Price: $5.50\n            \n            This Iced Mocha is a veg item from our beverages menu.\n            A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            It contains 350 calories and costs $5.50.",
+        "metadata": {
+          "type": "Veg",
+          "calories": 350,
+          "source": "menu_csv",
+          "item_name": "Iced Mocha",
+          "category": "Beverages",
+          "price": "$5.50"
+        },
+        "relevance_score": 0.3519699716567993,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Pizzas\n            Item: Margherita\n            Description: Classic pizza with fresh mozzarella, tomato sauce, and basil on a thin crust.\n            Type: Veg\n            Calories: 720\n            Price: $12.50\n            \n            This Margherita is a veg item from our pizzas menu.\n            Classic pizza with fresh mozzarella, tomato sauce, and basil on a thin crust.\n            It contains 720 calories and costs $12.50.",
+        "metadata": {
+          "item_name": "Margherita",
+          "source": "menu_csv",
+          "calories": 720,
+          "category": "Pizzas",
+          "price": "$12.50",
+          "type": "Veg"
+        },
+        "relevance_score": 0.3271584558486938,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Relevant menu information:\n\n1. Category: Pizzas\n            Item: Pepperoni\n            Description: A crowd-pleaser with generous layers of spicy pepperoni and mozzarella cheese.\n            Type: Non-Veg\n            Calories: 950\n\n2. Category: Pizzas\n            Item: Veggie Supreme\n            Description: Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            Type: Veg\n            Calories: 810\n \n\n3. Category: Healthy Meals\n            Item: Chicken & Veggie Skewers\n            Description: Marinated chicken and mixed vegetable skewers, grilled and served with a yogurt dip.\n            Type: Non-V\n\n4. Category: Beverages\n            Item: Iced Mocha\n            Description: A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            Type: Veg\n            Calorie\n\n5. Category: Pizzas\n            Item: Margherita\n            Description: Classic pizza with fresh mozzarella, tomato sauce, and basil on a thin crust.\n            Type: Veg\n            Calories: 720",
+    "response_time_ms": 8088.847875595093,
+    "retrieval_strategy": "factual_lookup",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "does the pizza contain gluten",
+    "intent_result": {
+      "intent": "order_modification",
+      "confidence": 0.6267058452257737,
+      "confidence_level": "low",
+      "priority": 4,
+      "timestamp": "2025-08-28T22:48:01.387306",
+      "alternatives": [
+        {
+          "intent": "order_placement",
+          "confidence": 0.6193353136007762
+        },
+        {
+          "intent": "menu_inquiry",
+          "confidence": 0.6139489962143342
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "order_modification",
+        "confidence": 0.6267058452257737,
+        "confidence_level": "low",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 300,
+        "retrieval_strategy": "procedural",
+        "rerank_weight": 0.5249999999999999,
+        "context_window": "medium",
+        "supports_expansion": "True",
+        "supports_step_back": false
+      }
+    },
+    "expansion_result": {
+      "original_query": "does the pizza contain gluten",
+      "expanded_terms": [
+        "chicken",
+        "pizza"
+      ],
+      "reformulated_queries": [
+        "Is this pizza gluten-free?",
+        "Can I get a gluten-free pizza option?",
+        "does the pizza contain gluten",
+        "Does the pizza have any gluten ingredients?"
+      ],
+      "step_back_query": null,
+      "expansion_strategy": "hybrid",
+      "confidence_score": 0.7
+    },
+    "retrieval_results": [
+      {
+        "content": "Category: Pizzas\n            Item: Margherita\n            Description: Classic pizza with fresh mozzarella, tomato sauce, and basil on a thin crust.\n            Type: Veg\n            Calories: 720\n            Price: $12.50\n            \n            This Margherita is a veg item from our pizzas menu.\n            Classic pizza with fresh mozzarella, tomato sauce, and basil on a thin crust.\n            It contains 720 calories and costs $12.50.",
+        "metadata": {
+          "calories": 720,
+          "price": "$12.50",
+          "source": "menu_csv",
+          "item_name": "Margherita",
+          "category": "Pizzas",
+          "type": "Veg"
+        },
+        "relevance_score": 0.3298714622855186,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Pizzas\n            Item: Pepperoni\n            Description: A crowd-pleaser with generous layers of spicy pepperoni and mozzarella cheese.\n            Type: Non-Veg\n            Calories: 950\n            Price: $14.00\n            \n            This Pepperoni is a non-veg item from our pizzas menu.\n            A crowd-pleaser with generous layers of spicy pepperoni and mozzarella cheese.\n            It contains 950 calories and costs $14.00.",
+        "metadata": {
+          "calories": 950,
+          "price": "$14.00",
+          "source": "menu_csv",
+          "item_name": "Pepperoni",
+          "category": "Pizzas",
+          "type": "Non-Veg"
+        },
+        "relevance_score": 0.33105456680059425,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Pizzas\n            Item: Veggie Supreme\n            Description: Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            Type: Veg\n            Calories: 810\n            Price: $13.50\n            \n            This Veggie Supreme is a veg item from our pizzas menu.\n            Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            It contains 810 calories and costs $13.50.",
+        "metadata": {
+          "price": "$13.50",
+          "item_name": "Veggie Supreme",
+          "category": "Pizzas",
+          "calories": 810,
+          "source": "menu_csv",
+          "type": "Veg"
+        },
+        "relevance_score": 0.34174030870199196,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Step-by-step information:\n\nStep 1: Category: Pizzas\n            Item: Margherita\n            Description: Classic pizza with fresh mozzarella, tomato sauce, and basil on a thin crust.\n            Type: Veg\n            Calories: 720\n            Price: $12.50\n            \n            This Margherita is a veg item from our pizzas menu.\n            Classic pizza with fresh mozzarella, tomato sauce, and basil on a thin crust.\n            It contains 720 calories and costs $12.50.\n\nStep 2: Category: Pizzas\n            Item: Pepperoni\n            Description: A crowd-pleaser with generous layers of spicy pepperoni and mozzarella cheese.\n            Type: Non-Veg\n            Calories: 950\n            Price: $14.00\n            \n            This Pepperoni is a non-veg item from our pizzas menu.\n            A crowd-pleaser with generous layers of spicy pepperoni and mozzarella cheese.\n            It contains 950 calories and costs $14.00.\n\nStep 3: Category: Pizzas\n            Item: Veggie Supreme\n            Description: Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            Type: Veg\n            Calories: 810\n            Price: $13.50\n            \n            This Veggie Supreme is a veg item from our pizzas menu.\n            Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            It contains 810 calories and costs $13.50.",
+    "response_time_ms": 7066.442012786865,
+    "retrieval_strategy": "procedural",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "what's in the veggie burger",
+    "intent_result": {
+      "intent": "order_modification",
+      "confidence": 0.6168380422133499,
+      "confidence_level": "low",
+      "priority": 4,
+      "timestamp": "2025-08-28T22:48:08.444269",
+      "alternatives": [
+        {
+          "intent": "menu_inquiry",
+          "confidence": 0.6027486769968641
+        },
+        {
+          "intent": "order_placement",
+          "confidence": 0.586575943009298
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "order_modification",
+        "confidence": 0.6168380422133499,
+        "confidence_level": "low",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 300,
+        "retrieval_strategy": "procedural",
+        "rerank_weight": 0.5249999999999999,
+        "context_window": "medium",
+        "supports_expansion": "True",
+        "supports_step_back": false
+      }
+    },
+    "expansion_result": {
+      "original_query": "what's in the veggie burger",
+      "expanded_terms": [
+        "chicken"
+      ],
+      "reformulated_queries": [
+        "what's in the veggie burger"
+      ],
+      "step_back_query": null,
+      "expansion_strategy": "hybrid",
+      "confidence_score": 0.7
+    },
+    "retrieval_results": [
+      {
+        "content": "Category: Hotdogs\n            Item: Veggie Dog\n            Description: Plant-based sausage in a whole wheat bun with your choice of toppings.\n            Type: Veg\n            Calories: 400\n            Price: $9.00\n            \n            This Veggie Dog is a veg item from our hotdogs menu.\n            Plant-based sausage in a whole wheat bun with your choice of toppings.\n            It contains 400 calories and costs $9.00.",
+        "metadata": {
+          "source": "menu_csv",
+          "type": "Veg",
+          "category": "Hotdogs",
+          "calories": 400,
+          "price": "$9.00",
+          "item_name": "Veggie Dog"
+        },
+        "relevance_score": 0.3099513843655586,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Healthy Meals\n            Item: Buddha Bowl\n            Description: A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            Type: Veg\n            Calories: 520\n            Price: $13.50\n            \n            This Buddha Bowl is a veg item from our healthy meals menu.\n            A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            It contains 520 calories and costs $13.50.",
+        "metadata": {
+          "type": "Veg",
+          "calories": 520,
+          "source": "menu_csv",
+          "category": "Healthy Meals",
+          "price": "$13.50",
+          "item_name": "Buddha Bowl"
+        },
+        "relevance_score": 0.3402257233858108,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Pizzas\n            Item: Veggie Supreme\n            Description: Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            Type: Veg\n            Calories: 810\n            Price: $13.50\n            \n            This Veggie Supreme is a veg item from our pizzas menu.\n            Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            It contains 810 calories and costs $13.50.",
+        "metadata": {
+          "item_name": "Veggie Supreme",
+          "category": "Pizzas",
+          "price": "$13.50",
+          "calories": 810,
+          "source": "menu_csv",
+          "type": "Veg"
+        },
+        "relevance_score": 0.34138032048940653,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Hotdogs\n            Item: The Classic\n            Description: All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            Type: Non-Veg\n            Calories: 450\n            Price: $8.00\n            \n            This The Classic is a non-veg item from our hotdogs menu.\n            All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            It contains 450 calories and costs $8.00.",
+        "metadata": {
+          "price": "$8.00",
+          "category": "Hotdogs",
+          "type": "Non-Veg",
+          "calories": 450,
+          "source": "menu_csv",
+          "item_name": "The Classic"
+        },
+        "relevance_score": 0.2653076201677322,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Step-by-step information:\n\nStep 1: Category: Hotdogs\n            Item: Veggie Dog\n            Description: Plant-based sausage in a whole wheat bun with your choice of toppings.\n            Type: Veg\n            Calories: 400\n            Price: $9.00\n            \n            This Veggie Dog is a veg item from our hotdogs menu.\n            Plant-based sausage in a whole wheat bun with your choice of toppings.\n            It contains 400 calories and costs $9.00.\n\nStep 2: Category: Healthy Meals\n            Item: Buddha Bowl\n            Description: A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            Type: Veg\n            Calories: 520\n            Price: $13.50\n            \n            This Buddha Bowl is a veg item from our healthy meals menu.\n            A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            It contains 520 calories and costs $13.50.\n\nStep 3: Category: Pizzas\n            Item: Veggie Supreme\n            Description: Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            Type: Veg\n            Calories: 810\n            Price: $13.50\n            \n            This Veggie Supreme is a veg item from our pizzas menu.\n            Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            It contains 810 calories and costs $13.50.\n\nStep 4: Category: Hotdogs\n            Item: The Classic\n            Description: All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            Type: Non-Veg\n            Calories: 450\n            Price: $8.00\n            \n            This The Classic is a non-veg item from our hotdogs menu.\n            All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            It contains 450 calories and costs $8.00.",
+    "response_time_ms": 37892.58289337158,
+    "retrieval_strategy": "procedural",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "are there nuts in the salad",
+    "intent_result": {
+      "intent": "order_modification",
+      "confidence": 0.6124939415830609,
+      "confidence_level": "low",
+      "priority": 4,
+      "timestamp": "2025-08-28T22:48:46.443308",
+      "alternatives": [
+        {
+          "intent": "menu_inquiry",
+          "confidence": 0.5918521272789959
+        },
+        {
+          "intent": "order_placement",
+          "confidence": 0.5900537513009446
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "order_modification",
+        "confidence": 0.6124939415830609,
+        "confidence_level": "low",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 300,
+        "retrieval_strategy": "procedural",
+        "rerank_weight": 0.5249999999999999,
+        "context_window": "medium",
+        "supports_expansion": "True",
+        "supports_step_back": false
+      }
+    },
+    "expansion_result": {
+      "original_query": "are there nuts in the salad",
+      "expanded_terms": [
+        "salad",
+        "sandwich"
+      ],
+      "reformulated_queries": [
+        "Can I get the salad without nuts?",
+        "are there nuts in the salad",
+        "Is there any nut-based ingredient in the salad?",
+        "Does the salad contain any nuts?"
+      ],
+      "step_back_query": null,
+      "expansion_strategy": "hybrid",
+      "confidence_score": 0.7
+    },
+    "retrieval_results": [
+      {
+        "content": "Category: Healthy Meals\n            Item: Quinoa Salad\n            Description: A vibrant salad with quinoa, chickpeas, cucumber, tomatoes, and a lemon-tahini dressing.\n            Type: Veg\n            Calories: 450\n            Price: $12.50\n            \n            This Quinoa Salad is a veg item from our healthy meals menu.\n            A vibrant salad with quinoa, chickpeas, cucumber, tomatoes, and a lemon-tahini dressing.\n            It contains 450 calories and costs $12.50.",
+        "metadata": {
+          "category": "Healthy Meals",
+          "type": "Veg",
+          "source": "menu_csv",
+          "calories": 450,
+          "item_name": "Quinoa Salad",
+          "price": "$12.50"
+        },
+        "relevance_score": 0.35790247768163674,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Healthy Meals\n            Item: Buddha Bowl\n            Description: A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            Type: Veg\n            Calories: 520\n            Price: $13.50\n            \n            This Buddha Bowl is a veg item from our healthy meals menu.\n            A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            It contains 520 calories and costs $13.50.",
+        "metadata": {
+          "category": "Healthy Meals",
+          "source": "menu_csv",
+          "item_name": "Buddha Bowl",
+          "type": "Veg",
+          "calories": 520,
+          "price": "$13.50"
+        },
+        "relevance_score": 0.3951940208673477,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Sandwiches\n            Item: Caprese Panini\n            Description: Toasted panini with fresh mozzarella, tomatoes, basil pesto, and balsamic glaze.\n            Type: Veg\n            Calories: 650\n            Price: $11.50\n            \n            This Caprese Panini is a veg item from our sandwiches menu.\n            Toasted panini with fresh mozzarella, tomatoes, basil pesto, and balsamic glaze.\n            It contains 650 calories and costs $11.50.",
+        "metadata": {
+          "price": "$11.50",
+          "category": "Sandwiches",
+          "type": "Veg",
+          "calories": 650,
+          "source": "menu_csv",
+          "item_name": "Caprese Panini"
+        },
+        "relevance_score": 0.3997566774487495,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Step-by-step information:\n\nStep 1: Category: Healthy Meals\n            Item: Quinoa Salad\n            Description: A vibrant salad with quinoa, chickpeas, cucumber, tomatoes, and a lemon-tahini dressing.\n            Type: Veg\n            Calories: 450\n            Price: $12.50\n            \n            This Quinoa Salad is a veg item from our healthy meals menu.\n            A vibrant salad with quinoa, chickpeas, cucumber, tomatoes, and a lemon-tahini dressing.\n            It contains 450 calories and costs $12.50.\n\nStep 2: Category: Healthy Meals\n            Item: Buddha Bowl\n            Description: A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            Type: Veg\n            Calories: 520\n            Price: $13.50\n            \n            This Buddha Bowl is a veg item from our healthy meals menu.\n            A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            It contains 520 calories and costs $13.50.\n\nStep 3: Category: Sandwiches\n            Item: Caprese Panini\n            Description: Toasted panini with fresh mozzarella, tomatoes, basil pesto, and balsamic glaze.\n            Type: Veg\n            Calories: 650\n            Price: $11.50\n            \n            This Caprese Panini is a veg item from our sandwiches menu.\n            Toasted panini with fresh mozzarella, tomatoes, basil pesto, and balsamic glaze.\n            It contains 650 calories and costs $11.50.",
+    "response_time_ms": 6959.334850311279,
+    "retrieval_strategy": "procedural",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "is the soup vegan",
+    "intent_result": {
+      "intent": "menu_inquiry",
+      "confidence": 0.5932414584686588,
+      "confidence_level": "low",
+      "priority": 2,
+      "timestamp": "2025-08-28T22:48:53.298211",
+      "alternatives": [
+        {
+          "intent": "order_modification",
+          "confidence": 0.5705538876177376
+        },
+        {
+          "intent": "order_placement",
+          "confidence": 0.5633049240254491
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "menu_inquiry",
+        "confidence": 0.5932414584686588,
+        "confidence_level": "low",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 200,
+        "retrieval_strategy": "factual_lookup",
+        "rerank_weight": 0.5599999999999999,
+        "context_window": "small",
+        "supports_expansion": "False",
+        "supports_step_back": false
+      }
+    },
+    "expansion_result": null,
+    "retrieval_results": [
+      {
+        "content": "Category: Healthy Meals\n            Item: Lentil Soup\n            Description: A hearty and nutritious soup made with red lentils, carrots, celery, and spices.\n            Type: Veg\n            Calories: 350\n            Price: $9.00\n            \n            This Lentil Soup is a veg item from our healthy meals menu.\n            A hearty and nutritious soup made with red lentils, carrots, celery, and spices.\n            It contains 350 calories and costs $9.00.",
+        "metadata": {
+          "price": "$9.00",
+          "item_name": "Lentil Soup",
+          "category": "Healthy Meals",
+          "type": "Veg",
+          "calories": 350,
+          "source": "menu_csv"
+        },
+        "relevance_score": 0.35885594367980955,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Hotdogs\n            Item: Veggie Dog\n            Description: Plant-based sausage in a whole wheat bun with your choice of toppings.\n            Type: Veg\n            Calories: 400\n            Price: $9.00\n            \n            This Veggie Dog is a veg item from our hotdogs menu.\n            Plant-based sausage in a whole wheat bun with your choice of toppings.\n            It contains 400 calories and costs $9.00.",
+        "metadata": {
+          "type": "Veg",
+          "calories": 400,
+          "category": "Hotdogs",
+          "item_name": "Veggie Dog",
+          "price": "$9.00",
+          "source": "menu_csv"
+        },
+        "relevance_score": 0.40511875152587884,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Beverages\n            Item: Green Smoothie\n            Description: A healthy mix of spinach, banana, mango, and almond milk.\n            Type: Veg\n            Calories: 280\n            Price: $6.00\n            \n            This Green Smoothie is a veg item from our beverages menu.\n            A healthy mix of spinach, banana, mango, and almond milk.\n            It contains 280 calories and costs $6.00.",
+        "metadata": {
+          "category": "Beverages",
+          "source": "menu_csv",
+          "calories": 280,
+          "price": "$6.00",
+          "item_name": "Green Smoothie",
+          "type": "Veg"
+        },
+        "relevance_score": 0.41996595382690427,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Relevant menu information:\n\n1. Category: Healthy Meals\n            Item: Lentil Soup\n            Description: A hearty and nutritious soup made with red lentils, carrots, celery, and spices.\n            Type: Veg\n            Calori\n\n2. Category: Hotdogs\n            Item: Veggie Dog\n            Description: Plant-based sausage in a whole wheat bun with your choice of toppings.\n            Type: Veg\n            Calories: 400\n         \n\n3. Category: Beverages\n            Item: Green Smoothie\n            Description: A healthy mix of spinach, banana, mango, and almond milk.\n            Type: Veg\n            Calories: 280\n            Pric",
+    "response_time_ms": 1434.692144393921,
+    "retrieval_strategy": "factual_lookup",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "what ingredients are in the sandwich",
+    "intent_result": {
+      "intent": "order_modification",
+      "confidence": 0.6475219991387069,
+      "confidence_level": "low",
+      "priority": 4,
+      "timestamp": "2025-08-28T22:48:54.526639",
+      "alternatives": [
+        {
+          "intent": "order_placement",
+          "confidence": 0.6365563492329988
+        },
+        {
+          "intent": "menu_inquiry",
+          "confidence": 0.6274801030789531
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "order_modification",
+        "confidence": 0.6475219991387069,
+        "confidence_level": "low",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 300,
+        "retrieval_strategy": "procedural",
+        "rerank_weight": 0.5249999999999999,
+        "context_window": "medium",
+        "supports_expansion": "True",
+        "supports_step_back": false
+      }
+    },
+    "expansion_result": {
+      "original_query": "what ingredients are in the sandwich",
+      "expanded_terms": [
+        "sandwich",
+        "salad"
+      ],
+      "reformulated_queries": [
+        "what ingredients are in the sandwich"
+      ],
+      "step_back_query": null,
+      "expansion_strategy": "hybrid",
+      "confidence_score": 0.7
+    },
+    "retrieval_results": [
+      {
+        "content": "Category: Sandwiches\n            Item: Caprese Panini\n            Description: Toasted panini with fresh mozzarella, tomatoes, basil pesto, and balsamic glaze.\n            Type: Veg\n            Calories: 650\n            Price: $11.50\n            \n            This Caprese Panini is a veg item from our sandwiches menu.\n            Toasted panini with fresh mozzarella, tomatoes, basil pesto, and balsamic glaze.\n            It contains 650 calories and costs $11.50.",
+        "metadata": {
+          "calories": 650,
+          "item_name": "Caprese Panini",
+          "source": "menu_csv",
+          "price": "$11.50",
+          "category": "Sandwiches",
+          "type": "Veg"
+        },
+        "relevance_score": 0.2943121120333671,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Sandwiches\n            Item: Spicy Tofu Banh Mi\n            Description: Vietnamese-style sandwich with marinated spicy tofu, pickled carrots, and cilantro.\n            Type: Veg\n            Calories: 580\n            Price: $12.00\n            \n            This Spicy Tofu Banh Mi is a veg item from our sandwiches menu.\n            Vietnamese-style sandwich with marinated spicy tofu, pickled carrots, and cilantro.\n            It contains 580 calories and costs $12.00.",
+        "metadata": {
+          "category": "Sandwiches",
+          "item_name": "Spicy Tofu Banh Mi",
+          "price": "$12.00",
+          "source": "menu_csv",
+          "type": "Veg",
+          "calories": 580
+        },
+        "relevance_score": 0.3043989792466163,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Sandwiches\n            Item: Classic Club\n            Description: Triple-decker sandwich with turkey, bacon, lettuce, tomato, and mayonnaise.\n            Type: Non-Veg\n            Calories: 850\n            Price: $13.00\n            \n            This Classic Club is a non-veg item from our sandwiches menu.\n            Triple-decker sandwich with turkey, bacon, lettuce, tomato, and mayonnaise.\n            It contains 850 calories and costs $13.00.",
+        "metadata": {
+          "category": "Sandwiches",
+          "type": "Non-Veg",
+          "source": "menu_csv",
+          "calories": 850,
+          "item_name": "Classic Club",
+          "price": "$13.00"
+        },
+        "relevance_score": 0.3228236228227615,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Sandwiches\n            Item: Tuna Melt\n            Description: Classic sandwich with tuna salad and melted cheddar cheese on toasted rye bread.\n            Type: Non-Veg\n            Calories: 750\n            Price: $12.50\n            \n            This Tuna Melt is a non-veg item from our sandwiches menu.\n            Classic sandwich with tuna salad and melted cheddar cheese on toasted rye bread.\n            It contains 750 calories and costs $12.50.",
+        "metadata": {
+          "price": "$12.50",
+          "calories": 750,
+          "source": "menu_csv",
+          "type": "Non-Veg",
+          "category": "Sandwiches",
+          "item_name": "Tuna Melt"
+        },
+        "relevance_score": 0.2735686361789703,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Step-by-step information:\n\nStep 1: Category: Sandwiches\n            Item: Caprese Panini\n            Description: Toasted panini with fresh mozzarella, tomatoes, basil pesto, and balsamic glaze.\n            Type: Veg\n            Calories: 650\n            Price: $11.50\n            \n            This Caprese Panini is a veg item from our sandwiches menu.\n            Toasted panini with fresh mozzarella, tomatoes, basil pesto, and balsamic glaze.\n            It contains 650 calories and costs $11.50.\n\nStep 2: Category: Sandwiches\n            Item: Spicy Tofu Banh Mi\n            Description: Vietnamese-style sandwich with marinated spicy tofu, pickled carrots, and cilantro.\n            Type: Veg\n            Calories: 580\n            Price: $12.00\n            \n            This Spicy Tofu Banh Mi is a veg item from our sandwiches menu.\n            Vietnamese-style sandwich with marinated spicy tofu, pickled carrots, and cilantro.\n            It contains 580 calories and costs $12.00.\n\nStep 3: Category: Sandwiches\n            Item: Classic Club\n            Description: Triple-decker sandwich with turkey, bacon, lettuce, tomato, and mayonnaise.\n            Type: Non-Veg\n            Calories: 850\n            Price: $13.00\n            \n            This Classic Club is a non-veg item from our sandwiches menu.\n            Triple-decker sandwich with turkey, bacon, lettuce, tomato, and mayonnaise.\n            It contains 850 calories and costs $13.00.\n\nStep 4: Category: Sandwiches\n            Item: Tuna Melt\n            Description: Classic sandwich with tuna salad and melted cheddar cheese on toasted rye bread.\n            Type: Non-Veg\n            Calories: 750\n            Price: $12.50\n            \n            This Tuna Melt is a non-veg item from our sandwiches menu.\n            Classic sandwich with tuna salad and melted cheddar cheese on toasted rye bread.\n            It contains 750 calories and costs $12.50.",
+    "response_time_ms": 39952.47197151184,
+    "retrieval_strategy": "procedural",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "what gluten-free options are available",
+    "intent_result": {
+      "intent": "menu_inquiry",
+      "confidence": 0.5971254452325805,
+      "confidence_level": "low",
+      "priority": 2,
+      "timestamp": "2025-08-28T22:49:34.864881",
+      "alternatives": [
+        {
+          "intent": "order_placement",
+          "confidence": 0.5654709678532697
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "menu_inquiry",
+        "confidence": 0.5971254452325805,
+        "confidence_level": "low",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 200,
+        "retrieval_strategy": "factual_lookup",
+        "rerank_weight": 0.5599999999999999,
+        "context_window": "small",
+        "supports_expansion": "False",
+        "supports_step_back": false
+      }
+    },
+    "expansion_result": null,
+    "retrieval_results": [
+      {
+        "content": "Category: Sandwiches\n            Item: Caprese Panini\n            Description: Toasted panini with fresh mozzarella, tomatoes, basil pesto, and balsamic glaze.\n            Type: Veg\n            Calories: 650\n            Price: $11.50\n            \n            This Caprese Panini is a veg item from our sandwiches menu.\n            Toasted panini with fresh mozzarella, tomatoes, basil pesto, and balsamic glaze.\n            It contains 650 calories and costs $11.50.",
+        "metadata": {
+          "price": "$11.50",
+          "type": "Veg",
+          "source": "menu_csv",
+          "item_name": "Caprese Panini",
+          "category": "Sandwiches",
+          "calories": 650
+        },
+        "relevance_score": 0.4629595279693603,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Beverages\n            Item: Sparkling Water\n            Description: Chilled carbonated mineral water with a slice of lime.\n            Type: Veg\n            Calories: 0\n            Price: $3.00\n            \n            This Sparkling Water is a veg item from our beverages menu.\n            Chilled carbonated mineral water with a slice of lime.\n            It contains 0 calories and costs $3.00.",
+        "metadata": {
+          "source": "menu_csv",
+          "type": "Veg",
+          "category": "Beverages",
+          "calories": 0,
+          "price": "$3.00",
+          "item_name": "Sparkling Water"
+        },
+        "relevance_score": 0.46560591697692866,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Healthy Meals\n            Item: Quinoa Salad\n            Description: A vibrant salad with quinoa, chickpeas, cucumber, tomatoes, and a lemon-tahini dressing.\n            Type: Veg\n            Calories: 450\n            Price: $12.50\n            \n            This Quinoa Salad is a veg item from our healthy meals menu.\n            A vibrant salad with quinoa, chickpeas, cucumber, tomatoes, and a lemon-tahini dressing.\n            It contains 450 calories and costs $12.50.",
+        "metadata": {
+          "source": "menu_csv",
+          "category": "Healthy Meals",
+          "item_name": "Quinoa Salad",
+          "price": "$12.50",
+          "calories": 450,
+          "type": "Veg"
+        },
+        "relevance_score": 0.4715299844741821,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Relevant menu information:\n\n1. Category: Sandwiches\n            Item: Caprese Panini\n            Description: Toasted panini with fresh mozzarella, tomatoes, basil pesto, and balsamic glaze.\n            Type: Veg\n            Calori\n\n2. Category: Beverages\n            Item: Sparkling Water\n            Description: Chilled carbonated mineral water with a slice of lime.\n            Type: Veg\n            Calories: 0\n            Price: $\n\n3. Category: Healthy Meals\n            Item: Quinoa Salad\n            Description: A vibrant salad with quinoa, chickpeas, cucumber, tomatoes, and a lemon-tahini dressing.\n            Type: Veg",
+    "response_time_ms": 1488.9848232269287,
+    "retrieval_strategy": "factual_lookup",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "do you have vegan dishes",
+    "intent_result": {
+      "intent": "order_modification",
+      "confidence": 0.631450092900292,
+      "confidence_level": "low",
+      "priority": 4,
+      "timestamp": "2025-08-28T22:49:36.307240",
+      "alternatives": [
+        {
+          "intent": "menu_inquiry",
+          "confidence": 0.6307262840136774
+        },
+        {
+          "intent": "order_placement",
+          "confidence": 0.6155074636939336
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "order_modification",
+        "confidence": 0.631450092900292,
+        "confidence_level": "low",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 300,
+        "retrieval_strategy": "procedural",
+        "rerank_weight": 0.5249999999999999,
+        "context_window": "medium",
+        "supports_expansion": "True",
+        "supports_step_back": false
+      }
+    },
+    "expansion_result": {
+      "original_query": "do you have vegan dishes",
+      "expanded_terms": [
+        "sandwich",
+        "chicken",
+        "soup"
+      ],
+      "reformulated_queries": [
+        "\"Are there any vegan options available?\"",
+        "do you have vegan dishes",
+        "\"Do you offer meals without animal products?\"",
+        "\"Can I order any plant-based meals?\""
+      ],
+      "step_back_query": null,
+      "expansion_strategy": "hybrid",
+      "confidence_score": 0.7
+    },
+    "retrieval_results": [
+      {
+        "content": "Category: Hotdogs\n            Item: Veggie Dog\n            Description: Plant-based sausage in a whole wheat bun with your choice of toppings.\n            Type: Veg\n            Calories: 400\n            Price: $9.00\n            \n            This Veggie Dog is a veg item from our hotdogs menu.\n            Plant-based sausage in a whole wheat bun with your choice of toppings.\n            It contains 400 calories and costs $9.00.",
+        "metadata": {
+          "item_name": "Veggie Dog",
+          "category": "Hotdogs",
+          "calories": 400,
+          "price": "$9.00",
+          "source": "menu_csv",
+          "type": "Veg"
+        },
+        "relevance_score": 0.3193850219249725,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Healthy Meals\n            Item: Buddha Bowl\n            Description: A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            Type: Veg\n            Calories: 520\n            Price: $13.50\n            \n            This Buddha Bowl is a veg item from our healthy meals menu.\n            A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            It contains 520 calories and costs $13.50.",
+        "metadata": {
+          "calories": 520,
+          "category": "Healthy Meals",
+          "type": "Veg",
+          "source": "menu_csv",
+          "item_name": "Buddha Bowl",
+          "price": "$13.50"
+        },
+        "relevance_score": 0.3274115011096,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Sandwiches\n            Item: Spicy Tofu Banh Mi\n            Description: Vietnamese-style sandwich with marinated spicy tofu, pickled carrots, and cilantro.\n            Type: Veg\n            Calories: 580\n            Price: $12.00\n            \n            This Spicy Tofu Banh Mi is a veg item from our sandwiches menu.\n            Vietnamese-style sandwich with marinated spicy tofu, pickled carrots, and cilantro.\n            It contains 580 calories and costs $12.00.",
+        "metadata": {
+          "source": "menu_csv",
+          "calories": 580,
+          "category": "Sandwiches",
+          "price": "$12.00",
+          "type": "Veg",
+          "item_name": "Spicy Tofu Banh Mi"
+        },
+        "relevance_score": 0.3402514144778251,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Beverages\n            Item: Iced Mocha\n            Description: A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            Type: Veg\n            Calories: 350\n            Price: $5.50\n            \n            This Iced Mocha is a veg item from our beverages menu.\n            A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            It contains 350 calories and costs $5.50.",
+        "metadata": {
+          "source": "menu_csv",
+          "category": "Beverages",
+          "calories": 350,
+          "item_name": "Iced Mocha",
+          "type": "Veg",
+          "price": "$5.50"
+        },
+        "relevance_score": 0.3019477173686027,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Step-by-step information:\n\nStep 1: Category: Hotdogs\n            Item: Veggie Dog\n            Description: Plant-based sausage in a whole wheat bun with your choice of toppings.\n            Type: Veg\n            Calories: 400\n            Price: $9.00\n            \n            This Veggie Dog is a veg item from our hotdogs menu.\n            Plant-based sausage in a whole wheat bun with your choice of toppings.\n            It contains 400 calories and costs $9.00.\n\nStep 2: Category: Healthy Meals\n            Item: Buddha Bowl\n            Description: A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            Type: Veg\n            Calories: 520\n            Price: $13.50\n            \n            This Buddha Bowl is a veg item from our healthy meals menu.\n            A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            It contains 520 calories and costs $13.50.\n\nStep 3: Category: Sandwiches\n            Item: Spicy Tofu Banh Mi\n            Description: Vietnamese-style sandwich with marinated spicy tofu, pickled carrots, and cilantro.\n            Type: Veg\n            Calories: 580\n            Price: $12.00\n            \n            This Spicy Tofu Banh Mi is a veg item from our sandwiches menu.\n            Vietnamese-style sandwich with marinated spicy tofu, pickled carrots, and cilantro.\n            It contains 580 calories and costs $12.00.\n\nStep 4: Category: Beverages\n            Item: Iced Mocha\n            Description: A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            Type: Veg\n            Calories: 350\n            Price: $5.50\n            \n            This Iced Mocha is a veg item from our beverages menu.\n            A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            It contains 350 calories and costs $5.50.",
+    "response_time_ms": 8439.371109008789,
+    "retrieval_strategy": "procedural",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "what about low-calorie meals",
+    "intent_result": {
+      "intent": "menu_inquiry",
+      "confidence": 0.5816448120139597,
+      "confidence_level": "low",
+      "priority": 2,
+      "timestamp": "2025-08-28T22:49:44.582182",
+      "alternatives": [],
+      "retrieval_metadata": {
+        "intent": "menu_inquiry",
+        "confidence": 0.5816448120139597,
+        "confidence_level": "low",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 200,
+        "retrieval_strategy": "factual_lookup",
+        "rerank_weight": 0.5599999999999999,
+        "context_window": "small",
+        "supports_expansion": "False",
+        "supports_step_back": false
+      }
+    },
+    "expansion_result": null,
+    "retrieval_results": [
+      {
+        "content": "Category: Healthy Meals\n            Item: Lentil Soup\n            Description: A hearty and nutritious soup made with red lentils, carrots, celery, and spices.\n            Type: Veg\n            Calories: 350\n            Price: $9.00\n            \n            This Lentil Soup is a veg item from our healthy meals menu.\n            A hearty and nutritious soup made with red lentils, carrots, celery, and spices.\n            It contains 350 calories and costs $9.00.",
+        "metadata": {
+          "type": "Veg",
+          "price": "$9.00",
+          "category": "Healthy Meals",
+          "item_name": "Lentil Soup",
+          "calories": 350,
+          "source": "menu_csv"
+        },
+        "relevance_score": 0.34252646446228024,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Healthy Meals\n            Item: Buddha Bowl\n            Description: A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            Type: Veg\n            Calories: 520\n            Price: $13.50\n            \n            This Buddha Bowl is a veg item from our healthy meals menu.\n            A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            It contains 520 calories and costs $13.50.",
+        "metadata": {
+          "price": "$13.50",
+          "calories": 520,
+          "type": "Veg",
+          "category": "Healthy Meals",
+          "item_name": "Buddha Bowl",
+          "source": "menu_csv"
+        },
+        "relevance_score": 0.35555990695953366,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Healthy Meals\n            Item: Chicken & Veggie Skewers\n            Description: Marinated chicken and mixed vegetable skewers, grilled and served with a yogurt dip.\n            Type: Non-Veg\n            Calories: 480\n            Price: $15.00\n            \n            This Chicken & Veggie Skewers is a non-veg item from our healthy meals menu.\n            Marinated chicken and mixed vegetable skewers, grilled and served with a yogurt dip.\n            It contains 480 calories and costs $15.00.",
+        "metadata": {
+          "item_name": "Chicken & Veggie Skewers",
+          "calories": 480,
+          "category": "Healthy Meals",
+          "price": "$15.00",
+          "type": "Non-Veg",
+          "source": "menu_csv"
+        },
+        "relevance_score": 0.3619147253036499,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Relevant menu information:\n\n1. Category: Healthy Meals\n            Item: Lentil Soup\n            Description: A hearty and nutritious soup made with red lentils, carrots, celery, and spices.\n            Type: Veg\n            Calori\n\n2. Category: Healthy Meals\n            Item: Buddha Bowl\n            Description: A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            Type: Veg\n            Calo\n\n3. Category: Healthy Meals\n            Item: Chicken & Veggie Skewers\n            Description: Marinated chicken and mixed vegetable skewers, grilled and served with a yogurt dip.\n            Type: Non-V",
+    "response_time_ms": 1266.2031650543213,
+    "retrieval_strategy": "factual_lookup",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "any keto-friendly items",
+    "intent_result": {
+      "intent": "menu_inquiry",
+      "confidence": 0.6201315845508458,
+      "confidence_level": "low",
+      "priority": 2,
+      "timestamp": "2025-08-28T22:49:45.730124",
+      "alternatives": [
+        {
+          "intent": "order_placement",
+          "confidence": 0.6129718474281308
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "menu_inquiry",
+        "confidence": 0.6201315845508458,
+        "confidence_level": "low",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 200,
+        "retrieval_strategy": "factual_lookup",
+        "rerank_weight": 0.5599999999999999,
+        "context_window": "small",
+        "supports_expansion": "True",
+        "supports_step_back": false
+      }
+    },
+    "expansion_result": {
+      "original_query": "any keto-friendly items",
+      "expanded_terms": [
+        "beef"
+      ],
+      "reformulated_queries": [
+        "any keto-friendly items",
+        "\"Does your menu include keto-compatible dishes?\"",
+        "What beef options are available?",
+        "\"Can you list the keto-friendly choices on your menu?\"",
+        "Show me beef dishes",
+        "Tell me about beef on the menu"
+      ],
+      "step_back_query": null,
+      "expansion_strategy": "hybrid",
+      "confidence_score": 0.7
+    },
+    "retrieval_results": [
+      {
+        "content": "Category: Beverages\n            Item: Sparkling Water\n            Description: Chilled carbonated mineral water with a slice of lime.\n            Type: Veg\n            Calories: 0\n            Price: $3.00\n            \n            This Sparkling Water is a veg item from our beverages menu.\n            Chilled carbonated mineral water with a slice of lime.\n            It contains 0 calories and costs $3.00.",
+        "metadata": {
+          "type": "Veg",
+          "price": "$3.00",
+          "source": "menu_csv",
+          "category": "Beverages",
+          "item_name": "Sparkling Water",
+          "calories": 0
+        },
+        "relevance_score": 0.35285593986511227,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Beverages\n            Item: Iced Mocha\n            Description: A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            Type: Veg\n            Calories: 350\n            Price: $5.50\n            \n            This Iced Mocha is a veg item from our beverages menu.\n            A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            It contains 350 calories and costs $5.50.",
+        "metadata": {
+          "type": "Veg",
+          "calories": 350,
+          "category": "Beverages",
+          "source": "menu_csv",
+          "item_name": "Iced Mocha",
+          "price": "$5.50"
+        },
+        "relevance_score": 0.3588587141036987,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Pizzas\n            Item: Pepperoni\n            Description: A crowd-pleaser with generous layers of spicy pepperoni and mozzarella cheese.\n            Type: Non-Veg\n            Calories: 950\n            Price: $14.00\n            \n            This Pepperoni is a non-veg item from our pizzas menu.\n            A crowd-pleaser with generous layers of spicy pepperoni and mozzarella cheese.\n            It contains 950 calories and costs $14.00.",
+        "metadata": {
+          "source": "menu_csv",
+          "category": "Pizzas",
+          "calories": 950,
+          "type": "Non-Veg",
+          "item_name": "Pepperoni",
+          "price": "$14.00"
+        },
+        "relevance_score": 0.36473174571990963,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Healthy Meals\n            Item: Buddha Bowl\n            Description: A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            Type: Veg\n            Calories: 520\n            Price: $13.50\n            \n            This Buddha Bowl is a veg item from our healthy meals menu.\n            A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            It contains 520 calories and costs $13.50.",
+        "metadata": {
+          "calories": 520,
+          "item_name": "Buddha Bowl",
+          "source": "menu_csv",
+          "type": "Veg",
+          "category": "Healthy Meals",
+          "price": "$13.50"
+        },
+        "relevance_score": 0.3828491163253784,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Relevant menu information:\n\n1. Category: Beverages\n            Item: Sparkling Water\n            Description: Chilled carbonated mineral water with a slice of lime.\n            Type: Veg\n            Calories: 0\n            Price: $\n\n2. Category: Beverages\n            Item: Iced Mocha\n            Description: A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            Type: Veg\n            Calorie\n\n3. Category: Pizzas\n            Item: Pepperoni\n            Description: A crowd-pleaser with generous layers of spicy pepperoni and mozzarella cheese.\n            Type: Non-Veg\n            Calories: 950\n\n4. Category: Healthy Meals\n            Item: Buddha Bowl\n            Description: A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            Type: Veg\n            Calo\n\n5. Category: Healthy Meals\n            Item: Lentil Soup\n            Description: A hearty and nutritious soup made with red lentils, carrots, celery, and spices.\n            Type: Veg\n            Calori",
+    "response_time_ms": 7216.600179672241,
+    "retrieval_strategy": "factual_lookup",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "vegetarian protein options",
+    "intent_result": {
+      "intent": "order_modification",
+      "confidence": 0.6149746619918882,
+      "confidence_level": "low",
+      "priority": 4,
+      "timestamp": "2025-08-28T22:49:53.102199",
+      "alternatives": [
+        {
+          "intent": "menu_inquiry",
+          "confidence": 0.6010438504456511
+        },
+        {
+          "intent": "order_placement",
+          "confidence": 0.5843551780790615
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "order_modification",
+        "confidence": 0.6149746619918882,
+        "confidence_level": "low",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 300,
+        "retrieval_strategy": "procedural",
+        "rerank_weight": 0.5249999999999999,
+        "context_window": "medium",
+        "supports_expansion": "True",
+        "supports_step_back": false
+      }
+    },
+    "expansion_result": {
+      "original_query": "vegetarian protein options",
+      "expanded_terms": [
+        "chicken",
+        "soup"
+      ],
+      "reformulated_queries": [
+        "vegetarian protein options",
+        "\"Can I see the vegetarian protein dishes available?\"",
+        "\"What vegetarian high-protein meals do you offer?\"",
+        "\"Are there any meat-free protein options on the menu?\""
+      ],
+      "step_back_query": null,
+      "expansion_strategy": "hybrid",
+      "confidence_score": 0.7
+    },
+    "retrieval_results": [
+      {
+        "content": "Category: Healthy Meals\n            Item: Chicken & Veggie Skewers\n            Description: Marinated chicken and mixed vegetable skewers, grilled and served with a yogurt dip.\n            Type: Non-Veg\n            Calories: 480\n            Price: $15.00\n            \n            This Chicken & Veggie Skewers is a non-veg item from our healthy meals menu.\n            Marinated chicken and mixed vegetable skewers, grilled and served with a yogurt dip.\n            It contains 480 calories and costs $15.00.",
+        "metadata": {
+          "price": "$15.00",
+          "category": "Healthy Meals",
+          "calories": 480,
+          "type": "Non-Veg",
+          "item_name": "Chicken & Veggie Skewers",
+          "source": "menu_csv"
+        },
+        "relevance_score": 0.3385665982961654,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Hotdogs\n            Item: Veggie Dog\n            Description: Plant-based sausage in a whole wheat bun with your choice of toppings.\n            Type: Veg\n            Calories: 400\n            Price: $9.00\n            \n            This Veggie Dog is a veg item from our hotdogs menu.\n            Plant-based sausage in a whole wheat bun with your choice of toppings.\n            It contains 400 calories and costs $9.00.",
+        "metadata": {
+          "type": "Veg",
+          "calories": 400,
+          "item_name": "Veggie Dog",
+          "price": "$9.00",
+          "source": "menu_csv",
+          "category": "Hotdogs"
+        },
+        "relevance_score": 0.3461235970258712,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Healthy Meals\n            Item: Buddha Bowl\n            Description: A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            Type: Veg\n            Calories: 520\n            Price: $13.50\n            \n            This Buddha Bowl is a veg item from our healthy meals menu.\n            A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            It contains 520 calories and costs $13.50.",
+        "metadata": {
+          "source": "menu_csv",
+          "price": "$13.50",
+          "category": "Healthy Meals",
+          "type": "Veg",
+          "calories": 520,
+          "item_name": "Buddha Bowl"
+        },
+        "relevance_score": 0.35138639062643046,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Step-by-step information:\n\nStep 1: Category: Healthy Meals\n            Item: Chicken & Veggie Skewers\n            Description: Marinated chicken and mixed vegetable skewers, grilled and served with a yogurt dip.\n            Type: Non-Veg\n            Calories: 480\n            Price: $15.00\n            \n            This Chicken & Veggie Skewers is a non-veg item from our healthy meals menu.\n            Marinated chicken and mixed vegetable skewers, grilled and served with a yogurt dip.\n            It contains 480 calories and costs $15.00.\n\nStep 2: Category: Hotdogs\n            Item: Veggie Dog\n            Description: Plant-based sausage in a whole wheat bun with your choice of toppings.\n            Type: Veg\n            Calories: 400\n            Price: $9.00\n            \n            This Veggie Dog is a veg item from our hotdogs menu.\n            Plant-based sausage in a whole wheat bun with your choice of toppings.\n            It contains 400 calories and costs $9.00.\n\nStep 3: Category: Healthy Meals\n            Item: Buddha Bowl\n            Description: A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            Type: Veg\n            Calories: 520\n            Price: $13.50\n            \n            This Buddha Bowl is a veg item from our healthy meals menu.\n            A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            It contains 520 calories and costs $13.50.",
+    "response_time_ms": 37218.67632865906,
+    "retrieval_strategy": "procedural",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "I want to order pizza",
+    "intent_result": {
+      "intent": "order_placement",
+      "confidence": 0.7279601415882961,
+      "confidence_level": "medium",
+      "priority": 3,
+      "timestamp": "2025-08-28T22:50:30.325241",
+      "alternatives": [
+        {
+          "intent": "order_modification",
+          "confidence": 0.715302797920069
+        },
+        {
+          "intent": "menu_inquiry",
+          "confidence": 0.6968499274894142
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "order_placement",
+        "confidence": 0.7279601415882961,
+        "confidence_level": "medium",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 250,
+        "retrieval_strategy": "procedural",
+        "rerank_weight": 0.63,
+        "context_window": "medium",
+        "supports_expansion": "True",
+        "supports_step_back": false
+      }
+    },
+    "expansion_result": {
+      "original_query": "I want to order pizza",
+      "expanded_terms": [
+        "chicken",
+        "pizza"
+      ],
+      "reformulated_queries": [
+        "\"I'd like to request a pizza delivery to my room.\"",
+        "\"How do I order a pizza from your hotel?\"",
+        "\"Can I place an order for a pizza?\"",
+        "I want to order pizza"
+      ],
+      "step_back_query": null,
+      "expansion_strategy": "hybrid",
+      "confidence_score": 0.7
+    },
+    "retrieval_results": [
+      {
+        "content": "Category: Pizzas\n            Item: Pepperoni\n            Description: A crowd-pleaser with generous layers of spicy pepperoni and mozzarella cheese.\n            Type: Non-Veg\n            Calories: 950\n            Price: $14.00\n            \n            This Pepperoni is a non-veg item from our pizzas menu.\n            A crowd-pleaser with generous layers of spicy pepperoni and mozzarella cheese.\n            It contains 950 calories and costs $14.00.",
+        "metadata": {
+          "price": "$14.00",
+          "source": "menu_csv",
+          "category": "Pizzas",
+          "type": "Non-Veg",
+          "item_name": "Pepperoni",
+          "calories": 950
+        },
+        "relevance_score": 0.3125899440050125,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Pizzas\n            Item: Margherita\n            Description: Classic pizza with fresh mozzarella, tomato sauce, and basil on a thin crust.\n            Type: Veg\n            Calories: 720\n            Price: $12.50\n            \n            This Margherita is a veg item from our pizzas menu.\n            Classic pizza with fresh mozzarella, tomato sauce, and basil on a thin crust.\n            It contains 720 calories and costs $12.50.",
+        "metadata": {
+          "price": "$12.50",
+          "type": "Veg",
+          "calories": 720,
+          "category": "Pizzas",
+          "source": "menu_csv",
+          "item_name": "Margherita"
+        },
+        "relevance_score": 0.3144289630651474,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Pizzas\n            Item: Veggie Supreme\n            Description: Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            Type: Veg\n            Calories: 810\n            Price: $13.50\n            \n            This Veggie Supreme is a veg item from our pizzas menu.\n            Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            It contains 810 calories and costs $13.50.",
+        "metadata": {
+          "source": "menu_csv",
+          "calories": 810,
+          "item_name": "Veggie Supreme",
+          "price": "$13.50",
+          "category": "Pizzas",
+          "type": "Veg"
+        },
+        "relevance_score": 0.3158327668905258,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Pizzas\n            Item: Hawaiian\n            Description: A tropical delight featuring ham, pineapple chunks, and a cheesy base.\n            Type: Non-Veg\n            Calories: 890\n            Price: $14.50\n            \n            This Hawaiian is a non-veg item from our pizzas menu.\n            A tropical delight featuring ham, pineapple chunks, and a cheesy base.\n            It contains 890 calories and costs $14.50.",
+        "metadata": {
+          "item_name": "Hawaiian",
+          "source": "menu_csv",
+          "price": "$14.50",
+          "category": "Pizzas",
+          "type": "Non-Veg",
+          "calories": 890
+        },
+        "relevance_score": 0.3603207010030747,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Step-by-step information:\n\nStep 1: Category: Pizzas\n            Item: Pepperoni\n            Description: A crowd-pleaser with generous layers of spicy pepperoni and mozzarella cheese.\n            Type: Non-Veg\n            Calories: 950\n            Price: $14.00\n            \n            This Pepperoni is a non-veg item from our pizzas menu.\n            A crowd-pleaser with generous layers of spicy pepperoni and mozzarella cheese.\n            It contains 950 calories and costs $14.00.\n\nStep 2: Category: Pizzas\n            Item: Margherita\n            Description: Classic pizza with fresh mozzarella, tomato sauce, and basil on a thin crust.\n            Type: Veg\n            Calories: 720\n            Price: $12.50\n            \n            This Margherita is a veg item from our pizzas menu.\n            Classic pizza with fresh mozzarella, tomato sauce, and basil on a thin crust.\n            It contains 720 calories and costs $12.50.\n\nStep 3: Category: Pizzas\n            Item: Veggie Supreme\n            Description: Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            Type: Veg\n            Calories: 810\n            Price: $13.50\n            \n            This Veggie Supreme is a veg item from our pizzas menu.\n            Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            It contains 810 calories and costs $13.50.\n\nStep 4: Category: Pizzas\n            Item: Hawaiian\n            Description: A tropical delight featuring ham, pineapple chunks, and a cheesy base.\n            Type: Non-Veg\n            Calories: 890\n            Price: $14.50\n            \n            This Hawaiian is a non-veg item from our pizzas menu.\n            A tropical delight featuring ham, pineapple chunks, and a cheesy base.\n            It contains 890 calories and costs $14.50.",
+    "response_time_ms": 8113.768815994263,
+    "retrieval_strategy": "procedural",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "get me the chicken sandwich",
+    "intent_result": {
+      "intent": "order_modification",
+      "confidence": 0.6386637202876325,
+      "confidence_level": "low",
+      "priority": 4,
+      "timestamp": "2025-08-28T22:50:38.405591",
+      "alternatives": [
+        {
+          "intent": "menu_inquiry",
+          "confidence": 0.6364272344711592
+        },
+        {
+          "intent": "order_placement",
+          "confidence": 0.6363582949609434
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "order_modification",
+        "confidence": 0.6386637202876325,
+        "confidence_level": "low",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 300,
+        "retrieval_strategy": "procedural",
+        "rerank_weight": 0.5249999999999999,
+        "context_window": "medium",
+        "supports_expansion": "True",
+        "supports_step_back": false
+      }
+    },
+    "expansion_result": {
+      "original_query": "get me the chicken sandwich",
+      "expanded_terms": [
+        "sandwich",
+        "chicken",
+        "beef",
+        "salad"
+      ],
+      "reformulated_queries": [
+        "get me the chicken sandwich",
+        "\"Show me the options for chicken sandwiches on the menu.\"",
+        "\"Can I order a chicken sandwich?\"",
+        "\"What are the available chicken sandwich choices?\""
+      ],
+      "step_back_query": null,
+      "expansion_strategy": "hybrid",
+      "confidence_score": 0.7
+    },
+    "retrieval_results": [
+      {
+        "content": "Category: Sandwiches\n            Item: Caprese Panini\n            Description: Toasted panini with fresh mozzarella, tomatoes, basil pesto, and balsamic glaze.\n            Type: Veg\n            Calories: 650\n            Price: $11.50\n            \n            This Caprese Panini is a veg item from our sandwiches menu.\n            Toasted panini with fresh mozzarella, tomatoes, basil pesto, and balsamic glaze.\n            It contains 650 calories and costs $11.50.",
+        "metadata": {
+          "calories": 650,
+          "price": "$11.50",
+          "source": "menu_csv",
+          "category": "Sandwiches",
+          "type": "Veg",
+          "item_name": "Caprese Panini"
+        },
+        "relevance_score": 0.35274423211812966,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Sandwiches\n            Item: Classic Club\n            Description: Triple-decker sandwich with turkey, bacon, lettuce, tomato, and mayonnaise.\n            Type: Non-Veg\n            Calories: 850\n            Price: $13.00\n            \n            This Classic Club is a non-veg item from our sandwiches menu.\n            Triple-decker sandwich with turkey, bacon, lettuce, tomato, and mayonnaise.\n            It contains 850 calories and costs $13.00.",
+        "metadata": {
+          "source": "menu_csv",
+          "item_name": "Classic Club",
+          "type": "Non-Veg",
+          "calories": 850,
+          "category": "Sandwiches",
+          "price": "$13.00"
+        },
+        "relevance_score": 0.3527681082487106,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Pizzas\n            Item: BBQ Chicken\n            Description: Tangy BBQ sauce base, grilled chicken strips, red onions, and cilantro.\n            Type: Non-Veg\n            Calories: 980\n            Price: $15.50\n            \n            This BBQ Chicken is a non-veg item from our pizzas menu.\n            Tangy BBQ sauce base, grilled chicken strips, red onions, and cilantro.\n            It contains 980 calories and costs $15.50.",
+        "metadata": {
+          "category": "Pizzas",
+          "source": "menu_csv",
+          "item_name": "BBQ Chicken",
+          "calories": 980,
+          "price": "$15.50",
+          "type": "Non-Veg"
+        },
+        "relevance_score": 0.36008703410625453,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Step-by-step information:\n\nStep 1: Category: Sandwiches\n            Item: Caprese Panini\n            Description: Toasted panini with fresh mozzarella, tomatoes, basil pesto, and balsamic glaze.\n            Type: Veg\n            Calories: 650\n            Price: $11.50\n            \n            This Caprese Panini is a veg item from our sandwiches menu.\n            Toasted panini with fresh mozzarella, tomatoes, basil pesto, and balsamic glaze.\n            It contains 650 calories and costs $11.50.\n\nStep 2: Category: Sandwiches\n            Item: Classic Club\n            Description: Triple-decker sandwich with turkey, bacon, lettuce, tomato, and mayonnaise.\n            Type: Non-Veg\n            Calories: 850\n            Price: $13.00\n            \n            This Classic Club is a non-veg item from our sandwiches menu.\n            Triple-decker sandwich with turkey, bacon, lettuce, tomato, and mayonnaise.\n            It contains 850 calories and costs $13.00.\n\nStep 3: Category: Pizzas\n            Item: BBQ Chicken\n            Description: Tangy BBQ sauce base, grilled chicken strips, red onions, and cilantro.\n            Type: Non-Veg\n            Calories: 980\n            Price: $15.50\n            \n            This BBQ Chicken is a non-veg item from our pizzas menu.\n            Tangy BBQ sauce base, grilled chicken strips, red onions, and cilantro.\n            It contains 980 calories and costs $15.50.",
+    "response_time_ms": 7102.3969650268555,
+    "retrieval_strategy": "procedural",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "I'll have the soup",
+    "intent_result": {
+      "intent": "order_modification",
+      "confidence": 0.6674738817952274,
+      "confidence_level": "medium",
+      "priority": 4,
+      "timestamp": "2025-08-28T22:50:45.634067",
+      "alternatives": [
+        {
+          "intent": "order_placement",
+          "confidence": 0.6665264145138394
+        },
+        {
+          "intent": "order_confirmation",
+          "confidence": 0.6656494321084012
+        },
+        {
+          "intent": "menu_inquiry",
+          "confidence": 0.6570564633225089
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "order_modification",
+        "confidence": 0.6674738817952274,
+        "confidence_level": "medium",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 300,
+        "retrieval_strategy": "procedural",
+        "rerank_weight": 0.675,
+        "context_window": "medium",
+        "supports_expansion": "True",
+        "supports_step_back": false
+      }
+    },
+    "expansion_result": {
+      "original_query": "I'll have the soup",
+      "expanded_terms": [
+        "beef",
+        "soup"
+      ],
+      "reformulated_queries": [
+        "\"I'd like to order the soup\"",
+        "\"Can I get the soup, please?\"",
+        "\"Would you mind bringing me the soup?\"",
+        "I'll have the soup"
+      ],
+      "step_back_query": null,
+      "expansion_strategy": "hybrid",
+      "confidence_score": 0.7
+    },
+    "retrieval_results": [
+      {
+        "content": "Category: Healthy Meals\n            Item: Lentil Soup\n            Description: A hearty and nutritious soup made with red lentils, carrots, celery, and spices.\n            Type: Veg\n            Calories: 350\n            Price: $9.00\n            \n            This Lentil Soup is a veg item from our healthy meals menu.\n            A hearty and nutritious soup made with red lentils, carrots, celery, and spices.\n            It contains 350 calories and costs $9.00.",
+        "metadata": {
+          "type": "Veg",
+          "item_name": "Lentil Soup",
+          "category": "Healthy Meals",
+          "price": "$9.00",
+          "calories": 350,
+          "source": "menu_csv"
+        },
+        "relevance_score": 0.326847392320633,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Hotdogs\n            Item: The Classic\n            Description: All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            Type: Non-Veg\n            Calories: 450\n            Price: $8.00\n            \n            This The Classic is a non-veg item from our hotdogs menu.\n            All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            It contains 450 calories and costs $8.00.",
+        "metadata": {
+          "calories": 450,
+          "category": "Hotdogs",
+          "source": "menu_csv",
+          "type": "Non-Veg",
+          "item_name": "The Classic",
+          "price": "$8.00"
+        },
+        "relevance_score": 0.383615380525589,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Beverages\n            Item: Iced Mocha\n            Description: A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            Type: Veg\n            Calories: 350\n            Price: $5.50\n            \n            This Iced Mocha is a veg item from our beverages menu.\n            A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            It contains 350 calories and costs $5.50.",
+        "metadata": {
+          "price": "$5.50",
+          "item_name": "Iced Mocha",
+          "type": "Veg",
+          "source": "menu_csv",
+          "category": "Beverages",
+          "calories": 350
+        },
+        "relevance_score": 0.3921150729060173,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Step-by-step information:\n\nStep 1: Category: Healthy Meals\n            Item: Lentil Soup\n            Description: A hearty and nutritious soup made with red lentils, carrots, celery, and spices.\n            Type: Veg\n            Calories: 350\n            Price: $9.00\n            \n            This Lentil Soup is a veg item from our healthy meals menu.\n            A hearty and nutritious soup made with red lentils, carrots, celery, and spices.\n            It contains 350 calories and costs $9.00.\n\nStep 2: Category: Hotdogs\n            Item: The Classic\n            Description: All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            Type: Non-Veg\n            Calories: 450\n            Price: $8.00\n            \n            This The Classic is a non-veg item from our hotdogs menu.\n            All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            It contains 450 calories and costs $8.00.\n\nStep 3: Category: Beverages\n            Item: Iced Mocha\n            Description: A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            Type: Veg\n            Calories: 350\n            Price: $5.50\n            \n            This Iced Mocha is a veg item from our beverages menu.\n            A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            It contains 350 calories and costs $5.50.\n\nStep 4: Category: Healthy Meals\n            Item: Buddha Bowl\n            Description: A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            Type: Veg\n            Calories: 520\n            Price: $13.50\n            \n            This Buddha Bowl is a veg item from our healthy meals menu.\n            A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            It contains 520 calories and costs $13.50.",
+    "response_time_ms": 7473.244905471802,
+    "retrieval_strategy": "procedural",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "add a salad to my order",
+    "intent_result": {
+      "intent": "order_modification",
+      "confidence": 0.7686579264279629,
+      "confidence_level": "medium",
+      "priority": 4,
+      "timestamp": "2025-08-28T22:50:53.110958",
+      "alternatives": [
+        {
+          "intent": "order_placement",
+          "confidence": 0.7154406061829967
+        },
+        {
+          "intent": "menu_inquiry",
+          "confidence": 0.6929945726588144
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "order_modification",
+        "confidence": 0.7686579264279629,
+        "confidence_level": "medium",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 300,
+        "retrieval_strategy": "procedural",
+        "rerank_weight": 0.675,
+        "context_window": "medium",
+        "supports_expansion": "True",
+        "supports_step_back": false
+      }
+    },
+    "expansion_result": {
+      "original_query": "add a salad to my order",
+      "expanded_terms": [
+        "salad"
+      ],
+      "reformulated_queries": [
+        "\"Please add a salad to my existing hotel room service order\"",
+        "\"Can you include a salad in my food order?\"",
+        "add a salad to my order",
+        "\"I'd like to add a salad to my current order\""
+      ],
+      "step_back_query": null,
+      "expansion_strategy": "hybrid",
+      "confidence_score": 0.7
+    },
+    "retrieval_results": [
+      {
+        "content": "Category: Healthy Meals\n            Item: Quinoa Salad\n            Description: A vibrant salad with quinoa, chickpeas, cucumber, tomatoes, and a lemon-tahini dressing.\n            Type: Veg\n            Calories: 450\n            Price: $12.50\n            \n            This Quinoa Salad is a veg item from our healthy meals menu.\n            A vibrant salad with quinoa, chickpeas, cucumber, tomatoes, and a lemon-tahini dressing.\n            It contains 450 calories and costs $12.50.",
+        "metadata": {
+          "source": "menu_csv",
+          "category": "Healthy Meals",
+          "type": "Veg",
+          "calories": 450,
+          "price": "$12.50",
+          "item_name": "Quinoa Salad"
+        },
+        "relevance_score": 0.34258341640233997,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Pizzas\n            Item: Veggie Supreme\n            Description: Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            Type: Veg\n            Calories: 810\n            Price: $13.50\n            \n            This Veggie Supreme is a veg item from our pizzas menu.\n            Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            It contains 810 calories and costs $13.50.",
+        "metadata": {
+          "price": "$13.50",
+          "calories": 810,
+          "item_name": "Veggie Supreme",
+          "category": "Pizzas",
+          "source": "menu_csv",
+          "type": "Veg"
+        },
+        "relevance_score": 0.36922221779823305,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Healthy Meals\n            Item: Buddha Bowl\n            Description: A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            Type: Veg\n            Calories: 520\n            Price: $13.50\n            \n            This Buddha Bowl is a veg item from our healthy meals menu.\n            A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            It contains 520 calories and costs $13.50.",
+        "metadata": {
+          "source": "menu_csv",
+          "item_name": "Buddha Bowl",
+          "category": "Healthy Meals",
+          "calories": 520,
+          "type": "Veg",
+          "price": "$13.50"
+        },
+        "relevance_score": 0.37091176807880405,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Healthy Meals\n            Item: Grilled Salmon\n            Description: Grilled salmon fillet served with a side of steamed asparagus and brown rice.\n            Type: Non-Veg\n            Calories: 550\n            Price: $18.00\n            \n            This Grilled Salmon is a non-veg item from our healthy meals menu.\n            Grilled salmon fillet served with a side of steamed asparagus and brown rice.\n            It contains 550 calories and costs $18.00.",
+        "metadata": {
+          "source": "menu_csv",
+          "calories": 550,
+          "category": "Healthy Meals",
+          "item_name": "Grilled Salmon",
+          "price": "$18.00",
+          "type": "Non-Veg"
+        },
+        "relevance_score": 0.4160253837704659,
+        "retrieval_strategy": "procedural",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Step-by-step information:\n\nStep 1: Category: Healthy Meals\n            Item: Quinoa Salad\n            Description: A vibrant salad with quinoa, chickpeas, cucumber, tomatoes, and a lemon-tahini dressing.\n            Type: Veg\n            Calories: 450\n            Price: $12.50\n            \n            This Quinoa Salad is a veg item from our healthy meals menu.\n            A vibrant salad with quinoa, chickpeas, cucumber, tomatoes, and a lemon-tahini dressing.\n            It contains 450 calories and costs $12.50.\n\nStep 2: Category: Pizzas\n            Item: Veggie Supreme\n            Description: Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            Type: Veg\n            Calories: 810\n            Price: $13.50\n            \n            This Veggie Supreme is a veg item from our pizzas menu.\n            Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            It contains 810 calories and costs $13.50.\n\nStep 3: Category: Healthy Meals\n            Item: Buddha Bowl\n            Description: A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            Type: Veg\n            Calories: 520\n            Price: $13.50\n            \n            This Buddha Bowl is a veg item from our healthy meals menu.\n            A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            It contains 520 calories and costs $13.50.\n\nStep 4: Category: Healthy Meals\n            Item: Grilled Salmon\n            Description: Grilled salmon fillet served with a side of steamed asparagus and brown rice.\n            Type: Non-Veg\n            Calories: 550\n            Price: $18.00\n            \n            This Grilled Salmon is a non-veg item from our healthy meals menu.\n            Grilled salmon fillet served with a side of steamed asparagus and brown rice.\n            It contains 550 calories and costs $18.00.",
+    "response_time_ms": 38809.55386161804,
+    "retrieval_strategy": "procedural",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "order me some appetizers",
+    "intent_result": {
+      "intent": "menu_inquiry",
+      "confidence": 0.7525239526676287,
+      "confidence_level": "medium",
+      "priority": 2,
+      "timestamp": "2025-08-28T22:51:33.966367",
+      "alternatives": [
+        {
+          "intent": "order_placement",
+          "confidence": 0.7040232009074895
+        },
+        {
+          "intent": "order_modification",
+          "confidence": 0.6879285813280455
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "menu_inquiry",
+        "confidence": 0.7525239526676287,
+        "confidence_level": "medium",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 200,
+        "retrieval_strategy": "factual_lookup",
+        "rerank_weight": 0.7200000000000001,
+        "context_window": "small",
+        "supports_expansion": "True",
+        "supports_step_back": false
+      }
+    },
+    "expansion_result": {
+      "original_query": "order me some appetizers",
+      "expanded_terms": [
+        "chicken"
+      ],
+      "reformulated_queries": [
+        "\"Which starters are available for ordering?\"",
+        "What chicken options are available?",
+        "\"Can I see the appetizer options?\"",
+        "\"What appetizers do you recommend?\"",
+        "Tell me about chicken on the menu",
+        "Show me chicken dishes"
+      ],
+      "step_back_query": null,
+      "expansion_strategy": "hybrid",
+      "confidence_score": 0.7
+    },
+    "retrieval_results": [
+      {
+        "content": "Category: Pizzas\n            Item: Pepperoni\n            Description: A crowd-pleaser with generous layers of spicy pepperoni and mozzarella cheese.\n            Type: Non-Veg\n            Calories: 950\n            Price: $14.00\n            \n            This Pepperoni is a non-veg item from our pizzas menu.\n            A crowd-pleaser with generous layers of spicy pepperoni and mozzarella cheese.\n            It contains 950 calories and costs $14.00.",
+        "metadata": {
+          "source": "menu_csv",
+          "item_name": "Pepperoni",
+          "calories": 950,
+          "type": "Non-Veg",
+          "price": "$14.00",
+          "category": "Pizzas"
+        },
+        "relevance_score": 0.4000486421585083,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Pizzas\n            Item: Veggie Supreme\n            Description: Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            Type: Veg\n            Calories: 810\n            Price: $13.50\n            \n            This Veggie Supreme is a veg item from our pizzas menu.\n            Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            It contains 810 calories and costs $13.50.",
+        "metadata": {
+          "category": "Pizzas",
+          "source": "menu_csv",
+          "calories": 810,
+          "item_name": "Veggie Supreme",
+          "price": "$13.50",
+          "type": "Veg"
+        },
+        "relevance_score": 0.40877491950988776,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Pizzas\n            Item: BBQ Chicken\n            Description: Tangy BBQ sauce base, grilled chicken strips, red onions, and cilantro.\n            Type: Non-Veg\n            Calories: 980\n            Price: $15.50\n            \n            This BBQ Chicken is a non-veg item from our pizzas menu.\n            Tangy BBQ sauce base, grilled chicken strips, red onions, and cilantro.\n            It contains 980 calories and costs $15.50.",
+        "metadata": {
+          "item_name": "BBQ Chicken",
+          "type": "Non-Veg",
+          "calories": 980,
+          "price": "$15.50",
+          "category": "Pizzas",
+          "source": "menu_csv"
+        },
+        "relevance_score": 0.40909781455993655,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Beverages\n            Item: Sparkling Water\n            Description: Chilled carbonated mineral water with a slice of lime.\n            Type: Veg\n            Calories: 0\n            Price: $3.00\n            \n            This Sparkling Water is a veg item from our beverages menu.\n            Chilled carbonated mineral water with a slice of lime.\n            It contains 0 calories and costs $3.00.",
+        "metadata": {
+          "source": "menu_csv",
+          "item_name": "Sparkling Water",
+          "type": "Veg",
+          "calories": 0,
+          "category": "Beverages",
+          "price": "$3.00"
+        },
+        "relevance_score": 0.5181148910522462,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Hotdogs\n            Item: The Classic\n            Description: All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            Type: Non-Veg\n            Calories: 450\n            Price: $8.00\n            \n            This The Classic is a non-veg item from our hotdogs menu.\n            All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            It contains 450 calories and costs $8.00.",
+        "metadata": {
+          "item_name": "The Classic",
+          "source": "menu_csv",
+          "calories": 450,
+          "price": "$8.00",
+          "category": "Hotdogs",
+          "type": "Non-Veg"
+        },
+        "relevance_score": 0.4955720615386964,
+        "retrieval_strategy": "factual_lookup",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Relevant menu information:\n\n1. Category: Pizzas\n            Item: Pepperoni\n            Description: A crowd-pleaser with generous layers of spicy pepperoni and mozzarella cheese.\n            Type: Non-Veg\n            Calories: 950\n\n2. Category: Pizzas\n            Item: Veggie Supreme\n            Description: Loaded with bell peppers, onions, olives, mushrooms, and mozzarella cheese.\n            Type: Veg\n            Calories: 810\n \n\n3. Category: Pizzas\n            Item: BBQ Chicken\n            Description: Tangy BBQ sauce base, grilled chicken strips, red onions, and cilantro.\n            Type: Non-Veg\n            Calories: 980\n    \n\n4. Category: Beverages\n            Item: Sparkling Water\n            Description: Chilled carbonated mineral water with a slice of lime.\n            Type: Veg\n            Calories: 0\n            Price: $\n\n5. Category: Healthy Meals\n            Item: Chicken & Veggie Skewers\n            Description: Marinated chicken and mixed vegetable skewers, grilled and served with a yogurt dip.\n            Type: Non-V",
+    "response_time_ms": 9727.19693183899,
+    "retrieval_strategy": "factual_lookup",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "can you help me choose",
+    "intent_result": {
+      "intent": "general_assistance",
+      "confidence": 0.6433699465228634,
+      "confidence_level": "low",
+      "priority": 1,
+      "timestamp": "2025-08-28T22:51:41.548727",
+      "alternatives": [
+        {
+          "intent": "order_modification",
+          "confidence": 0.6325722747913202
+        },
+        {
+          "intent": "menu_inquiry",
+          "confidence": 0.6299963943807013
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "general_assistance",
+        "confidence": 0.6433699465228634,
+        "confidence_level": "low",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 350,
+        "retrieval_strategy": "conceptual_explanation",
+        "rerank_weight": 0.35,
+        "context_window": "large",
+        "supports_expansion": "True",
+        "supports_step_back": "True"
+      }
+    },
+    "expansion_result": {
+      "original_query": "can you help me choose",
+      "expanded_terms": [
+        "beef"
+      ],
+      "reformulated_queries": [
+        "\"How can I decide on a meal from the hotel menu?\"",
+        "\"Can you suggest some hotel dining options?\"",
+        "can you help me choose",
+        "\"What are the best food choices at this hotel?\""
+      ],
+      "step_back_query": "What are the main services and information available?",
+      "expansion_strategy": "hybrid",
+      "confidence_score": 0.7
+    },
+    "retrieval_results": [
+      {
+        "content": "Category: Hotdogs\n            Item: The Classic\n            Description: All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            Type: Non-Veg\n            Calories: 450\n            Price: $8.00\n            \n            This The Classic is a non-veg item from our hotdogs menu.\n            All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            It contains 450 calories and costs $8.00.",
+        "metadata": {
+          "category": "Hotdogs",
+          "price": "$8.00",
+          "type": "Non-Veg",
+          "calories": 450,
+          "source": "menu_csv",
+          "item_name": "The Classic"
+        },
+        "relevance_score": 0.23886553049087522,
+        "retrieval_strategy": "conceptual_explanation",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Beverages\n            Item: Sparkling Water\n            Description: Chilled carbonated mineral water with a slice of lime.\n            Type: Veg\n            Calories: 0\n            Price: $3.00\n            \n            This Sparkling Water is a veg item from our beverages menu.\n            Chilled carbonated mineral water with a slice of lime.\n            It contains 0 calories and costs $3.00.",
+        "metadata": {
+          "source": "menu_csv",
+          "item_name": "Sparkling Water",
+          "price": "$3.00",
+          "type": "Veg",
+          "calories": 0,
+          "category": "Beverages"
+        },
+        "relevance_score": 0.2405914545059204,
+        "retrieval_strategy": "conceptual_explanation",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Beverages\n            Item: Classic Lemonade\n            Description: Freshly squeezed lemon juice, sweetened to perfection. Served chilled.\n            Type: Veg\n            Calories: 150\n            Price: $4.00\n            \n            This Classic Lemonade is a veg item from our beverages menu.\n            Freshly squeezed lemon juice, sweetened to perfection. Served chilled.\n            It contains 150 calories and costs $4.00.",
+        "metadata": {
+          "type": "Veg",
+          "category": "Beverages",
+          "price": "$4.00",
+          "calories": 150,
+          "source": "menu_csv",
+          "item_name": "Classic Lemonade"
+        },
+        "relevance_score": 0.24353340268135068,
+        "retrieval_strategy": "conceptual_explanation",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Pizzas\n            Item: Hawaiian\n            Description: A tropical delight featuring ham, pineapple chunks, and a cheesy base.\n            Type: Non-Veg\n            Calories: 890\n            Price: $14.50\n            \n            This Hawaiian is a non-veg item from our pizzas menu.\n            A tropical delight featuring ham, pineapple chunks, and a cheesy base.\n            It contains 890 calories and costs $14.50.",
+        "metadata": {
+          "category": "Pizzas",
+          "calories": 890,
+          "source": "menu_csv",
+          "price": "$14.50",
+          "item_name": "Hawaiian",
+          "type": "Non-Veg"
+        },
+        "relevance_score": 0.23054672777652738,
+        "retrieval_strategy": "conceptual_explanation",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Comprehensive menu information:\n\nOverview: Category: Hotdogs\n            Item: The Classic\n            Description: All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            Type: Non-Veg\n            Calories: 450\n            Price: $8.00\n            \n            This The Classic is a non-veg item from our hotdogs menu.\n            All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            It contains 450 calories and costs $8.00.\n\nAdditional details:\n\u2022 Category: Beverages\n            Item: Sparkling Water\n            Description: Chilled carbonated mineral water with a slice of lime.\n            Type: Veg\n            Calories: 0\n            Price: $3.00\n            \n            This Sparkling Water is a veg item from our beverages menu.\n            Chilled carbonated mineral water with a slice of lime.\n            It contains 0 calories and costs $3.00.\n\u2022 Category: Beverages\n            Item: Classic Lemonade\n            Description: Freshly squeezed lemon juice, sweetened to perfection. Served chilled.\n            Type: Veg\n            Calories: 150\n            Price: $4.00\n            \n            This Classic Lemonade is a veg item from our beverages menu.\n            Freshly squeezed lemon juice, sweetened to perfection. Served chilled.\n            It contains 150 calories and costs $4.00.\n\u2022 Category: Healthy Meals\n            Item: Lentil Soup\n            Description: A hearty and nutritious soup made with red lentils, carrots, celery, and spices.\n            Type: Veg\n            Calories: 350\n            Price: $9.00\n            \n            This Lentil Soup is a veg item from our healthy meals menu.\n            A hearty and nutritious soup made with red lentils, carrots, celery, and spices.\n            It contains 350 calories and costs $9.00.\n\u2022 Category: Healthy Meals\n            Item: Chicken & Veggie Skewers\n            Description: Marinated chicken and mixed vegetable skewers, grilled and served with a yogurt dip.\n            Type: Non-Veg\n            Calories: 480\n            Price: $15.00\n            \n            This Chicken & Veggie Skewers is a non-veg item from our healthy meals menu.\n            Marinated chicken and mixed vegetable skewers, grilled and served with a yogurt dip.\n            It contains 480 calories and costs $15.00.",
+    "response_time_ms": 7271.932125091553,
+    "retrieval_strategy": "conceptual_explanation",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "what do you recommend",
+    "intent_result": {
+      "intent": "general_assistance",
+      "confidence": 0.662770930227476,
+      "confidence_level": "medium",
+      "priority": 1,
+      "timestamp": "2025-08-28T22:51:48.903604",
+      "alternatives": [
+        {
+          "intent": "menu_inquiry",
+          "confidence": 0.6268572888100633
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "general_assistance",
+        "confidence": 0.662770930227476,
+        "confidence_level": "medium",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 350,
+        "retrieval_strategy": "conceptual_explanation",
+        "rerank_weight": 0.45,
+        "context_window": "large",
+        "supports_expansion": "True",
+        "supports_step_back": "True"
+      }
+    },
+    "expansion_result": {
+      "original_query": "what do you recommend",
+      "expanded_terms": [
+        "beef"
+      ],
+      "reformulated_queries": [
+        "what do you recommend",
+        "\"Can you suggest some popular dishes from the hotel menu?\"",
+        "\"What are the best food options available at the hotel?\"",
+        "\"Which menu items do you recommend trying during my stay?\""
+      ],
+      "step_back_query": "What are the main services and information available?",
+      "expansion_strategy": "hybrid",
+      "confidence_score": 0.7
+    },
+    "retrieval_results": [
+      {
+        "content": "Category: Hotdogs\n            Item: The Classic\n            Description: All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            Type: Non-Veg\n            Calories: 450\n            Price: $8.00\n            \n            This The Classic is a non-veg item from our hotdogs menu.\n            All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            It contains 450 calories and costs $8.00.",
+        "metadata": {
+          "calories": 450,
+          "source": "menu_csv",
+          "price": "$8.00",
+          "category": "Hotdogs",
+          "type": "Non-Veg",
+          "item_name": "The Classic"
+        },
+        "relevance_score": 0.3098921835422516,
+        "retrieval_strategy": "conceptual_explanation",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Beverages\n            Item: Sparkling Water\n            Description: Chilled carbonated mineral water with a slice of lime.\n            Type: Veg\n            Calories: 0\n            Price: $3.00\n            \n            This Sparkling Water is a veg item from our beverages menu.\n            Chilled carbonated mineral water with a slice of lime.\n            It contains 0 calories and costs $3.00.",
+        "metadata": {
+          "type": "Veg",
+          "price": "$3.00",
+          "calories": 0,
+          "category": "Beverages",
+          "item_name": "Sparkling Water",
+          "source": "menu_csv"
+        },
+        "relevance_score": 0.31208124160766604,
+        "retrieval_strategy": "conceptual_explanation",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Hotdogs\n            Item: Veggie Dog\n            Description: Plant-based sausage in a whole wheat bun with your choice of toppings.\n            Type: Veg\n            Calories: 400\n            Price: $9.00\n            \n            This Veggie Dog is a veg item from our hotdogs menu.\n            Plant-based sausage in a whole wheat bun with your choice of toppings.\n            It contains 400 calories and costs $9.00.",
+        "metadata": {
+          "item_name": "Veggie Dog",
+          "calories": 400,
+          "category": "Hotdogs",
+          "source": "menu_csv",
+          "price": "$9.00",
+          "type": "Veg"
+        },
+        "relevance_score": 0.31515092253685,
+        "retrieval_strategy": "conceptual_explanation",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Beverages\n            Item: Mango Lassi\n            Description: Traditional Indian yogurt-based drink blended with sweet mango pulp.\n            Type: Veg\n            Calories: 320\n            Price: $5.00\n            \n            This Mango Lassi is a veg item from our beverages menu.\n            Traditional Indian yogurt-based drink blended with sweet mango pulp.\n            It contains 320 calories and costs $5.00.",
+        "metadata": {
+          "category": "Beverages",
+          "item_name": "Mango Lassi",
+          "type": "Veg",
+          "calories": 320,
+          "source": "menu_csv",
+          "price": "$5.00"
+        },
+        "relevance_score": 0.22174226939678193,
+        "retrieval_strategy": "conceptual_explanation",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Comprehensive menu information:\n\nOverview: Category: Hotdogs\n            Item: The Classic\n            Description: All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            Type: Non-Veg\n            Calories: 450\n            Price: $8.00\n            \n            This The Classic is a non-veg item from our hotdogs menu.\n            All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            It contains 450 calories and costs $8.00.\n\nAdditional details:\n\u2022 Category: Beverages\n            Item: Sparkling Water\n            Description: Chilled carbonated mineral water with a slice of lime.\n            Type: Veg\n            Calories: 0\n            Price: $3.00\n            \n            This Sparkling Water is a veg item from our beverages menu.\n            Chilled carbonated mineral water with a slice of lime.\n            It contains 0 calories and costs $3.00.\n\u2022 Category: Hotdogs\n            Item: Veggie Dog\n            Description: Plant-based sausage in a whole wheat bun with your choice of toppings.\n            Type: Veg\n            Calories: 400\n            Price: $9.00\n            \n            This Veggie Dog is a veg item from our hotdogs menu.\n            Plant-based sausage in a whole wheat bun with your choice of toppings.\n            It contains 400 calories and costs $9.00.\n\u2022 Category: Beverages\n            Item: Mango Lassi\n            Description: Traditional Indian yogurt-based drink blended with sweet mango pulp.\n            Type: Veg\n            Calories: 320\n            Price: $5.00\n            \n            This Mango Lassi is a veg item from our beverages menu.\n            Traditional Indian yogurt-based drink blended with sweet mango pulp.\n            It contains 320 calories and costs $5.00.",
+    "response_time_ms": 6654.817819595337,
+    "retrieval_strategy": "conceptual_explanation",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "I'm not sure what to get",
+    "intent_result": {
+      "intent": "general_assistance",
+      "confidence": 0.6604452130093652,
+      "confidence_level": "medium",
+      "priority": 1,
+      "timestamp": "2025-08-28T22:51:55.421856",
+      "alternatives": [
+        {
+          "intent": "order_modification",
+          "confidence": 0.6382957204166548
+        },
+        {
+          "intent": "order_placement",
+          "confidence": 0.6345304009183261
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "general_assistance",
+        "confidence": 0.6604452130093652,
+        "confidence_level": "medium",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 350,
+        "retrieval_strategy": "conceptual_explanation",
+        "rerank_weight": 0.45,
+        "context_window": "large",
+        "supports_expansion": "True",
+        "supports_step_back": "True"
+      }
+    },
+    "expansion_result": {
+      "original_query": "I'm not sure what to get",
+      "expanded_terms": [
+        "sandwich",
+        "beef",
+        "salad"
+      ],
+      "reformulated_queries": [
+        "\"What dishes do you recommend?\"",
+        "I'm not sure what to get",
+        "\"Can you suggest some popular items from the menu?\"",
+        "\"Which meals or snacks are most commonly ordered here?\""
+      ],
+      "step_back_query": "What are the main services and information available?",
+      "expansion_strategy": "hybrid",
+      "confidence_score": 0.7
+    },
+    "retrieval_results": [
+      {
+        "content": "Category: Beverages\n            Item: Iced Mocha\n            Description: A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            Type: Veg\n            Calories: 350\n            Price: $5.50\n            \n            This Iced Mocha is a veg item from our beverages menu.\n            A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            It contains 350 calories and costs $5.50.",
+        "metadata": {
+          "price": "$5.50",
+          "item_name": "Iced Mocha",
+          "type": "Veg",
+          "source": "menu_csv",
+          "category": "Beverages",
+          "calories": 350
+        },
+        "relevance_score": 0.28917185068130496,
+        "retrieval_strategy": "conceptual_explanation",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Beverages\n            Item: Sparkling Water\n            Description: Chilled carbonated mineral water with a slice of lime.\n            Type: Veg\n            Calories: 0\n            Price: $3.00\n            \n            This Sparkling Water is a veg item from our beverages menu.\n            Chilled carbonated mineral water with a slice of lime.\n            It contains 0 calories and costs $3.00.",
+        "metadata": {
+          "type": "Veg",
+          "category": "Beverages",
+          "calories": 0,
+          "price": "$3.00",
+          "item_name": "Sparkling Water",
+          "source": "menu_csv"
+        },
+        "relevance_score": 0.2918503046035767,
+        "retrieval_strategy": "conceptual_explanation",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Sandwiches\n            Item: Tuna Melt\n            Description: Classic sandwich with tuna salad and melted cheddar cheese on toasted rye bread.\n            Type: Non-Veg\n            Calories: 750\n            Price: $12.50\n            \n            This Tuna Melt is a non-veg item from our sandwiches menu.\n            Classic sandwich with tuna salad and melted cheddar cheese on toasted rye bread.\n            It contains 750 calories and costs $12.50.",
+        "metadata": {
+          "type": "Non-Veg",
+          "price": "$12.50",
+          "source": "menu_csv",
+          "item_name": "Tuna Melt",
+          "calories": 750,
+          "category": "Sandwiches"
+        },
+        "relevance_score": 0.2930238783359528,
+        "retrieval_strategy": "conceptual_explanation",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Hotdogs\n            Item: The Classic\n            Description: All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            Type: Non-Veg\n            Calories: 450\n            Price: $8.00\n            \n            This The Classic is a non-veg item from our hotdogs menu.\n            All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            It contains 450 calories and costs $8.00.",
+        "metadata": {
+          "type": "Non-Veg",
+          "item_name": "The Classic",
+          "calories": 450,
+          "source": "menu_csv",
+          "category": "Hotdogs",
+          "price": "$8.00"
+        },
+        "relevance_score": 0.256694832444191,
+        "retrieval_strategy": "conceptual_explanation",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Comprehensive menu information:\n\nOverview: Category: Beverages\n            Item: Iced Mocha\n            Description: A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            Type: Veg\n            Calories: 350\n            Price: $5.50\n            \n            This Iced Mocha is a veg item from our beverages menu.\n            A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            It contains 350 calories and costs $5.50.\n\nAdditional details:\n\u2022 Category: Beverages\n            Item: Sparkling Water\n            Description: Chilled carbonated mineral water with a slice of lime.\n            Type: Veg\n            Calories: 0\n            Price: $3.00\n            \n            This Sparkling Water is a veg item from our beverages menu.\n            Chilled carbonated mineral water with a slice of lime.\n            It contains 0 calories and costs $3.00.\n\u2022 Category: Sandwiches\n            Item: Tuna Melt\n            Description: Classic sandwich with tuna salad and melted cheddar cheese on toasted rye bread.\n            Type: Non-Veg\n            Calories: 750\n            Price: $12.50\n            \n            This Tuna Melt is a non-veg item from our sandwiches menu.\n            Classic sandwich with tuna salad and melted cheddar cheese on toasted rye bread.\n            It contains 750 calories and costs $12.50.\n\u2022 Category: Healthy Meals\n            Item: Buddha Bowl\n            Description: A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            Type: Veg\n            Calories: 520\n            Price: $13.50\n            \n            This Buddha Bowl is a veg item from our healthy meals menu.\n            A colorful bowl of roasted sweet potatoes, black beans, avocado, and mixed greens.\n            It contains 520 calories and costs $13.50.\n\u2022 Category: Healthy Meals\n            Item: Lentil Soup\n            Description: A hearty and nutritious soup made with red lentils, carrots, celery, and spices.\n            Type: Veg\n            Calories: 350\n            Price: $9.00\n            \n            This Lentil Soup is a veg item from our healthy meals menu.\n            A hearty and nutritious soup made with red lentils, carrots, celery, and spices.\n            It contains 350 calories and costs $9.00.",
+    "response_time_ms": 37991.17207527161,
+    "retrieval_strategy": "conceptual_explanation",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "help me decide",
+    "intent_result": {
+      "intent": "general_assistance",
+      "confidence": 0.6060180542179712,
+      "confidence_level": "low",
+      "priority": 1,
+      "timestamp": "2025-08-28T22:52:33.621868",
+      "alternatives": [
+        {
+          "intent": "menu_inquiry",
+          "confidence": 0.5985670253717511
+        },
+        {
+          "intent": "order_modification",
+          "confidence": 0.5910254068958676
+        },
+        {
+          "intent": "order_confirmation",
+          "confidence": 0.5907557579810773
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "general_assistance",
+        "confidence": 0.6060180542179712,
+        "confidence_level": "low",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 350,
+        "retrieval_strategy": "conceptual_explanation",
+        "rerank_weight": 0.35,
+        "context_window": "large",
+        "supports_expansion": "True",
+        "supports_step_back": "True"
+      }
+    },
+    "expansion_result": {
+      "original_query": "help me decide",
+      "expanded_terms": [
+        "beef"
+      ],
+      "reformulated_queries": [
+        "\"What are the best dishes to order at a hotel restaurant?\"",
+        "\"Can you suggest some good hotel food options?\"",
+        "\"How do I choose the best meal from a hotel menu?\"",
+        "help me decide"
+      ],
+      "step_back_query": "What are the main services and information available?",
+      "expansion_strategy": "hybrid",
+      "confidence_score": 0.7
+    },
+    "retrieval_results": [
+      {
+        "content": "Category: Hotdogs\n            Item: Veggie Dog\n            Description: Plant-based sausage in a whole wheat bun with your choice of toppings.\n            Type: Veg\n            Calories: 400\n            Price: $9.00\n            \n            This Veggie Dog is a veg item from our hotdogs menu.\n            Plant-based sausage in a whole wheat bun with your choice of toppings.\n            It contains 400 calories and costs $9.00.",
+        "metadata": {
+          "price": "$9.00",
+          "type": "Veg",
+          "calories": 400,
+          "item_name": "Veggie Dog",
+          "category": "Hotdogs",
+          "source": "menu_csv"
+        },
+        "relevance_score": 0.2828423589468002,
+        "retrieval_strategy": "conceptual_explanation",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Beverages\n            Item: Mango Lassi\n            Description: Traditional Indian yogurt-based drink blended with sweet mango pulp.\n            Type: Veg\n            Calories: 320\n            Price: $5.00\n            \n            This Mango Lassi is a veg item from our beverages menu.\n            Traditional Indian yogurt-based drink blended with sweet mango pulp.\n            It contains 320 calories and costs $5.00.",
+        "metadata": {
+          "price": "$5.00",
+          "item_name": "Mango Lassi",
+          "source": "menu_csv",
+          "calories": 320,
+          "type": "Veg",
+          "category": "Beverages"
+        },
+        "relevance_score": 0.28394495844841,
+        "retrieval_strategy": "conceptual_explanation",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Beverages\n            Item: Classic Lemonade\n            Description: Freshly squeezed lemon juice, sweetened to perfection. Served chilled.\n            Type: Veg\n            Calories: 150\n            Price: $4.00\n            \n            This Classic Lemonade is a veg item from our beverages menu.\n            Freshly squeezed lemon juice, sweetened to perfection. Served chilled.\n            It contains 150 calories and costs $4.00.",
+        "metadata": {
+          "price": "$4.00",
+          "item_name": "Classic Lemonade",
+          "category": "Beverages",
+          "calories": 150,
+          "type": "Veg",
+          "source": "menu_csv"
+        },
+        "relevance_score": 0.28457477092742917,
+        "retrieval_strategy": "conceptual_explanation",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Hotdogs\n            Item: The Classic\n            Description: All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            Type: Non-Veg\n            Calories: 450\n            Price: $8.00\n            \n            This The Classic is a non-veg item from our hotdogs menu.\n            All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            It contains 450 calories and costs $8.00.",
+        "metadata": {
+          "price": "$8.00",
+          "type": "Non-Veg",
+          "source": "menu_csv",
+          "item_name": "The Classic",
+          "calories": 450,
+          "category": "Hotdogs"
+        },
+        "relevance_score": 0.187790909409523,
+        "retrieval_strategy": "conceptual_explanation",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Beverages\n            Item: Iced Mocha\n            Description: A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            Type: Veg\n            Calories: 350\n            Price: $5.50\n            \n            This Iced Mocha is a veg item from our beverages menu.\n            A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            It contains 350 calories and costs $5.50.",
+        "metadata": {
+          "type": "Veg",
+          "item_name": "Iced Mocha",
+          "price": "$5.50",
+          "source": "menu_csv",
+          "calories": 350,
+          "category": "Beverages"
+        },
+        "relevance_score": 0.1888623833656311,
+        "retrieval_strategy": "conceptual_explanation",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Comprehensive menu information:\n\nOverview: Category: Hotdogs\n            Item: Veggie Dog\n            Description: Plant-based sausage in a whole wheat bun with your choice of toppings.\n            Type: Veg\n            Calories: 400\n            Price: $9.00\n            \n            This Veggie Dog is a veg item from our hotdogs menu.\n            Plant-based sausage in a whole wheat bun with your choice of toppings.\n            It contains 400 calories and costs $9.00.\n\nAdditional details:\n\u2022 Category: Beverages\n            Item: Mango Lassi\n            Description: Traditional Indian yogurt-based drink blended with sweet mango pulp.\n            Type: Veg\n            Calories: 320\n            Price: $5.00\n            \n            This Mango Lassi is a veg item from our beverages menu.\n            Traditional Indian yogurt-based drink blended with sweet mango pulp.\n            It contains 320 calories and costs $5.00.\n\u2022 Category: Beverages\n            Item: Classic Lemonade\n            Description: Freshly squeezed lemon juice, sweetened to perfection. Served chilled.\n            Type: Veg\n            Calories: 150\n            Price: $4.00\n            \n            This Classic Lemonade is a veg item from our beverages menu.\n            Freshly squeezed lemon juice, sweetened to perfection. Served chilled.\n            It contains 150 calories and costs $4.00.\n\u2022 Category: Healthy Meals\n            Item: Chicken & Veggie Skewers\n            Description: Marinated chicken and mixed vegetable skewers, grilled and served with a yogurt dip.\n            Type: Non-Veg\n            Calories: 480\n            Price: $15.00\n            \n            This Chicken & Veggie Skewers is a non-veg item from our healthy meals menu.\n            Marinated chicken and mixed vegetable skewers, grilled and served with a yogurt dip.\n            It contains 480 calories and costs $15.00.\n\u2022 Category: Hotdogs\n            Item: The Classic\n            Description: All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            Type: Non-Veg\n            Calories: 450\n            Price: $8.00\n            \n            This The Classic is a non-veg item from our hotdogs menu.\n            All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            It contains 450 calories and costs $8.00.",
+    "response_time_ms": 8214.091062545776,
+    "retrieval_strategy": "conceptual_explanation",
+    "success": "True",
+    "error": null
+  },
+  {
+    "query": "what's popular",
+    "intent_result": {
+      "intent": "general_assistance",
+      "confidence": 0.6642766424579876,
+      "confidence_level": "medium",
+      "priority": 1,
+      "timestamp": "2025-08-28T22:52:41.832439",
+      "alternatives": [
+        {
+          "intent": "menu_inquiry",
+          "confidence": 0.5859702669427511
+        }
+      ],
+      "retrieval_metadata": {
+        "intent": "general_assistance",
+        "confidence": 0.6642766424579876,
+        "confidence_level": "medium",
+        "retrieval_approach": "hybrid",
+        "chunk_size": 350,
+        "retrieval_strategy": "conceptual_explanation",
+        "rerank_weight": 0.45,
+        "context_window": "large",
+        "supports_expansion": "True",
+        "supports_step_back": "True"
+      }
+    },
+    "expansion_result": {
+      "original_query": "what's popular",
+      "expanded_terms": [
+        "beef"
+      ],
+      "reformulated_queries": [
+        "what's popular",
+        "Can you recommend the most popular menu choices?",
+        "What are the most popular dishes on the menu?",
+        "Which food items are frequently ordered by guests?"
+      ],
+      "step_back_query": "What are the main services and information available?",
+      "expansion_strategy": "hybrid",
+      "confidence_score": 0.7
+    },
+    "retrieval_results": [
+      {
+        "content": "Category: Beverages\n            Item: Sparkling Water\n            Description: Chilled carbonated mineral water with a slice of lime.\n            Type: Veg\n            Calories: 0\n            Price: $3.00\n            \n            This Sparkling Water is a veg item from our beverages menu.\n            Chilled carbonated mineral water with a slice of lime.\n            It contains 0 calories and costs $3.00.",
+        "metadata": {
+          "source": "menu_csv",
+          "calories": 0,
+          "item_name": "Sparkling Water",
+          "category": "Beverages",
+          "type": "Veg",
+          "price": "$3.00"
+        },
+        "relevance_score": 0.3352567881345749,
+        "retrieval_strategy": "conceptual_explanation",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Pizzas\n            Item: Pepperoni\n            Description: A crowd-pleaser with generous layers of spicy pepperoni and mozzarella cheese.\n            Type: Non-Veg\n            Calories: 950\n            Price: $14.00\n            \n            This Pepperoni is a non-veg item from our pizzas menu.\n            A crowd-pleaser with generous layers of spicy pepperoni and mozzarella cheese.\n            It contains 950 calories and costs $14.00.",
+        "metadata": {
+          "price": "$14.00",
+          "item_name": "Pepperoni",
+          "calories": 950,
+          "source": "menu_csv",
+          "category": "Pizzas",
+          "type": "Non-Veg"
+        },
+        "relevance_score": 0.34286522269248965,
+        "retrieval_strategy": "conceptual_explanation",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Hotdogs\n            Item: The Classic\n            Description: All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            Type: Non-Veg\n            Calories: 450\n            Price: $8.00\n            \n            This The Classic is a non-veg item from our hotdogs menu.\n            All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            It contains 450 calories and costs $8.00.",
+        "metadata": {
+          "type": "Non-Veg",
+          "category": "Hotdogs",
+          "source": "menu_csv",
+          "price": "$8.00",
+          "calories": 450,
+          "item_name": "The Classic"
+        },
+        "relevance_score": 0.3432799190282822,
+        "retrieval_strategy": "conceptual_explanation",
+        "retrieval_approach": "hybrid"
+      },
+      {
+        "content": "Category: Beverages\n            Item: Iced Mocha\n            Description: A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            Type: Veg\n            Calories: 350\n            Price: $5.50\n            \n            This Iced Mocha is a veg item from our beverages menu.\n            A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            It contains 350 calories and costs $5.50.",
+        "metadata": {
+          "price": "$5.50",
+          "type": "Veg",
+          "source": "menu_csv",
+          "category": "Beverages",
+          "calories": 350,
+          "item_name": "Iced Mocha"
+        },
+        "relevance_score": 0.23929040729999543,
+        "retrieval_strategy": "conceptual_explanation",
+        "retrieval_approach": "hybrid"
+      }
+    ],
+    "context_generated": "Comprehensive menu information:\n\nOverview: Category: Beverages\n            Item: Sparkling Water\n            Description: Chilled carbonated mineral water with a slice of lime.\n            Type: Veg\n            Calories: 0\n            Price: $3.00\n            \n            This Sparkling Water is a veg item from our beverages menu.\n            Chilled carbonated mineral water with a slice of lime.\n            It contains 0 calories and costs $3.00.\n\nAdditional details:\n\u2022 Category: Pizzas\n            Item: Pepperoni\n            Description: A crowd-pleaser with generous layers of spicy pepperoni and mozzarella cheese.\n            Type: Non-Veg\n            Calories: 950\n            Price: $14.00\n            \n            This Pepperoni is a non-veg item from our pizzas menu.\n            A crowd-pleaser with generous layers of spicy pepperoni and mozzarella cheese.\n            It contains 950 calories and costs $14.00.\n\u2022 Category: Hotdogs\n            Item: The Classic\n            Description: All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            Type: Non-Veg\n            Calories: 450\n            Price: $8.00\n            \n            This The Classic is a non-veg item from our hotdogs menu.\n            All-beef hotdog in a soft bun, topped with ketchup and mustard.\n            It contains 450 calories and costs $8.00.\n\u2022 Category: Beverages\n            Item: Mango Lassi\n            Description: Traditional Indian yogurt-based drink blended with sweet mango pulp.\n            Type: Veg\n            Calories: 320\n            Price: $5.00\n            \n            This Mango Lassi is a veg item from our beverages menu.\n            Traditional Indian yogurt-based drink blended with sweet mango pulp.\n            It contains 320 calories and costs $5.00.\n\u2022 Category: Beverages\n            Item: Iced Mocha\n            Description: A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            Type: Veg\n            Calories: 350\n            Price: $5.50\n            \n            This Iced Mocha is a veg item from our beverages menu.\n            A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream.\n            It contains 350 calories and costs $5.50.",
+    "response_time_ms": 7144.584894180298,
+    "retrieval_strategy": "conceptual_explanation",
+    "success": "True",
+    "error": null
+  }
+]

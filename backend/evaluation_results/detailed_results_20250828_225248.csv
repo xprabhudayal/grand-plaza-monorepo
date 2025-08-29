@@ -1,0 +1,31 @@
+query,intent,confidence,confidence_level,retrieval_strategy,num_retrieval_results,context_length,response_time_ms,success,error,expansion_used
+what vegetarian options do you have,order_modification,0.6424411607368851,low,procedural,3,1463,8812.524795532227,True,,True
+show me the pizza menu,menu_inquiry,0.6551868828644717,medium,factual_lookup,3,637,7788.157939910889,True,,True
+what salads are available,order_placement,0.6424538303284315,low,procedural,3,1483,7670.759916305542,True,,True
+tell me about your breakfast options,order_placement,0.6114814301855159,low,procedural,5,1839,8093.416213989258,True,,True
+what beverages do you offer,menu_inquiry,0.625123685620886,low,factual_lookup,4,641,39201.7867565155,True,,True
+how much does the pizza cost,menu_inquiry,0.6463782352451221,low,factual_lookup,3,637,8515.000104904175,True,,True
+what's the price of the burger,order_modification,0.6199133085844158,low,procedural,3,1917,37788.68508338928,True,,True
+how expensive is the wine,menu_inquiry,0.5670643373052476,low,factual_lookup,3,639,1696.4681148529053,True,,False
+what does the salad cost,order_modification,0.6167654672251661,low,procedural,4,1483,8237.188816070557,True,,True
+pricing for appetizers,menu_inquiry,0.6246444922874618,low,factual_lookup,5,1047,8088.847875595093,True,,True
+does the pizza contain gluten,order_modification,0.6267058452257737,low,procedural,3,1399,7066.442012786865,True,,True
+what's in the veggie burger,order_modification,0.6168380422133499,low,procedural,4,1839,37892.58289337158,True,,True
+are there nuts in the salad,order_modification,0.6124939415830609,low,procedural,3,1475,6959.334850311279,True,,True
+is the soup vegan,menu_inquiry,0.5932414584686588,low,factual_lookup,3,641,1434.692144393921,True,,False
+what ingredients are in the sandwich,order_modification,0.6475219991387069,low,procedural,4,1935,39952.47197151184,True,,True
+what gluten-free options are available,menu_inquiry,0.5971254452325805,low,factual_lookup,3,631,1488.9848232269287,True,,False
+do you have vegan dishes,order_modification,0.631450092900292,low,procedural,4,1907,8439.371109008789,True,,True
+what about low-calorie meals,menu_inquiry,0.5816448120139597,low,factual_lookup,3,641,1266.2031650543213,True,,False
+any keto-friendly items,menu_inquiry,0.6201315845508458,low,factual_lookup,4,1051,7216.600179672241,True,,True
+vegetarian protein options,order_modification,0.6149746619918882,low,procedural,3,1463,37218.67632865906,True,,True
+I want to order pizza,order_placement,0.7279601415882961,medium,procedural,4,1843,8113.768815994263,True,,True
+get me the chicken sandwich,order_modification,0.6386637202876325,low,procedural,3,1423,7102.3969650268555,True,,True
+I'll have the soup,order_modification,0.6674738817952274,medium,procedural,3,1887,7473.244905471802,True,,True
+add a salad to my order,order_modification,0.7686579264279629,medium,procedural,4,1941,38809.55386161804,True,,True
+order me some appetizers,menu_inquiry,0.7525239526676287,medium,factual_lookup,5,1051,9727.19693183899,True,,True
+can you help me choose,general_assistance,0.6433699465228634,low,conceptual_explanation,4,2328,7271.932125091553,True,,True
+what do you recommend,general_assistance,0.662770930227476,medium,conceptual_explanation,4,1769,6654.817819595337,True,,True
+I'm not sure what to get,general_assistance,0.6604452130093652,medium,conceptual_explanation,4,2344,37991.17207527161,True,,True
+help me decide,general_assistance,0.6060180542179712,low,conceptual_explanation,5,2318,8214.091062545776,True,,True
+what's popular,general_assistance,0.6642766424579876,medium,conceptual_explanation,4,2256,7144.584894180298,True,,True
