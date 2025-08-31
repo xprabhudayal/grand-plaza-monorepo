@@ -34,7 +34,7 @@ from pipecat.processors.aggregators.openai_llm_context import OpenAILLMContextFr
 from pipecat.frames.frames import TextFrame, LLMFullResponseStartFrame, LLMFullResponseEndFrame
 
 # Import LangGraph agent
-from langgraph_agent import get_concierge_agent
+from main_langgraph_agent import get_concierge_agent
 
 # Import session transcript logger
 from session_transcript_logger import SessionTranscriptLogger

@@ -1,0 +1,7 @@
+timestamp,role,content,session_id,room_number,confidence_score,processing_time_ms
+2025-08-31T23:22:45.061267,user,"હેલો, હેલો!",c797d842-d69c-4b43-a7ff-a9fc4cd3c378,,,
+2025-08-31T23:22:45.580555,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,c797d842-d69c-4b43-a7ff-a9fc4cd3c378,,,
+2025-08-31T23:22:50.053770,user, Welcome to,c797d842-d69c-4b43-a7ff-a9fc4cd3c378,,,
+2025-08-31T23:22:50.566135,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,c797d842-d69c-4b43-a7ff-a9fc4cd3c378,,,
+2025-08-31T23:22:54.381477,user, Welcome to,c797d842-d69c-4b43-a7ff-a9fc4cd3c378,,,
+2025-08-31T23:22:54.894820,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,c797d842-d69c-4b43-a7ff-a9fc4cd3c378,,,

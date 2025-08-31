@@ -1,0 +1,38 @@
+# Core Dependencies (existing)
+fastapi==0.104.1
+uvicorn==0.24.0
+pydantic==2.5.0
+python-dotenv==1.0.0
+aiohttp==3.9.0
+pypdf==3.17.0
+pandas==2.1.0
+loguru==0.7.2
+
+# LangChain Dependencies (existing)
+langchain==0.2.16
+langchain-community==0.2.16
+langchain-core==0.2.27
+langchain-groq==0.1.9
+langchain-mistralai==0.1.12
+langgraph==0.2.0
+
+# Vector Store Dependencies (existing)
+chromadb==0.5.15
+
+# LangSmith Dependencies (existing)
+langsmith==0.1.126
+
+# RAGAS Dependencies (existing)
+ragas==0.1.19
+
+# New Dependencies for PRD Implementation
+sentence-transformers==2.2.2
+transformers==4.36.2
+torch>=1.13.0
+
+# Additional NLP Dependencies for Enhanced Intent Detection
+scikit-learn==1.3.2
+numpy>=1.24.0
+
+# OpenAI for Enhanced Evaluation (multi-model approach)
+openai==1.6.0
