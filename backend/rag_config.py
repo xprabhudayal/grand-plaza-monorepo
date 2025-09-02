@@ -19,6 +19,7 @@ class RAGConfig:
     retrieval_k: int = 5
     similarity_threshold: float = 0.85
     chroma_db_path: str = "./chroma_db"
+    collection_name: str = "hotel_menu"
     
     # Intent Classification Configuration
     intent_model_name: str = "all-MiniLM-L6-v2"
@@ -55,6 +56,7 @@ class RAGConfig:
             retrieval_k=int(os.getenv("RAG_RETRIEVAL_K", "5")),
             similarity_threshold=float(os.getenv("RAG_SIMILARITY_THRESHOLD", "0.85")),
             chroma_db_path=os.getenv("RAG_CHROMA_DB_PATH", "./chroma_db"),
+            collection_name=os.getenv("RAG_COLLECTION_NAME", "hotel_menu"),
             
             # Intent Classification
             intent_model_name=os.getenv("INTENT_MODEL_NAME", "all-MiniLM-L6-v2"),
@@ -106,6 +108,7 @@ class RAGConfig:
             "retrieval_k": self.retrieval_k,
             "similarity_threshold": self.similarity_threshold,
             "chroma_db_path": self.chroma_db_path,
+            "collection_name": self.collection_name,
             "intent_model_name": self.intent_model_name,
             "confidence_thresholds": self.get_confidence_thresholds(),
             "retrieval_weights": self.get_retrieval_weights(),

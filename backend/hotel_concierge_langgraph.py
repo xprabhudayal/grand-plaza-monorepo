@@ -23,7 +23,8 @@ from pipecat.pipeline.runner import PipelineRunner
 from pipecat.pipeline.task import PipelineParams, PipelineTask
 from pipecat.services.groq.llm import GroqLLMService
 from pipecat.processors.aggregators.openai_llm_context import OpenAILLMContext
-from pipecat.services.cartesia.tts import CartesiaTTSService
+# from pipecat.services.cartesia.tts import CartesiaTTSService
+from pipecat.services.elevenlabs.tts import ElevenLabsTTSService
 from pipecat.services.deepgram.stt import DeepgramSTTService
 from pipecat.services.deepgram.tts import DeepgramTTSService
 from pipecat.transports.services.daily import DailyParams, DailyTransport
@@ -64,7 +65,7 @@ if dotenv_path.exists():
 else:
     print(f"Warning: .env file not found at {dotenv_path}")
 
-os.environ["LANGSMITH_PROJECT"] = "voice-ai-concierge"
+os.environ["LANGSMITH_PROJECT"] = "voice-ai-concierge-final"
 
 # ============================================================================
 # LangGraph Integration Handler
@@ -261,14 +262,38 @@ async def main():
 
             # Initialize TTS service
             cartesia_key = os.getenv("CARTESIA_API_KEY")
-            if cartesia_key:
-                logger.info("Using Cartesia TTS service")
-                tts = CartesiaTTSService(
-                    api_key=cartesia_key,
-                    voice_id="820a3788-2b37-4d21-847a-b65d8a68c99a",
-                )
+            elevenlabs_key = os.getenv("ELEVENLABS_API_KEY")
+            elevenlabs_voice_id = os.getenv("ELEVENLABS_VOICE_ID")
+            
+            # Debug logging for TTS selection
+            logger.info(f"ElevenLabs API Key found: {bool(elevenlabs_key)}")
+            logger.info(f"ElevenLabs Voice ID found: {bool(elevenlabs_voice_id)}")
+            if elevenlabs_key:
+                logger.info(f"ElevenLabs API Key prefix: {elevenlabs_key[:10]}...")
+            
+            # if cartesia_key:
+            #     logger.info("Using Cartesia TTS service")
+            #     tts = CartesiaTTSService(
+            #         api_key=cartesia_key,
+            #         voice_id="820a3788-2b37-4d21-847a-b65d8a68c99a",
+            #     )
+            if elevenlabs_key and elevenlabs_voice_id:
+                logger.info(f"Initializing ElevenLabs TTS with voice ID: {elevenlabs_voice_id}")
+                try:
+                    tts = ElevenLabsTTSService(
+                        api_key=elevenlabs_key,
+                        voice_id=elevenlabs_voice_id,
+                    )
+                    logger.info("ElevenLabs TTS service initialized successfully")
+                except Exception as e:
+                    logger.error(f"Failed to initialize ElevenLabs TTS: {e}")
+                    logger.info("Falling back to Deepgram TTS service")
+                    tts = DeepgramTTSService(
+                        api_key=os.getenv("DEEPGRAM_API_KEY"),
+                        voice="aura-angus-en",
+                    )
             else:
-                logger.info("Using Deepgram TTS service")
+                logger.info("Using Deepgram TTS service (ElevenLabs credentials not found)")
                 tts = DeepgramTTSService(
                     api_key=os.getenv("DEEPGRAM_API_KEY"),
                     voice="aura-angus-en",
@@ -346,10 +371,17 @@ async def main():
                         await self.push_frame(LLMFullResponseEndFrame())
 
             # Initialize LLM service with LangGraph integration
+            # llm = LangGraphLLMService(
+            #     lang_handler=lang_handler,
+            #     api_key=os.getenv("OPENAI_API_KEY"),
+            #     model=os.getenv("OPENAI_MODEL_NAME"),
+            #     temperature=0.1,
+            #     max_tokens=1000,
+            # )
             llm = LangGraphLLMService(
                 lang_handler=lang_handler,
                 api_key=os.getenv("GROQ_API_KEY"),
-                model="qwen/qwen3-32b",
+                model=os.getenv("GROQ_MODEL_NAME"),
                 temperature=0.1,
                 max_tokens=1000,
             )
@@ -443,6 +475,7 @@ async def main():
                     await transport.capture_participant_transcription(participant["id"])
                     logger.debug("First participant joined - initializing LangGraph context")
                     
+                    '''
                     # Add system context
                     context.add_message({
                         "role": "system",
@@ -455,6 +488,8 @@ async def main():
                             "role": "system",
                             "content": "You are appearing as a video avatar. Maintain professional demeanor and eye contact."
                         })
+                        
+                    '''
 
                 # Handle Tavus-specific events
                 if tavus_service:
@@ -478,10 +513,10 @@ async def main():
             else:
                 # For local transport, we can add initial context directly
                 logger.debug("Initializing LangGraph context for local session")
-                context.add_message({
-                    "role": "system",
-                    "content": "You are a professional hotel room service assistant. Be concise and efficient."
-                })
+                # context.add_message({
+                #     "role": "system",
+                #     "content": "You are a professional hotel room service assistant. Be concise and efficient."
+                # })
 
 
             # Run the pipeline

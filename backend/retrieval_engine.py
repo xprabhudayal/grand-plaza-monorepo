@@ -181,7 +181,7 @@ class SimplifiedRetrievalEngine:
         results.sort(key=lambda x: x[1])
         
         diversified = []
-        seen_content = set()
+        seen_content = []
         
         for doc, distance in results:
             # Simple content similarity check
@@ -197,7 +197,7 @@ class SimplifiedRetrievalEngine:
                     break
             
             if not is_similar:
-                seen_content.add(content_words)
+                seen_content.append(content_words)
                 diversified.append((doc, distance))
                 
                 if len(diversified) >= target_count:

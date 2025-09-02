@@ -33,6 +33,9 @@ except ImportError as e:
     def get_rag_pipeline():
         raise ImportError("RAG pipeline dependencies not installed")
 
+# Import the refactored semantic intent classifier
+from intent_classifier_refactored import create_intent_classifier
+
 
 # setup the project name for LangSmith
 os.environ["LANGSMITH_PROJECT"] = "voice-ai-concierge"
@@ -269,36 +272,47 @@ def guest_validation_node(state: AgentState) -> Dict[str, Any]:
     }
 
 
+_intent_classifier = None
+
+def get_intent_classifier():
+    """Get or create the intent classifier singleton"""
+    global _intent_classifier
+    if _intent_classifier is None:
+        _intent_classifier = create_intent_classifier()
+    return _intent_classifier
+
 @traceable(
     name="intent_classification",
     metadata={"node_type": "classification", "agent_component": "intent_classification"},
     tags=["intent", "classification", "routing"]
 )
 def intent_classification_node(state: AgentState) -> Dict[str, Any]:
-    """Classify user intent for routing"""
+    """Classify user intent for routing using a semantic classifier."""
     last_message = state["messages"][-1] if state["messages"] else None
     
-    if not last_message or not hasattr(last_message, 'content'):
+    if not last_message or not hasattr(last_message, 'content') or not str(last_message.content).strip():
         return {"intent": "unknown"}
     
-    content = str(last_message.content).lower()
+    content = str(last_message.content)
     
-    # Intent classification logic
-    menu_keywords = ["menu", "food", "pizza", "sandwich", "beverage", "what do you have", "options"]
-    order_keywords = ["order", "add", "want", "get", "place", "buy"]
-    modify_keywords = ["change", "remove", "cancel", "modify", "update", "delete"]
-    confirm_keywords = ["confirm", "yes", "place order", "finalize", "checkout"]
+    # Get the semantic intent classifier
+    intent_classifier = get_intent_classifier()
     
-    if any(keyword in content for keyword in confirm_keywords):
-        return {"intent": "order_confirmation"}
-    elif any(keyword in content for keyword in modify_keywords):
-        return {"intent": "order_modification"}
-    elif any(keyword in content for keyword in order_keywords):
-        return {"intent": "order_placement"}
-    elif any(keyword in content for keyword in menu_keywords):
-        return {"intent": "menu_inquiry"}
+    # Classify intent
+    classification_result = intent_classifier.classify_intent(content)
+    
+    # Extract the intent
+    intent = classification_result.get("intent", "general_assistance")
+    
+    # Map to the graph's expected intents
+    if intent == "general_assistance":
+        mapped_intent = "general_inquiry"
     else:
-        return {"intent": "general_inquiry"}
+        mapped_intent = intent
+
+    logger.info(f"Semantic intent classification: '{intent}' -> Mapped to: '{mapped_intent}' with confidence {classification_result.get('confidence')}")
+    
+    return {"intent": mapped_intent}
 
 
 @traceable(

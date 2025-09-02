@@ -70,16 +70,16 @@ class RefactoredRAGPipeline:
             price = row.get('Price (USD)', '')
             
             # Create concise text for each item
-            content = f\"\"\"Category: {current_section}
-Item: {item_name}
-Description: {description}
-Type: {veg_status}
-Calories: {calories}
-Price: {price}
+            content = f"""Category: {current_section}
+            Item: {item_name}
+            Description: {description}
+            Type: {veg_status}
+            Calories: {calories}
+            Price: {price}
 
-This {item_name} is a {veg_status.lower()} item from our {current_section.lower()} menu.
-{description}
-It contains {calories} calories and costs {price}.\"\"\"
+            This {item_name} is a {veg_status.lower()} item from our {current_section.lower()} menu.
+            {description}
+            It contains {calories} calories and costs {price}."""
             
             # Create metadata for filtering
             metadata = {
@@ -108,7 +108,7 @@ It contains {calories} calories and costs {price}.\"\"\"
                 full_text = ""
                 for page_num, page in enumerate(pdf_reader.pages):
                     text = page.extract_text()
-                    full_text += f"\\nPage {page_num + 1}:\\n{text}\\n"
+                    full_text += f"\nPage {page_num + 1}:\n{text}\n"
                 
                 # Use configurable text splitter
                 text_splitter = RecursiveCharacterTextSplitter(
@@ -153,26 +153,45 @@ It contains {calories} calories and costs {price}.\"\"\"
     @traceable(name="rag_vectorstore_creation", tags=["rag", "setup"])
     def create_vectorstore(self):
         """Create or load ChromaDB vectorstore using unified manager"""
-        collection_name = "hotel_menu"
-        
-        # Check if collection exists
-        if self.db_manager.collection_exists(collection_name):
-            logger.info(f"Loading existing vectorstore: {collection_name}")
-            self._vectorstore = self.db_manager.get_collection(collection_name)
-        else:
-            if not self.documents:
-                raise ValueError("No documents loaded to create a new vectorstore.")
+        collection_name = self.config.collection_name
+
+        if not self.db_manager.collection_exists(collection_name):
+            logger.info(f"Collection '{collection_name}' not found. Loading documents to create a new vectorstore.")
             
-            logger.info(f"Creating new vectorstore: {collection_name}")
+            document_path = os.getenv("RAG_DOCUMENT_PATH")
+            if not document_path:
+                default_path = Path(__file__).parent / "RAG_DOCS" / "menu-items.csv"
+                if default_path.exists():
+                    document_path = str(default_path)
+                    logger.info(f"Using default document path: {document_path}")
+                else:
+                    raise FileNotFoundError(
+                        "RAG_DOCUMENT_PATH environment variable not set and default path not found. "
+                        f"Please set RAG_DOCUMENT_PATH or place menu-items.csv at {default_path}"
+                    )
+            self.load_documents(document_path)
+
+            if not self.documents:
+                raise ValueError("Attempted to create a new vectorstore, but no documents were loaded.")
+
+            logger.info(f"Creating new vectorstore: {collection_name} with {len(self.documents)} documents.")
             self._vectorstore = self.db_manager.create_collection_with_documents(
-                collection_name, 
+                collection_name,
                 self.documents
             )
-        
+        else:
+            logger.info(f"Loading existing vectorstore: {collection_name}")
+            self._vectorstore = self.db_manager.get_collection(collection_name)
+
+        if self._vectorstore is None:
+            raise RuntimeError(
+                f"Failed to load or create vectorstore for collection '{collection_name}'. "
+                "The ChromaDBManager returned None, which may indicate an issue with the database connection or collection access."
+            )
+
         # Update retrieval engine vectorstore reference
         self.retrieval_engine._vectorstore = self._vectorstore
-        
-        logger.info("Vectorstore initialization completed")
+        logger.info("Vectorstore initialization completed successfully.")
     
     @traceable(name="rag_query_processing", tags=["rag", "query"])
     def retrieve(self, query: str, retrieval_metadata: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
@@ -252,28 +271,10 @@ class RAGPipelineManager:
         """Setup the RAG pipeline with configuration"""
         pipeline = self._pipeline
         
-        # Initialize embeddings
+        # Initialize embeddings, which in turn initializes the DB manager
         pipeline.initialize_embeddings()
         
-        # Load documents if needed
-        if not self.config.chroma_db_path or not Path(self.config.chroma_db_path).exists():
-            document_path = os.getenv("RAG_DOCUMENT_PATH")
-            
-            if not document_path:
-                # Use relative path as fallback
-                default_path = Path(__file__).parent / "RAG_DOCS" / "menu-items.csv"
-                if default_path.exists():
-                    document_path = str(default_path)
-                    logger.info(f"Using default document path: {document_path}")
-                else:
-                    raise FileNotFoundError(
-                        "RAG_DOCUMENT_PATH environment variable not set and default path not found. "
-                        f"Please set RAG_DOCUMENT_PATH or place menu-items.csv at {default_path}"
-                    )
-            
-            pipeline.load_documents(document_path)
-        
-        # Create vectorstore
+        # Create or load the vectorstore. This method now handles its own dependencies.
         pipeline.create_vectorstore()
         
         logger.info("RAG pipeline setup completed successfully")
@@ -321,7 +322,7 @@ if __name__ == "__main__":
     
     # Show stats
     stats = manager.get_stats()
-    print("\\nPipeline Statistics:")
+    print("\nPipeline Statistics:")
     print(f"Documents loaded: {stats.get('documents_loaded', 'N/A')}")
     print(f"Vectorstore initialized: {stats.get('vectorstore_initialized', 'N/A')}")
     print(f"Database collections: {len(stats.get('database_stats', {}).get('collections', {}))}")
