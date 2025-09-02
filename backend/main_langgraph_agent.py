@@ -27,6 +27,8 @@ from langsmith import traceable, Client
 
 # Import the new production-ready RAG system
 from production_rag_system import create_production_rag_system, ProductionRAGSystem
+# Import COT reasoning system
+from cot_reasoning import COTWrapper, create_cot_enhanced_llm
 
 
 # setup the project name for LangSmith
@@ -256,13 +258,30 @@ def guest_validation_node(state: AgentState) -> Dict[str, Any]:
         
         # Convert words to digits and extract all numbers
         processed_content = _convert_words_to_digits(content)
-        digits = re.sub(r'[^0-9]', '', processed_content)
         
         room_number = None
-        # First, look for a 3 or 4 digit number
-        match = re.search(r'\d{3,4}', digits)
-        if match:
-            room_number = match.group(0)
+        
+        # Pattern 1: Look for "room" followed by numbers (e.g., "room 5", "room 123")
+        room_pattern = re.search(r'room\s*(\d+)', processed_content.lower())
+        if room_pattern:
+            room_number = room_pattern.group(1)
+        
+        # Pattern 2: Look for standalone numbers (1-4 digits)
+        if not room_number:
+            # Extract all digit sequences
+            all_numbers = re.findall(r'\d+', processed_content)
+            # Accept any number from 1 to 9999 (covers all typical room numbers)
+            for num in all_numbers:
+                if 1 <= int(num) <= 9999:
+                    room_number = num
+                    break
+        
+        # Pattern 3: If user just says a number without "room" prefix
+        if not room_number:
+            # Check if the entire message is basically just a number
+            digits_only = re.sub(r'[^0-9]', '', processed_content)
+            if digits_only and 1 <= int(digits_only) <= 9999:
+                room_number = digits_only
 
         if room_number:
             return {
@@ -425,7 +444,11 @@ def route_from_tools(state: AgentState) -> str:
         return "general_agent"
 
 def create_specialized_agent_nodes(llm, tools):
-    """Create specialized agent nodes for different intents"""
+    """Create specialized agent nodes for different intents with COT support"""
+    
+    # Check if COT is enabled
+    is_cot_wrapped = isinstance(llm, COTWrapper)
+    base_llm = llm.llm if is_cot_wrapped else llm
     
     def menu_retrieval_agent(state: AgentState) -> Dict[str, Any]:
         """Specialized agent for menu-related queries"""
@@ -434,7 +457,7 @@ def create_specialized_agent_nodes(llm, tools):
         
         system_context = f"""You are a friendly menu specialist for hotel room service talking to a guest in room {room_number}. You're having a natural conversation over the phone, so speak warmly and conversationally. 
         
-Your role is to help guests browse our menu, answer questions about food items, ingredients, prices, and availability. Always use the retrieve_menu_info tool to get current and accurate information - never guess or provide information from memory. 
+{"<think>" if is_cot_wrapped else ""}Your role is to help guests browse our menu, answer questions about food items, ingredients, prices, and availability. Always use the retrieve_menu_info tool to get current and accurate information - never guess or provide information from memory.{"</think>" if is_cot_wrapped else ""}
 
 CRITICAL: This will be read aloud by text-to-speech, so format everything for natural speech:
 - Say prices as "5 dollars and 50 cents" NOT "$5.50" 
@@ -448,11 +471,34 @@ Speak naturally as if you're talking to someone on the phone. Be conversational,
         system_message = SystemMessage(content=system_context)
         full_messages = [system_message] + messages
         
-        response = llm.bind_tools([tool for tool in tools if tool.name == "retrieve_menu_info"]).invoke(full_messages)
+        # Use COT reasoning for complex menu queries if enabled
+        if is_cot_wrapped:
+            # Check if this needs COT reasoning
+            last_msg = messages[-1] if messages else None
+            needs_reasoning = False
+            
+            if last_msg and hasattr(last_msg, 'content'):
+                # Trigger COT for complex menu queries
+                complex_terms = ['compare', 'difference', 'recommend', 'suggest', 'best', 'healthiest', 
+                               'vegetarian', 'vegan', 'allergy', 'gluten', 'dietary', 'calories']
+                needs_reasoning = any(term in str(last_msg.content).lower() for term in complex_terms)
+            
+            if needs_reasoning:
+                context = {
+                    "room_number": room_number,
+                    "conversation_phase": "menu_browsing",
+                    "order_summary": state.get("order_summary", {})
+                }
+                # Get COT reasoning first
+                reasoned_response = llm.invoke_with_cot(full_messages, context)
+                full_messages.append(reasoned_response)
+        
+        # Bind tools and get response
+        response = base_llm.bind_tools([tool for tool in tools if tool.name == "retrieve_menu_info"]).invoke(full_messages)
         return {"messages": [response], "conversation_phase": "menu_browsing"}
     
     def order_management_agent(state: AgentState) -> Dict[str, Any]:
-        """Specialized agent for order placement and modification"""
+        """Specialized agent for order placement and modification with COT support"""
         messages = state["messages"]
         room_number = state.get("room_number", "")
         order_summary = state.get("order_summary", {})
@@ -461,7 +507,7 @@ Speak naturally as if you're talking to someone on the phone. Be conversational,
 
 Current order: {order_summary if order_summary else 'Empty'}
 
-Your role is to help guests add items to their order, modify quantities, remove items, and manage their current order. Always use the retrieve_menu_info tool when guests ask about menu items to get accurate information - never guess prices or details.
+{"<think>" if is_cot_wrapped else ""}Your role is to help guests add items to their order, modify quantities, remove items, and manage their current order. Always use the retrieve_menu_info tool when guests ask about menu items to get accurate information - never guess prices or details.{"</think>" if is_cot_wrapped else ""}
 
 IMPORTANT: If a guest asks to order an item that is a category, like "pizza" or "sandwich," or any other category in which you think, there could be a sub variety you MUST NOT add it to the order. Instead, use the `retrieve_menu_info` tool to look up the options for that category. Then, ask a clarifying question. For example: "We have several kinds of pizza: Margherita, Pepperoni, and BBQ Chicken. Which one would you like?" Only add an item to the order when the guest specifies a complete, orderable item. These are just for your reference about the types of the pizza, and it should noted that you should not take these are a reference to say that we have, these pizzas actually. You have to use the "retrieve_menu_tool" inorder to fetch the right information available for the provided user query.
 
@@ -477,8 +523,33 @@ Speak naturally as if you're talking to someone on the phone. Be conversational,
         system_message = SystemMessage(content=system_context)
         full_messages = [system_message] + messages
         
+        # Use COT for complex order modifications if enabled
+        if is_cot_wrapped:
+            last_msg = messages[-1] if messages else None
+            needs_reasoning = False
+            
+            if last_msg and hasattr(last_msg, 'content'):
+                # Trigger COT for complex order operations
+                complex_terms = ['change', 'modify', 'instead', 'replace', 'actually', 'wait', 
+                               'cancel', 'remove everything', 'start over', 'confused']
+                needs_reasoning = any(term in str(last_msg.content).lower() for term in complex_terms)
+                # Also trigger if order has multiple items
+                needs_reasoning = needs_reasoning or len(order_summary) > 2
+            
+            if needs_reasoning:
+                context = {
+                    "room_number": room_number,
+                    "conversation_phase": "ordering",
+                    "order_summary": order_summary,
+                    "intent": "order_modification" if order_summary else "order_placement"
+                }
+                # Get COT reasoning for complex order logic
+                reasoned_response = llm.invoke_with_cot(full_messages, context)
+                full_messages.append(reasoned_response)
+                logger.debug(f"COT reasoning applied for order management: {len(order_summary)} items in cart")
+        
         order_tools = [tool for tool in tools if tool.name in ["update_order", "retrieve_menu_info"]]
-        response = llm.bind_tools(order_tools).invoke(full_messages)
+        response = base_llm.bind_tools(order_tools).invoke(full_messages)
         return {"messages": [response], "conversation_phase": "ordering"}
     
     def general_agent(state: AgentState) -> Dict[str, Any]:
@@ -502,7 +573,7 @@ Speak naturally as if you're talking to someone on the phone. Be conversational,
         system_message = SystemMessage(content=system_context)
         full_messages = [system_message] + messages
         
-        response = llm.bind_tools([]).invoke(full_messages)
+        response = base_llm.bind_tools([]).invoke(full_messages)
         return {"messages": [response]}
     
     def order_placement_tools(state: AgentState) -> Dict[str, Any]:
@@ -614,6 +685,8 @@ class HotelConciergeAgent:
     
     def __init__(self):
         self.llm = None
+        self.base_llm = None  # Store base LLM for tool binding
+        self.cot_enabled = False
         self.tools = None
         self.graph = None
         self.app = None
@@ -635,12 +708,25 @@ class HotelConciergeAgent:
             api_url=os.getenv("LANGSMITH_ENDPOINT", "https://api.smith.langchain.com")
         )
         
-        self.llm = ChatGroq(
+        # Create base LLM
+        self.base_llm = ChatGroq(
             groq_api_key=groq_api_key,
             model_name=os.getenv("GROQ_MODEL_NAME", "qwen/qwen3-32b"),
             temperature=0.1,
             max_tokens=1000
         )
+        
+        # Check if COT is enabled
+        self.cot_enabled = os.getenv("ENABLE_COT", "false").lower() == "true"
+        
+        if self.cot_enabled:
+            # Wrap with COT reasoning
+            self.llm = COTWrapper(self.base_llm)
+            logger.info(f"COT reasoning ENABLED - Mode: {os.getenv('COT_MODE', 'adaptive')}")
+        else:
+            # Use base LLM directly
+            self.llm = self.base_llm
+            logger.info("COT reasoning DISABLED - Using standard LLM")
         
         # self.llm = ChatOpenAI(
         #     openai_api_key=os.getenv("OPENAI_API_KEY"),
@@ -658,7 +744,8 @@ class HotelConciergeAgent:
         
         self._build_graph()
         
-        logger.info("Hotel Concierge Agent initialized successfully with Production Systems")
+        cot_status = "with COT reasoning" if self.cot_enabled else "without COT"
+        logger.info(f"Hotel Concierge Agent initialized successfully with Production Systems {cot_status}")
     
     def _build_graph(self):
         """Build the enhanced LangGraph workflow with detailed phase management"""

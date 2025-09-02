@@ -1,0 +1,7 @@
+timestamp,role,content,session_id,room_number,confidence_score,processing_time_ms
+2025-09-02T23:51:26.877363,user,Event handler on conversation and notes.,c62ec59d-19dd-4ae3-81fc-dfdbd023ca56,,,
+2025-09-02T23:51:27.389620,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,c62ec59d-19dd-4ae3-81fc-dfdbd023ca56,,,
+2025-09-02T23:51:30.134920,user, Done.,c62ec59d-19dd-4ae3-81fc-dfdbd023ca56,,,
+2025-09-02T23:51:30.942379,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,c62ec59d-19dd-4ae3-81fc-dfdbd023ca56,,,
+2025-09-02T23:51:38.892237,user," Hello, hello.",c62ec59d-19dd-4ae3-81fc-dfdbd023ca56,,,
+2025-09-02T23:51:39.398751,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,c62ec59d-19dd-4ae3-81fc-dfdbd023ca56,,,

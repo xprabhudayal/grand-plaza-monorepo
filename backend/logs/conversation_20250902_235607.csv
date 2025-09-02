@@ -1,0 +1,7 @@
+timestamp,role,content,session_id,room_number,confidence_score,processing_time_ms
+2025-09-02T23:56:33.606492,user,Hello.,2f9f3345-132d-4892-b024-f0cda117f05c,,,
+2025-09-02T23:56:34.123489,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,2f9f3345-132d-4892-b024-f0cda117f05c,,,
+2025-09-02T23:56:46.739817,user, My room number is one.,2f9f3345-132d-4892-b024-f0cda117f05c,,,
+2025-09-02T23:56:47.252864,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,2f9f3345-132d-4892-b024-f0cda117f05c,,,
+2025-09-02T23:56:58.283847,user, One zero three.,2f9f3345-132d-4892-b024-f0cda117f05c,,,
+2025-09-02T23:57:05.560702,assistant,"Great, I’ve got room 103 on the list. What can I help you with today? Are you looking for a particular dish, want to see the full menu, or have a question about ingredients or prices?",2f9f3345-132d-4892-b024-f0cda117f05c,103,,
