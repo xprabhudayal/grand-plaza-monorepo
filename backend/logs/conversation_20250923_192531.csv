@@ -1,0 +1,4 @@
+timestamp,role,content,session_id,room_number,confidence_score,processing_time_ms
+2025-09-23T19:25:51.671033,user,हेलो!,d6bbaeb9-1c10-408b-b050-bd967c178c4f,,,
+2025-09-23T19:25:56.391961,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,d6bbaeb9-1c10-408b-b050-bd967c178c4f,,,
+2025-09-23T19:26:08.809960,user," हाँ जी, मेरा रूम नंबर 9 है।",d6bbaeb9-1c10-408b-b050-bd967c178c4f,,,

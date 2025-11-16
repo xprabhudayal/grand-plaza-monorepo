@@ -1,0 +1,20 @@
+timestamp,role,content,session_id,room_number,confidence_score,processing_time_ms
+2025-09-22T12:43:42.669982,user,Hello.,2580905a-39b6-444c-a007-0cf9654feb83,,,
+2025-09-22T12:43:43.197731,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,2580905a-39b6-444c-a007-0cf9654feb83,,,
+2025-09-22T12:43:54.409433,user, It's my room number is one. I would like to order mango lassi.,2580905a-39b6-444c-a007-0cf9654feb83,,,
+2025-09-22T12:44:08.771903,assistant,"Great! I've added one Mango Lassi to your order at $5.00. Would you like to add anything else from our menu? We also have options like Green Smoothie, Classic Lemonade, or even a hearty Lentil Soup available.",2580905a-39b6-444c-a007-0cf9654feb83,1,,
+2025-09-22T12:44:28.991259,user," Oh, thanks, please. Please confirm the order.",2580905a-39b6-444c-a007-0cf9654feb83,1,,
+2025-09-22T12:44:32.733848,assistant,"I apologize for the confusion earlier! Let me clarify:  
+Your order currently has **1 Mango Lassi** at $5.00. Is this correct?  
+- Say ""Yes"" to confirm  
+- Say ""No"" to adjust or add more items  
+
+Thank you!",2580905a-39b6-444c-a007-0cf9654feb83,1,,
+2025-09-22T12:44:53.888484,user," Yes, confirm.",2580905a-39b6-444c-a007-0cf9654feb83,1,,
+2025-09-22T12:45:36.998378,user," Hello, hello.",2580905a-39b6-444c-a007-0cf9654feb83,1,,
+2025-09-22T12:45:42.152549,assistant,"Welcome back! I see there might be some confusion about your order. Let me clarify:  
+
+- If you’d like to **place a new order**, I can help with that.  
+- If you’re asking about a **previous order**, could you confirm the details (e.g., room number, items)?  
+
+How would you like to proceed? 😊",2580905a-39b6-444c-a007-0cf9654feb83,1,,

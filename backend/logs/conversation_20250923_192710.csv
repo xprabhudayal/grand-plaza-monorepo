@@ -1,0 +1,9 @@
+timestamp,role,content,session_id,room_number,confidence_score,processing_time_ms
+2025-09-23T19:27:27.908248,user,"जी, मेरा रूम नंबर 9 है।",73c57cd1-8bb3-4429-be9d-a7fc174e9ff6,,,
+2025-09-23T19:27:37.719743,assistant,"हमारी रूम सर्विस के लिए आपका स्वागत है! मैं आपकी कैसे मदद कर सकता हूँ? क्या आप कुछ ऑर्डर करना चाहेंगे, मेनू देखना चाहेंगे, या कोई अन्य सहायता चाहेंगे? 😊",73c57cd1-8bb3-4429-be9d-a7fc174e9ff6,9,,
+2025-09-23T19:27:55.267604,user, मुझे एक मैंगो लस्सी ऑर्डर करनी थी।,73c57cd1-8bb3-4429-be9d-a7fc174e9ff6,9,,
+2025-09-23T19:28:00.802762,assistant,"""Great! I've added one Mango Lassi to your order. Is there anything else you'd like to add, remove, or modify in your order?""",73c57cd1-8bb3-4429-be9d-a7fc174e9ff6,9,,
+2025-09-23T19:28:18.826648,user," दोस्तों, मैंगो लस्सी का कैलोरी कितना है?",73c57cd1-8bb3-4429-be9d-a7fc174e9ff6,9,,
+2025-09-23T19:28:51.971320,user," वैसे, कितने कैलोरीज की है ये?",73c57cd1-8bb3-4429-be9d-a7fc174e9ff6,9,,
+2025-09-23T19:28:53.927722,user, मैंगो लस्सी।,73c57cd1-8bb3-4429-be9d-a7fc174e9ff6,9,,
+2025-09-23T19:29:23.565487,user," हेलो, थोड़ा अधिक",73c57cd1-8bb3-4429-be9d-a7fc174e9ff6,9,,

@@ -1,0 +1,5 @@
+timestamp,role,content,session_id,room_number,confidence_score,processing_time_ms
+2025-09-23T17:10:16.764362,user,We still in bed.,9a854df5-f346-48c8-a529-0892b58e2250,,,
+2025-09-23T17:10:17.277949,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,9a854df5-f346-48c8-a529-0892b58e2250,,,
+2025-09-23T17:10:22.895541,user, Ajde!,9a854df5-f346-48c8-a529-0892b58e2250,,,
+2025-09-23T17:10:23.405770,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,9a854df5-f346-48c8-a529-0892b58e2250,,,

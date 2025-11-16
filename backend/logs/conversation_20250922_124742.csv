@@ -1,0 +1,4 @@
+timestamp,role,content,session_id,room_number,confidence_score,processing_time_ms
+2025-09-22T12:47:56.217188,user,Hello.,e10eccad-2aa5-4950-ae75-5ec6fb2def4b,,,
+2025-09-22T12:47:56.739063,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,e10eccad-2aa5-4950-ae75-5ec6fb2def4b,,,
+2025-09-22T12:48:06.768224,user," Yes, my room number is one.",e10eccad-2aa5-4950-ae75-5ec6fb2def4b,,,

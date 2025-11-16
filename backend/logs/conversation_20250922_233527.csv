@@ -1,0 +1,5 @@
+timestamp,role,content,session_id,room_number,confidence_score,processing_time_ms
+2025-09-22T23:35:36.996156,user,"హలో, అయితే",b2e48139-c112-47ca-96d8-cbf1e5120372,,,
+2025-09-22T23:35:37.521458,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,b2e48139-c112-47ca-96d8-cbf1e5120372,,,
+2025-09-22T23:35:45.855929,user, Am I audible?,b2e48139-c112-47ca-96d8-cbf1e5120372,,,
+2025-09-22T23:35:46.369872,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,b2e48139-c112-47ca-96d8-cbf1e5120372,,,

@@ -24,7 +24,7 @@ from pipecat.pipeline.task import PipelineParams, PipelineTask
 from pipecat.services.groq.llm import GroqLLMService
 from pipecat.processors.aggregators.openai_llm_context import OpenAILLMContext
 # from pipecat.services.cartesia.tts import CartesiaTTSService
-from pipecat.services.elevenlabs.tts import ElevenLabsTTSService
+from elevenlabs_fix import get_robust_tts_service
 from pipecat.services.deepgram.stt import DeepgramSTTService
 from pipecat.services.deepgram.tts import DeepgramTTSService
 from pipecat.transports.services.daily import DailyParams, DailyTransport
@@ -65,7 +65,7 @@ if dotenv_path.exists():
 else:
     print(f"Warning: .env file not found at {dotenv_path}")
 
-os.environ["LANGSMITH_PROJECT"] = "voice-ai-concierge-final"
+os.environ["LANGSMITH_PROJECT"] = "FINAL_CONCIERGE"
 
 # ============================================================================
 # LangGraph Integration Handler
@@ -253,7 +253,7 @@ async def main():
                 stt = SonioxSTTService(
                     api_key=soniox_key,
                     params=SonioxInputParams(
-                        language_hints=[Language.EN],
+                        language_hints=[Language.EN, Language.HI_IN],
                     ),
                 )
             else:
@@ -277,27 +277,9 @@ async def main():
             #         api_key=cartesia_key,
             #         voice_id="820a3788-2b37-4d21-847a-b65d8a68c99a",
             #     )
-            if elevenlabs_key and elevenlabs_voice_id:
-                logger.info(f"Initializing ElevenLabs TTS with voice ID: {elevenlabs_voice_id}")
-                try:
-                    tts = ElevenLabsTTSService(
-                        api_key=elevenlabs_key,
-                        voice_id=elevenlabs_voice_id,
-                    )
-                    logger.info("ElevenLabs TTS service initialized successfully")
-                except Exception as e:
-                    logger.error(f"Failed to initialize ElevenLabs TTS: {e}")
-                    logger.info("Falling back to Deepgram TTS service")
-                    tts = DeepgramTTSService(
-                        api_key=os.getenv("DEEPGRAM_API_KEY"),
-                        voice="aura-angus-en",
-                    )
-            else:
-                logger.info("Using Deepgram TTS service (ElevenLabs credentials not found)")
-                tts = DeepgramTTSService(
-                    api_key=os.getenv("DEEPGRAM_API_KEY"),
-                    voice="aura-angus-en",
-                )
+            # Use robust ElevenLabs TTS with fallback handling
+            logger.info("Initializing robust ElevenLabs TTS service")
+            tts = get_robust_tts_service()
 
             # Initialize LangGraph handler
             lang_handler = LangGraphHandler()

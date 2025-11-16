@@ -1,0 +1,39 @@
+timestamp,role,content,session_id,room_number,confidence_score,processing_time_ms
+2025-09-03T17:11:44.974712,user,Hello.,f6f07e41-f32e-4031-a312-e8bef99a6854,,,
+2025-09-03T17:11:45.504552,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,f6f07e41-f32e-4031-a312-e8bef99a6854,,,
+2025-09-03T17:12:01.543954,user," Yeah, my room number is one.",f6f07e41-f32e-4031-a312-e8bef99a6854,,,
+2025-09-03T17:12:09.351361,assistant,"Great! What would you like to order today? If you’re not sure, I can tell you about our menu options.",f6f07e41-f32e-4031-a312-e8bef99a6854,1,,
+2025-09-03T17:12:32.017956,user," Like, I would like to know, what major categories of the menu items do you have?",f6f07e41-f32e-4031-a312-e8bef99a6854,1,,
+2025-09-03T17:12:34.630547,user," Just over a high level overview, right?",f6f07e41-f32e-4031-a312-e8bef99a6854,1,,
+2025-09-03T17:12:37.134364,assistant,"We have three main categories on our menu: Beverages, Hotdogs, and Healthy Meals. If you’d like more details about any of those, just let me know!",f6f07e41-f32e-4031-a312-e8bef99a6854,1,,
+2025-09-03T17:13:09.090958,user," Well, that's great, but can you tell me which of the, uh, can you tell me two of these foods, which are having the highest calorie from the menu, as well as the lowest calorie possible food?",f6f07e41-f32e-4031-a312-e8bef99a6854,1,,
+2025-09-03T17:13:11.606941,assistant,"The highest‑calorie items on our menu are:
+
+1. Pepperoni pizza – 950 calories.  
+2. Veggie Supreme pizza – 810 calories.
+
+The lowest‑calorie item we have is:
+
+- The Classic hotdog – 450 calories.",f6f07e41-f32e-4031-a312-e8bef99a6854,1,,
+2025-09-03T17:13:41.466134,user, That's great. And what do you think about some options from the beverages?,f6f07e41-f32e-4031-a312-e8bef99a6854,1,,
+2025-09-03T17:13:44.731949,assistant,"Here are a few of our favorite beverages you might like:
+
+- Classic Lemonade – 150 calories, 4 dollars and 0 cents.  
+- Green Smoothie – 280 calories, 6 dollars and 0 cents.  
+- Sparkling Water – 0 calories, 3 dollars and 0 cents.  
+- Iced Mocha – 350 calories, 5 dollars and 50 cents.  
+- Mango Lassi – 320 calories, 5 dollars and 0 cents.
+
+Let me know if any of these catch your eye, or if you’d like to hear about something else!",f6f07e41-f32e-4031-a312-e8bef99a6854,1,,
+2025-09-03T17:14:14.010124,user," Well, that's great. I would like to order, and please add lemonade, as well as try to add sparkling water.",f6f07e41-f32e-4031-a312-e8bef99a6854,1,,
+2025-09-03T17:14:19.374784,user, And I would like to also order pepperoni pizza and veggie supreme pizza.,f6f07e41-f32e-4031-a312-e8bef99a6854,1,,
+2025-09-03T17:15:48.229645,assistant,"<think>
+The user wants to add Classic Lemonade, Sparkling Water, Pepperoni pizza, and Veggie Supreme pizza. We already updated the order with those items. We should confirm each addition and ask if they'd like anything else. No price calculation needed.Great! I’ve added the following items to your order:
+
+- Classic Lemonade, one cup.  
+- Sparkling Water, one bottle.  
+- Pepperoni pizza, one slice.  
+- Veggie Supreme pizza, one slice.
+
+Your order is now ready. Would you like to add anything else, or is that everything for now?",f6f07e41-f32e-4031-a312-e8bef99a6854,1,,
+2025-09-03T17:16:39.181959,user," Well, yeah, I would like to, like, delete this lemonade and pizza. Like pepperoni pizza.",f6f07e41-f32e-4031-a312-e8bef99a6854,1,,

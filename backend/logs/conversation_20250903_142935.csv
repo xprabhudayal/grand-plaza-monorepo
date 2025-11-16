@@ -1,0 +1,22 @@
+timestamp,role,content,session_id,room_number,confidence_score,processing_time_ms
+2025-09-03T14:30:01.812827,user,Hello.,d977f337-dc26-425f-9f08-8fdd9a647305,,,
+2025-09-03T14:30:02.333296,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,d977f337-dc26-425f-9f08-8fdd9a647305,,,
+2025-09-03T14:30:17.645008,user, My room number is 102.,d977f337-dc26-425f-9f08-8fdd9a647305,,,
+2025-09-03T14:30:26.814933,assistant,"Great, room 102 is all set. What would you like to order today? If you’re not sure, I can tell you about our current specials or menu highlights.",d977f337-dc26-425f-9f08-8fdd9a647305,102,,
+2025-09-03T14:30:58.659277,user," Hey, compare me with two different categories for the food, and I would like to have a detailed comparison between that. Uh, beverages and pizzas.",d977f337-dc26-425f-9f08-8fdd9a647305,102,,
+2025-09-03T14:31:01.023737,user, Section.,d977f337-dc26-425f-9f08-8fdd9a647305,102,,
+2025-09-03T14:31:33.593197,user, Can you compare the overall calories or,d977f337-dc26-425f-9f08-8fdd9a647305,102,,
+2025-09-03T14:31:36.723299,user, for the vegetarian food?,d977f337-dc26-425f-9f08-8fdd9a647305,102,,
+2025-09-03T14:31:56.328490,user," Provide me with options, related to beverages.",d977f337-dc26-425f-9f08-8fdd9a647305,102,,
+2025-09-03T14:32:03.718492,assistant,"Sure thing! Let’s look at the vegetarian options in each category and compare their calorie counts.
+
+For vegetarian pizzas, we have two main choices right now. The Veggie Supreme comes with bell peppers, onions, olives, mushrooms, and mozzarella, and it’s about 810 calories. The Margherita is a classic thin‑crust pizza with fresh mozzarella, tomato sauce, and basil, and it’s around 720 calories.
+
+In the beverages section, the only vegetarian drink we have listed is the Green Smoothie. It’s a blend of spinach, banana, mango, and almond milk, and it’s about 280 calories.
+
+So, if you’re looking at calories, the pizzas are definitely higher—between 720 and 810 calories—while the Green Smoothie is a lighter option at 280 calories. If you’d like to pair a pizza with a drink, the Green Smoothie would be a refreshing, lower‑calorie choice. 
+
+Would you like to add the Green Smoothie to your order, or would you like to hear about other pizza options? If you’re interested in other beverages, I can let you know what’s available in the full menu.",d977f337-dc26-425f-9f08-8fdd9a647305,102,,
+2025-09-03T14:32:51.506301,user," Yes, add each and every item on my final order list.",d977f337-dc26-425f-9f08-8fdd9a647305,102,,
+2025-09-03T14:32:53.349812,assistant,"I’m happy to help you build your order! Could you let me know which specific items you’d like to add? For example, if you want a pizza, we can pick a particular type like Veggie Supreme or Margherita, and for drinks we can choose the Green Smoothie or another beverage. Just let me know the exact items and how many of each, and I’ll add them to your order.",d977f337-dc26-425f-9f08-8fdd9a647305,102,,
+2025-09-03T14:33:14.925699,user," Yeah, add veggie supreme in two quantities and add green smoothie in five quantities.",d977f337-dc26-425f-9f08-8fdd9a647305,102,,

@@ -1,0 +1,3 @@
+timestamp,role,content,session_id,room_number,confidence_score,processing_time_ms
+2025-09-23T17:00:17.680458,user,हेलो।,80287fd2-a5e5-4e8a-af79-df078ee60ebb,,,
+2025-09-23T17:00:18.197223,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,80287fd2-a5e5-4e8a-af79-df078ee60ebb,,,

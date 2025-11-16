@@ -1,0 +1,31 @@
+timestamp,role,content,session_id,room_number,confidence_score,processing_time_ms
+2025-09-18T16:36:40.597016,user,Hello.,5bf82741-c8f0-4b52-b35e-19b815ceeff5,,,
+2025-09-18T16:36:41.131427,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,5bf82741-c8f0-4b52-b35e-19b815ceeff5,,,
+2025-09-18T16:36:57.768536,user," Yes, my room number is 701.",5bf82741-c8f0-4b52-b35e-19b815ceeff5,,,
+2025-09-18T16:37:08.114900,assistant,Great! How can I help you with your room service order today?,5bf82741-c8f0-4b52-b35e-19b815ceeff5,701,,
+2025-09-18T16:37:24.952890,user," I was looking to order from, uh, the category of Indian.",5bf82741-c8f0-4b52-b35e-19b815ceeff5,701,,
+2025-09-18T16:37:29.772752,user, Is there anything kind of similar to Indian in your menu?,5bf82741-c8f0-4b52-b35e-19b815ceeff5,701,,
+2025-09-18T16:37:33.509905,assistant,"<think>
+The user wants Indian-style items. The only Indian-related item is Mango Lassi. Offer it and ask if they'd like to order or want more details. Use friendly tone and proper TTS formatting.We have a lovely Indian-inspired beverage on our menu: the Mango Lassi. It’s a traditional yogurt-based drink blended with sweet mango pulp. It’s a vegetarian option, has 320 calories, and costs 5 dollars and 0 cents. Would you like to add that to your order, or would you like to hear about any other items?",5bf82741-c8f0-4b52-b35e-19b815ceeff5,701,,
+2025-09-18T16:37:54.280317,user," Man, man, man, man.",5bf82741-c8f0-4b52-b35e-19b815ceeff5,701,,
+2025-09-18T16:37:56.163036,user, Forget about that.,5bf82741-c8f0-4b52-b35e-19b815ceeff5,701,,
+2025-09-18T16:37:59.008982,assistant,"Sure thing! What would you like to add to your order today? Feel free to let me know any dishes, drinks, or sides you’re craving.",5bf82741-c8f0-4b52-b35e-19b815ceeff5,701,,
+2025-09-18T16:38:16.462262,user," Yes, I was looking for beverages, ma'am.",5bf82741-c8f0-4b52-b35e-19b815ceeff5,701,,
+2025-09-18T16:38:19.096998,assistant,"Here are all of our beverage options:
+
+- Sparkling Water: chilled carbonated mineral water with a slice of lime. It’s vegetarian, has 0 calories, and costs 3 dollars and 0 cents.
+- Green Smoothie: a healthy mix of spinach, banana, mango, and almond milk. Vegetarian, 280 calories, 6 dollars and 0 cents.
+- Classic Lemonade: freshly squeezed lemon juice, sweetened to perfection, served chilled. Vegetarian, 150 calories, 4 dollars and 0 cents.
+- Mango Lassi: traditional Indian yogurt-based drink blended with sweet mango pulp. Vegetarian, 320 calories, 5 dollars and 0 cents.
+- Iced Mocha: a rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream. Vegetarian, 350 calories, 5 dollars and 50 cents.
+
+Let me know which one sounds good to you, or if you’d like to add more than one.",5bf82741-c8f0-4b52-b35e-19b815ceeff5,701,,
+2025-09-18T16:38:50.321811,user," Okay, right. So, add one mango lassi, and--oh, sorry, add one mango lassi, and add one sparkling water, and you can add two of the iced mocha.",5bf82741-c8f0-4b52-b35e-19b815ceeff5,701,,
+2025-09-18T16:39:04.771280,assistant,"<think>
+The user wants to add the same items that are already in the order. That means we should increase the quantities: Mango Lassi from 1 to 2, Sparkling Water from 1 to 2, and Iced Mocha from 2 to 4. We should confirm the updated order and give a quick total. Use proper TTS formatting.Great! I’ve updated your order. Here’s what’s in your cart now:
+
+- Mango Lassi: 2 cups
+- Sparkling Water: 2 bottles
+- Iced Mocha: 4 cups
+
+That brings your total to 38 dollars and 0 cents. Is there anything else you’d like to add, or would you like me to place the order for you?",5bf82741-c8f0-4b52-b35e-19b815ceeff5,701,,

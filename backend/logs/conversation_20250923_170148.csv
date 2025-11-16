@@ -1,0 +1,4 @@
+timestamp,role,content,session_id,room_number,confidence_score,processing_time_ms
+2025-09-23T17:01:52.681172,user,Guys.,69960707-5621-406e-8aa4-18dd017051b1,,,
+2025-09-23T17:01:54.194013,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,69960707-5621-406e-8aa4-18dd017051b1,,,
+2025-09-23T17:01:54.608494,user, मामा जी के बैग में लगा करो।,69960707-5621-406e-8aa4-18dd017051b1,,,

@@ -132,8 +132,8 @@ class OrderPlacementTool(BaseTool):
                 metadata = doc.get('metadata', {})
                 stored_item_name = metadata.get('item_name', '').lower()
                 
-                if (stored_item_name == item_name.lower() or 
-                    item_name.lower() in stored_item_name or 
+                if (stored_item_name == item_name.lower() or
+                    item_name.lower() in stored_item_name or
                     stored_item_name in item_name.lower()):
                     
                     price_str = metadata.get('price', '')
@@ -419,7 +419,7 @@ def should_continue_to_tools(state: AgentState) -> str:
     if last_message and hasattr(last_message, 'tool_calls') and last_message.tool_calls:
         return "tools"
     
-    return "intent_classification"
+    return "END"
 
 
 def should_end_conversation(state: AgentState) -> str:
@@ -455,16 +455,22 @@ def create_specialized_agent_nodes(llm, tools):
         messages = state["messages"]
         room_number = state.get("room_number", "")
         
-        system_context = f"""You are a friendly menu specialist for hotel room service talking to a guest in room {room_number}. You're having a natural conversation over the phone, so speak warmly and conversationally. 
-        
-{"<think>" if is_cot_wrapped else ""}Your role is to help guests browse our menu, answer questions about food items, ingredients, prices, and availability. Always use the retrieve_menu_info tool to get current and accurate information - never guess or provide information from memory.{"</think>" if is_cot_wrapped else ""}
+        system_context = f"""You are a friendly menu specialist for hotel room service talking to a guest in room {room_number}. You're having a natural conversation over the phone, so speak warmly and conversationally. You can converse in both English and Hindi. If you respond in Hindi, please use the Devanagari script.
+
+{"<think>" if is_cot_wrapped else ""}Your role is to help guests browse our menu, answer questions about food items, ingredients, prices, and availability. Always use the retrieve_menu_info tool to get current and accurate information. Never guess or provide information from memory.{"</think>" if is_cot_wrapped else ""}
 
 CRITICAL: This will be read aloud by text-to-speech, so format everything for natural speech:
-- Say prices as "5 dollars and 50 cents" NOT "$5.50" 
-- NO asterisks, bullet points, dashes, or formatting symbols
-- NO numbered lists like "1. Item 2. Item" - just speak naturally
-- Say "dollars" and "cents" instead of dollar signs
-- Use natural speech patterns like "we have" instead of bullet points
+- Say prices as "5 dollars and 50 cents" not "dollar five fifty"
+- Use proper punctuation: periods, commas, question marks, exclamation points
+- Use short, clear sentences with natural pauses
+- Put command words in quotes when needed
+- Use commas for natural pauses in lists
+- End sentences with periods for proper pacing
+
+Examples of good formatting:
+- "We have several pizza options. Would you like to hear about our Margherita, Pepperoni, or Veggie Supreme?"
+- "The Caesar salad is 12 dollars and includes grilled chicken, romaine lettuce, and parmesan cheese."
+- "That sounds delicious! Let me add that to your order."
 
 Speak naturally as if you're talking to someone on the phone. Be conversational, helpful, and enthusiastic about our menu offerings."""
         
@@ -479,22 +485,39 @@ Speak naturally as if you're talking to someone on the phone. Be conversational,
             
             if last_msg and hasattr(last_msg, 'content'):
                 # Trigger COT for complex menu queries
-                complex_terms = ['compare', 'difference', 'recommend', 'suggest', 'best', 'healthiest', 
-                               'vegetarian', 'vegan', 'allergy', 'gluten', 'dietary', 'calories']
+                complex_terms = [
+                    'compare', 'difference', 'recommend', 'suggest', 'best', 'healthiest',
+                    'vegetarian', 'vegan', 'allergy', 'gluten', 'dietary', 'calories'
+                ]
                 needs_reasoning = any(term in str(last_msg.content).lower() for term in complex_terms)
             
             if needs_reasoning:
+                logger.info(f"COT TRIGGERED for menu query: {str(last_msg.content)[:100]}...")
                 context = {
                     "room_number": room_number,
                     "conversation_phase": "menu_browsing",
                     "order_summary": state.get("order_summary", {})
                 }
-                # Get COT reasoning first
-                reasoned_response = llm.invoke_with_cot(full_messages, context)
-                full_messages.append(reasoned_response)
+                # Add COT reasoning instruction that forces the model to output thinking
+                reasoning_prompt = llm._create_cot_prompt(str(last_msg.content), context)
+                system_context += f"\n\nIMPORTANT: Before providing your response, you MUST think through this step by step. Start your response with <think> tags containing your reasoning, then provide your final answer after </think>.\n\nReasoning framework:\n{reasoning_prompt}\n\nEXAMPLE FORMAT:\n<think>\nThe user is asking about menu items. I need to consider their dietary restrictions and preferences. Based on the menu data, I should use the retrieve_menu_info tool to get accurate information, then compare options and explain clearly with proper TTS formatting.\n</think>\n\nI'd be happy to help you with that! Let me look up our current menu options for you.\n\nRemember: Always start with <think>your reasoning here</think> then give your response with proper TTS formatting."
+        
+        system_message = SystemMessage(content=system_context)
+        full_messages = [system_message] + messages
         
         # Bind tools and get response
         response = base_llm.bind_tools([tool for tool in tools if tool.name == "retrieve_menu_info"]).invoke(full_messages)
+        
+        # Log COT reasoning if it exists in the response
+        if is_cot_wrapped and '<think>' in response.content:
+            think_start = response.content.find('<think>')
+            think_end = response.content.find('</think>')
+            if think_start != -1 and think_end != -1:
+                reasoning = response.content[think_start+7:think_end].strip()
+                logger.info(f"COT Menu Reasoning: {reasoning}")
+        elif is_cot_wrapped:
+            logger.warning(f"COT enabled but no <think> tags found in response. Response: {response.content[:200]}...")
+        
         return {"messages": [response], "conversation_phase": "menu_browsing"}
     
     def order_management_agent(state: AgentState) -> Dict[str, Any]:
@@ -503,20 +526,27 @@ Speak naturally as if you're talking to someone on the phone. Be conversational,
         room_number = state.get("room_number", "")
         order_summary = state.get("order_summary", {})
         
-        system_context = f"""You are a helpful order specialist for hotel room service talking to a guest in room {room_number}. You're having a natural conversation over the phone, so speak warmly and conversationally.
+        system_context = f"""You are a helpful order specialist for hotel room service talking to a guest in room {room_number}. You're having a natural conversation over the phone, so speak warmly and conversationally. You can converse in both English and Hindi. If you respond in Hindi, please use the Devanagari script.
 
 Current order: {order_summary if order_summary else 'Empty'}
 
-{"<think>" if is_cot_wrapped else ""}Your role is to help guests add items to their order, modify quantities, remove items, and manage their current order. Always use the retrieve_menu_info tool when guests ask about menu items to get accurate information - never guess prices or details.{"</think>" if is_cot_wrapped else ""}
+{"<think>" if is_cot_wrapped else ""}Your role is to help guests add items to their order, modify quantities, remove items, and manage their current order. Always use the retrieve_menu_info tool when guests ask about menu items to get accurate information. Never guess prices or details.{"</think>" if is_cot_wrapped else ""}
 
-IMPORTANT: If a guest asks to order an item that is a category, like "pizza" or "sandwich," or any other category in which you think, there could be a sub variety you MUST NOT add it to the order. Instead, use the `retrieve_menu_info` tool to look up the options for that category. Then, ask a clarifying question. For example: "We have several kinds of pizza: Margherita, Pepperoni, and BBQ Chicken. Which one would you like?" Only add an item to the order when the guest specifies a complete, orderable item. These are just for your reference about the types of the pizza, and it should noted that you should not take these are a reference to say that we have, these pizzas actually. You have to use the "retrieve_menu_tool" inorder to fetch the right information available for the provided user query.
+IMPORTANT: If a guest asks to order an item that is a category, like "pizza" or "sandwich," you must not add it to the order. Instead, use the retrieve_menu_info tool to look up the options for that category. Then, ask a clarifying question. For example: "We have several kinds of pizza: Margherita, Pepperoni, and BBQ Chicken. Which one would you like?" Only add an item to the order when the guest specifies a complete, orderable item.
 
 CRITICAL: This will be read aloud by text-to-speech, so format everything for natural speech:
-- Say prices as "5 dollars and 50 cents" NOT "$5.50" 
-- NO asterisks, bullet points, dashes, or formatting symbols
-- NO numbered lists like "1. Item 2. Item" - just speak naturally
-- Say "dollars" and "cents" instead of dollar signs
-- Use natural speech patterns like "we have" instead of bullet points
+- Say prices as "5 dollars and 50 cents" not "dollar five fifty"
+- Use proper punctuation: periods, commas, question marks, exclamation points
+- Use short, clear sentences with natural pauses
+- Put command words in quotes when needed
+- Use commas for natural pauses in lists
+- End sentences with periods for proper pacing
+
+Examples of good formatting:
+- "Perfect! I've added two pizzas to your order."
+- "Your current total is 24 dollars and 50 cents."
+- "Would you like to add a drink, dessert, or side dish?"
+- "Great choice! That's been added to your order."
 
 Speak naturally as if you're talking to someone on the phone. Be conversational, helpful, and confirm each change to their order clearly."""
         
@@ -530,26 +560,43 @@ Speak naturally as if you're talking to someone on the phone. Be conversational,
             
             if last_msg and hasattr(last_msg, 'content'):
                 # Trigger COT for complex order operations
-                complex_terms = ['change', 'modify', 'instead', 'replace', 'actually', 'wait', 
-                               'cancel', 'remove everything', 'start over', 'confused']
+                complex_terms = [
+                    'change', 'modify', 'instead', 'replace', 'actually', 'wait',
+                    'cancel', 'remove everything', 'start over', 'confused'
+                ]
                 needs_reasoning = any(term in str(last_msg.content).lower() for term in complex_terms)
                 # Also trigger if order has multiple items
                 needs_reasoning = needs_reasoning or len(order_summary) > 2
             
             if needs_reasoning:
+                logger.info(f"COT TRIGGERED for order query: {str(last_msg.content)[:100]}...")
                 context = {
                     "room_number": room_number,
                     "conversation_phase": "ordering",
                     "order_summary": order_summary,
                     "intent": "order_modification" if order_summary else "order_placement"
                 }
-                # Get COT reasoning for complex order logic
-                reasoned_response = llm.invoke_with_cot(full_messages, context)
-                full_messages.append(reasoned_response)
+                # Add COT reasoning instruction that forces the model to output thinking
+                reasoning_prompt = llm._create_cot_prompt(str(last_msg.content), context)
+                system_context += f"\n\nIMPORTANT: Before providing your response, you MUST think through this step by step. Start your response with <think> tags containing your reasoning, then provide your final answer after </think>.\n\nReasoning framework:\n{reasoning_prompt}\n\nEXAMPLE FORMAT:\n<think>\nThe user wants to modify their order. Current order has X items. They're asking to add/remove/change Y. I need to use the update_order tool to make this change and confirm it clearly with proper TTS formatting.\n</think>\n\nPerfect! Let me update your order for you.\n\nRemember: Always start with <think>your reasoning here</think> then give your response with proper TTS formatting."
                 logger.debug(f"COT reasoning applied for order management: {len(order_summary)} items in cart")
+        
+        system_message = SystemMessage(content=system_context)
+        full_messages = [system_message] + messages
         
         order_tools = [tool for tool in tools if tool.name in ["update_order", "retrieve_menu_info"]]
         response = base_llm.bind_tools(order_tools).invoke(full_messages)
+        
+        # Log COT reasoning if it exists in the response
+        if is_cot_wrapped and '<think>' in response.content:
+            think_start = response.content.find('<think>')
+            think_end = response.content.find('</think>')
+            if think_start != -1 and think_end != -1:
+                reasoning = response.content[think_start+7:think_end].strip()
+                logger.info(f"COT Order Reasoning: {reasoning}")
+        elif is_cot_wrapped:
+            logger.warning(f"COT enabled but no <think> tags found in response. Response: {response.content[:200]}...")
+        
         return {"messages": [response], "conversation_phase": "ordering"}
     
     def general_agent(state: AgentState) -> Dict[str, Any]:
@@ -557,16 +604,23 @@ Speak naturally as if you're talking to someone on the phone. Be conversational,
         messages = state["messages"]
         room_number = state.get("room_number", "")
         
-        system_context = f"""You are a friendly hotel concierge assistant talking to a guest in room {room_number}. You're having a natural conversation over the phone, so speak warmly and conversationally.
+        system_context = f"""You are a friendly hotel concierge assistant talking to a guest in room {room_number}. You're having a natural conversation over the phone, so speak warmly and conversationally. You can converse in both English and Hindi. If you respond in Hindi, please use the Devanagari script.
         
 Handle general inquiries, provide information about hotel services, and maintain a friendly, professional conversation. If the guest wants to order food, guide them appropriately to our room service options.
 
 CRITICAL: This will be read aloud by text-to-speech, so format everything for natural speech:
-- Say prices as "5 dollars and 50 cents" NOT "$5.50" 
-- NO asterisks, bullet points, dashes, or formatting symbols
-- NO numbered lists like "1. Item 2. Item" - just speak naturally
-- Say "dollars" and "cents" instead of dollar signs
-- Use natural speech patterns like "we have" instead of bullet points
+- Say prices as "5 dollars and 50 cents" not "dollar five fifty"
+- Use proper punctuation: periods, commas, question marks, exclamation points
+- Use short, clear sentences with natural pauses
+- Put command words in quotes when needed
+- Use commas for natural pauses in lists
+- End sentences with periods for proper pacing
+
+Examples of good formatting:
+- "Good morning! How can I assist you today?"
+- "Our pool is open from 6 AM to 10 PM daily."
+- "Would you like me to connect you to room service, or can I help you with something else?"
+- "The fitness center is located on the second floor, near the elevators."
         
 Speak naturally as if you're talking to someone on the phone. Be conversational, helpful, and make the guest feel welcome."""
         
@@ -787,13 +841,13 @@ class HotelConciergeAgent:
         workflow.add_conditional_edges(
             "menu_retrieval_agent",
             should_continue_to_tools,
-            {"tools": "tools", "intent_classification": END}
+            {"tools": "tools", "END": END}
         )
         
         workflow.add_conditional_edges(
             "order_management_agent",
             should_continue_to_tools,
-            {"tools": "tools", "intent_classification": END}
+            {"tools": "tools", "END": END}
         )
         
         workflow.add_edge("general_agent", END)
@@ -856,7 +910,7 @@ class HotelConciergeAgent:
         current_state["messages"].append(HumanMessage(content=message))
         
         try:
-            result = await self.app.ainvoke(current_state)
+            result = await self.app.ainvoke(current_state, config={"recursion_limit": 50})
             
             processing_time = (datetime.now() - start_time).total_seconds() * 1000
             logger.info(f"Message processed in {processing_time:.2f}ms - Phase: {result.get('conversation_phase', 'unknown')}")

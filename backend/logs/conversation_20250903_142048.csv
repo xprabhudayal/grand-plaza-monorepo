@@ -1,0 +1,8 @@
+timestamp,role,content,session_id,room_number,confidence_score,processing_time_ms
+2025-09-03T14:20:53.647444,user,ഹലോ,f274573d-258a-4fbd-97ad-a6da066e6e9e,,,
+2025-09-03T14:20:54.161037,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,f274573d-258a-4fbd-97ad-a6da066e6e9e,,,
+2025-09-03T14:20:59.918059,user, ഹലോ ഹലോ,f274573d-258a-4fbd-97ad-a6da066e6e9e,,,
+2025-09-03T14:21:00.424503,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,f274573d-258a-4fbd-97ad-a6da066e6e9e,,,
+2025-09-03T14:21:04.237761,user, ഹലോ ഹലോ,f274573d-258a-4fbd-97ad-a6da066e6e9e,,,
+2025-09-03T14:21:04.744000,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,f274573d-258a-4fbd-97ad-a6da066e6e9e,,,
+2025-09-03T14:21:09.735718,user, 10,f274573d-258a-4fbd-97ad-a6da066e6e9e,,,

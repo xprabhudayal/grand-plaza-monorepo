@@ -1,0 +1,5 @@
+timestamp,role,content,session_id,room_number,confidence_score,processing_time_ms
+2025-09-23T16:30:37.838070,user,Hello.,17ff491e-e29c-4577-813a-30776d480eab,,,
+2025-09-23T16:30:38.357542,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,17ff491e-e29c-4577-813a-30776d480eab,,,
+2025-09-23T16:30:52.163954,user, جی، میرا نام پراہو دیال ہے اور میں روم نمبر پانچ میں ہوں۔,17ff491e-e29c-4577-813a-30776d480eab,,,
+2025-09-23T16:30:52.678818,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,17ff491e-e29c-4577-813a-30776d480eab,,,

@@ -1,0 +1,16 @@
+timestamp,role,content,session_id,room_number,confidence_score,processing_time_ms
+2025-09-18T16:41:43.382063,user,Hello everyone.,06c4708d-30dc-4cc8-b9d6-e009cdb7e0b1,,,
+2025-09-18T16:41:43.904235,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,06c4708d-30dc-4cc8-b9d6-e009cdb7e0b1,,,
+2025-09-18T16:41:59.122899,user," Yes, my room number is 308.",06c4708d-30dc-4cc8-b9d6-e009cdb7e0b1,,,
+2025-09-18T16:42:08.309157,assistant,Thank you! I've noted your room number as 308. How can I assist you today?,06c4708d-30dc-4cc8-b9d6-e009cdb7e0b1,308,,
+2025-09-18T16:42:24.183581,user, I was thinking to order.,06c4708d-30dc-4cc8-b9d6-e009cdb7e0b1,308,,
+2025-09-18T16:42:28.386544,user," From your beverages section,",06c4708d-30dc-4cc8-b9d6-e009cdb7e0b1,308,,
+2025-09-18T16:42:36.617591,assistant,"Here are our current beverage options for you:
+
+1. **Sparkling Water** - 3 dollars. Chilled carbonated mineral water with a slice of lime. Zero calories.  
+2. **Green Smoothie** - 6 dollars. A healthy mix of spinach, banana, mango, and almond milk. 280 calories.  
+3. **Classic Lemonade** - 4 dollars. Freshly squeezed lemon juice, sweetened to perfection, served chilled. 150 calories.  
+4. **Mango Lassi** - 5 dollars. A traditional Indian yogurt-based drink blended with sweet mango pulp. 320 calories.  
+5. **Iced Mocha** - 5 dollars and 50 cents. A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream. 350 calories.  
+
+Would you like to hear more details about any of these, or shall I help you place an order?",06c4708d-30dc-4cc8-b9d6-e009cdb7e0b1,308,,

@@ -1,0 +1,34 @@
+timestamp,role,content,session_id,room_number,confidence_score,processing_time_ms
+2025-09-13T17:12:34.668503,user,Hello.,4e324f74-2a18-4edc-a59a-377d5b2fd498,,,
+2025-09-13T17:12:35.182292,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,4e324f74-2a18-4edc-a59a-377d5b2fd498,,,
+2025-09-13T17:12:49.660508,user," Yes, my room number is one.",4e324f74-2a18-4edc-a59a-377d5b2fd498,,,
+2025-09-13T17:12:59.506097,assistant,"Great! How can I help you with your order today? If you’d like to see the menu or add something, just let me know.",4e324f74-2a18-4edc-a59a-377d5b2fd498,1,,
+2025-09-13T17:13:16.449499,user," Yeah, I was thinking about ordering pizzas.",4e324f74-2a18-4edc-a59a-377d5b2fd498,1,,
+2025-09-13T17:13:18.236457,assistant,"We have several kinds of pizza: Pepperoni, Veggie Supreme, Margherita, Hawaiian, and BBQ Chicken. Which one would you like to order, and how many would you like?",4e324f74-2a18-4edc-a59a-377d5b2fd498,1,,
+2025-09-13T17:13:40.566106,user," Is--uh, add veggies supreme in two quantities.",4e324f74-2a18-4edc-a59a-377d5b2fd498,1,,
+2025-09-13T17:13:42.423171,assistant,"Perfect! I’ve added two Veggie Supreme pizzas to your order. Your current order now includes two Veggie Supreme pizzas. Would you like to add anything else, like a drink, dessert, or side dish?",4e324f74-2a18-4edc-a59a-377d5b2fd498,1,,
+2025-09-13T17:14:07.929357,user," Hey, let me know, like, what things do you have in the drinks?",4e324f74-2a18-4edc-a59a-377d5b2fd498,1,,
+2025-09-13T17:14:10.501242,assistant,"Here are the drinks we have available:
+
+- Sparkling Water, 3 dollars and 0 cents. It’s chilled carbonated mineral water with a slice of lime. Zero calories.
+- Green Smoothie, 6 dollars and 0 cents. A healthy mix of spinach, banana, mango, and almond milk. 280 calories.
+- Iced Mocha, 5 dollars and 50 cents. A rich blend of espresso, chocolate syrup, and cold milk, topped with whipped cream. 350 calories.
+- Classic Lemonade, 4 dollars and 0 cents. Freshly squeezed lemon juice, sweetened to perfection, served chilled. 150 calories.
+- Mango Lassi, 5 dollars and 0 cents. Traditional Indian yogurt-based drink blended with sweet mango pulp. 320 calories.
+
+Which one would you like to add to your order?",4e324f74-2a18-4edc-a59a-377d5b2fd498,1,,
+2025-09-13T17:14:44.240641,user," Yeah, so you have a very vast variety of beverages, but I would like to order sparkling water for now.",4e324f74-2a18-4edc-a59a-377d5b2fd498,1,,
+2025-09-13T17:14:45.669203,user, In three quantities.,4e324f74-2a18-4edc-a59a-377d5b2fd498,1,,
+2025-09-13T17:15:03.019556,user," I said, please add sparkling water in three quantities.",4e324f74-2a18-4edc-a59a-377d5b2fd498,1,,
+2025-09-13T17:15:06.530680,assistant,"Got it! I’ve added three more Sparkling Water bottles to your order. You now have six Sparkling Water bottles and two Veggie Supreme pizzas. Your current order looks like this:
+
+- Veggie Supreme – 2
+- Sparkling Water – 6
+
+Would you like to add anything else, or is that everything for now?",4e324f74-2a18-4edc-a59a-377d5b2fd498,1,,
+2025-09-13T17:15:17.334478,user," Hey, you have added six sparkling water. I would like to remove three sparkling water.",4e324f74-2a18-4edc-a59a-377d5b2fd498,1,,
+2025-09-13T17:15:22.561181,assistant,"All right, I’ve removed three Sparkling Water bottles. You now have three Sparkling Water bottles and two Veggie Supreme pizzas in your order. Is there anything else you’d like to add or change?",4e324f74-2a18-4edc-a59a-377d5b2fd498,1,,
+2025-09-13T17:15:44.650603,user," No, I'm good. Please place the order, please.",4e324f74-2a18-4edc-a59a-377d5b2fd498,1,,
+2025-09-13T17:15:49.501779,assistant,Great news! Your order has been successfully placed for room 1. You can expect your delicious food to arrive in about 25 to 30 minutes. Is there anything else I can help you with today?,4e324f74-2a18-4edc-a59a-377d5b2fd498,1,,
+2025-09-13T17:16:09.813848,user," No, I'm great, man. Thanks.",4e324f74-2a18-4edc-a59a-377d5b2fd498,1,,
+2025-09-13T17:16:11.027219,assistant,You're very welcome! Your order is already on its way to your room. Have a wonderful day!,4e324f74-2a18-4edc-a59a-377d5b2fd498,1,,

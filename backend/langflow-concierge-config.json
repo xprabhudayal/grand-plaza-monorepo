@@ -58,7 +58,7 @@
               "required": true,
               "display_name": "Groq API Key",
               "password": true,
-              "value": "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"
+              "value": ""
             },
             "model_name": {
               "type": "str",
@@ -105,14 +105,14 @@
               "type": "str",
               "required": true,
               "display_name": "API Endpoint",
-              "value": "https://07315f61-86e9-4b67-a7a9-4fcaad19c86b-us-east1.apps.astra.datastax.com"
+              "value": ""
             },
             "token": {
               "type": "str",
               "required": true,
               "display_name": "Token",
               "password": true,
-              "value": "AstraCS:PUkORwKXUDMDFREbrsOuBmqo:2ecc7a7046ac27ffef348b8a0c742a06b0db3ca533d581aa8827f94ad4a8a025"
+              "value": ""
             },
             "collection_name": {
               "type": "str",
@@ -177,7 +177,7 @@
               "required": true,
               "display_name": "Mistral API Key",
               "password": true,
-              "value": "4uXQxv9pF1Am4QZdneDpwyTBfBO8IXmp"
+              "value": ""
             },
             "model": {
               "type": "str",

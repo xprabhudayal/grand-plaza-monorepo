@@ -1,0 +1,8 @@
+timestamp,role,content,session_id,room_number,confidence_score,processing_time_ms
+2025-09-22T12:25:13.419180,user,Hello.,ae0a4d22-61c6-4f3b-963b-ee26ed35ec32,,,
+2025-09-22T12:25:13.936665,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,ae0a4d22-61c6-4f3b-963b-ee26ed35ec32,,,
+2025-09-22T12:25:31.817476,user," Yes, my room number is one.",ae0a4d22-61c6-4f3b-963b-ee26ed35ec32,,,
+2025-09-22T12:25:53.384317,assistant,"You're all set! How would you like to proceed? Are you ready to place an order, or would you like to browse the menu first?",ae0a4d22-61c6-4f3b-963b-ee26ed35ec32,1,,
+2025-09-22T12:26:33.738700,user, I was thinking to order something Indian. Do you have any of the categories? Available.,ae0a4d22-61c6-4f3b-963b-ee26ed35ec32,1,,
+2025-09-22T12:26:39.310603,assistant,"I'm sorry, but it looks like we don't have any Indian cuisine options available in our current menu. However, we do have other items you might enjoy, such as our Mango Lassi (a sweet yogurt drink), Hawaiian or Pepperoni pizzas, or hearty chili cheese dogs. Would you like to explore any of these options instead?",ae0a4d22-61c6-4f3b-963b-ee26ed35ec32,1,,
+2025-09-22T12:27:08.728079,user," Yes, I had one mango lassi to my order.",ae0a4d22-61c6-4f3b-963b-ee26ed35ec32,1,,

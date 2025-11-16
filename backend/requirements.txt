@@ -3,3 +3,4 @@ python-dotenv>=1.0.0
 loguru>=0.7.0
 pipecat>=0.1.0
 pipecat-flows>=0.1.0
+sarvamai>=0.1.0

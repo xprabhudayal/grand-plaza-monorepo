@@ -1,0 +1,296 @@
+    %-------------------------
+% Resume in Latex
+% Author
+% License : MIT
+%------------------------
+
+%---- Required Packages and Functions ----
+
+\documentclass[a4paper,11pt]{article}
+\usepackage{latexsym}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{ragged2e}
+\usepackage[empty]{fullpage}
+\usepackage{wrapfig}
+\usepackage{lipsum}
+\usepackage{tabularx}
+\usepackage{titlesec}
+\usepackage{geometry}
+\usepackage{marvosym}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage{fontawesome5}
+\usepackage{multicol}
+\usepackage{graphicx}
+% \usepackage{cfr-lm}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+
+\usepackage[T1]{fontenc}
+\setlength{\multicolsep}{0pt} 
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\geometry{left=1.4cm, top=0.8cm, right=1.2cm, bottom=1cm}
+% Adjust margins
+%\addtolength{\oddsidemargin}{-0.5in}
+%\addtolength{\evensidemargin}{-0.5in}
+%\addtolength{\textwidth}{1in}
+\usepackage[most]{tcolorbox}
+\tcbset{
+	frame code={}
+	center title,
+	left=0pt,
+	right=0pt,
+	top=0pt,
+	bottom=0pt,
+	colback=gray!20,
+	colframe=white,
+	width=\dimexpr\textwidth\relax,
+	enlarge left by=-2mm,
+	boxsep=4pt,
+	arc=0pt,outer arc=0pt,
+}
+
+\urlstyle{same}
+
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-7pt}]
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[2]{
+  \item{
+    \textbf{#1}{\hspace{0.5mm}#2 \vspace{-0.5mm}}
+  }
+}
+
+\newcommand{\resumePOR}[3]{
+\vspace{0.5mm}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+        \textbf{#1}\hspace{0.3mm}#2 & \textit{\small{#3}} 
+    \end{tabular*}
+    \vspace{-2mm}
+}
+
+\newcommand{\resumeSubheading}[4]{
+\vspace{0.5mm}\item
+    \begin{tabular*}{0.98\textwidth}[t]{l@{\extracolsep{\fill}}r}
+        \textbf{#1} & \textit{\footnotesize{#4}} \\
+        \textit{\footnotesize{#3}} &  \footnotesize{#2}\\
+    \end{tabular*}
+    \vspace{-2.4mm}
+}
+
+\newcommand{\resumeProject}[4]{
+\vspace{0.5mm}\item
+    \begin{tabular*}{0.98\textwidth}[t]{l@{\extracolsep{\fill}}r}
+        \textbf{#1} & \textit{\footnotesize{#3}} \\
+        \footnotesize{\textit{#2}} & \footnotesize{#4}
+    \end{tabular*}
+    \vspace{-2.4mm}
+}
+
+\newcommand{\resumeSubItem}[2]{\resumeItem{#1}{#2}\vspace{-4pt}}
+% \renewcommand{\labelitemii}{$\circ$}
+\renewcommand{\labelitemi}{$\vcenter{\hbox{\tiny$\bullet$}}$}
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=*,labelsep=0mm]}
+\newcommand{\resumeHeadingSkillStart}{\begin{itemize}[leftmargin=*,itemsep=1.7mm, rightmargin=2ex]}
+\newcommand{\resumeItemListStart}{\begin{justify}\begin{itemize}[leftmargin=3ex, rightmargin=2ex, noitemsep,labelsep=1.2mm,itemsep=0mm]\small}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}\vspace{2mm}}
+\newcommand{\resumeHeadingSkillEnd}{\end{itemize}\vspace{-2mm}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\end{justify}\vspace{-2mm}}
+\newcommand{\cvsection}[1]{%
+\vspace{2mm}
+\begin{tcolorbox}
+    \textbf{\large #1}
+\end{tcolorbox}
+    \vspace{-4mm}
+}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}%
+\newcolumntype{R}{>{\raggedleft\arraybackslash}X}%
+\newcolumntype{C}{>{\centering\arraybackslash}X}%
+\definecolor{darkblue}{RGB}{0,0,139}
+
+\usepackage[hidelinks]{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=darkblue,
+    filecolor=darkblue,
+    urlcolor=darkblue,
+}
+
+%---- End of Packages and Functions ------
+
+%-------------------------------------------
+%%%%%%  CV STARTS HERE  %%%%%%%%%%%
+%%%%%% DEFINE ELEMENTS HERE %%%%%%%
+\newcommand{\name}{PRABHUDAYAL VAISHNAV} % Your Name
+\newcommand{\course}{Computer Science and Engineering, Data Science} % Your Program
+\newcommand{\roll}{300012822032} % Your Roll No.
+\newcommand{\emaila}{p09m21@gmail.com} %Email 1
+\newcommand{\website}{\href{https://xpdv.github.io}{xpdv.github.io}}
+\begin{document}
+\fontfamily{phv}\selectfont
+%----------HEADING-----------------
+
+{
+\begin{tabularx}{\linewidth}{X r}
+  \textbf{\Large \name} & \href{https://leetcode.com/u/global-prada/}{\faCode \ LeetCode Profile} \\
+  \raisebox{0.0\height}{\faEnvelope \ \href{mailto:\emaila}{\emaila}} & \href{https://github.com/xprabhudayal}{\faGithub \ GitHub Profile }\\
+  \href{https://xpdv.github.io}{\faGithub \ Portfolio Website } & \href{https://linkedin.com/in/xprabhudayal/}{\faLinkedin \ LinkedIn Profile} \\
+\end{tabularx}
+}
+
+\vspace{-2mm}
+
+\section{\textbf{work experience}}
+
+\resumeProject
+{• Research Internship : ESIEA Paris, France (Remote)} 
+{Completed research on "Complex Human Emotion Detection Using YOLO11" project.}
+{January 2025 - June 2025}
+{}
+\resumeItemListStart
+  \item Enabled real-time detection of 22 discrete human emotions by training on the CFEE dataset using YOLO11. 
+  \item Fine-tuned YOLO11 (COCO-pretrained) using transfer learning for real-time emotion detection.
+\resumeItemListEnd
+
+\vspace{-2.5mm}
+
+%-----------PROJECTS-----------------
+%-----------PROJECTS-----------------
+\section{\textbf{projects}}
+
+\resumeProject
+{Grand Plaza: Voice AI Hotel Concierge System}
+{Built a full-stack voice AI concierge for hotel room service with real-time conversation capabilities}
+{FastAPI, LangGraph, Pipecat, Daily.co WebRTC, ChromaDB, OpenAI/Groq}
+{\href{https://github.com/xprabhudayal/voice_ai_concierge}{\textcolor{darkblue}{\faGithub}}}
+\resumeItemListStart
+  \item Architected a production-ready RAG system with semantic search, reranking, and Chain-of-Thought reasoning for natural language menu queries.
+  \item Implemented LangGraph-based agent workflows with specialized nodes for intent classification, order management, and validation.
+  \item Integrated multi-modal capabilities with voice synthesis (ElevenLabs), speech recognition (Deepgram), and video avatars (Tavus).
+  \item Built WebRTC-based real-time communication pipeline using Pipecat and Daily.co for seamless voice interactions.
+\resumeItemListEnd
+
+\resumeProject
+{Career Scout: Voice AI-Powered Job Search Assistant}
+{Developed a full-stack Voice AI Career Coach for smart job search}
+{Next.js, React, Supabase, TypeScript, MCP Server}
+{\href{https://github.com/xprabhudayal/career-scout}{\textcolor{darkblue}{\faGithub}}}
+\resumeItemListStart
+  \item Architected a custom MCP server with 3 tools: \textit{Intelligent Job Search, Company Analysis, and Web Search}.
+  \item Integrated custom scoring logic to match user skills with confidence percentages.  
+  \item Built a responsive, Supabase-authenticated frontend with React hooks and Tailwind CSS, reducing voice interaction latency by 40\%.
+\resumeItemListEnd
+
+\resumeProject
+{• The AI Scientist: Sakana AI} 
+{Contributed to Sakana AI's Open Source project to automate scientific research.}
+{Python, LLMs, Transformers, Git}
+{\href{https://huggingface.co/pradachan/AI-Scientist}{\textcolor{darkblue}{\faGithub}}}
+\resumeItemListStart
+ \item Added 8 open-source language models, achieving a 75\% reduction in generation costs.
+ \item Adapted the project for T4 GPU support, reducing reliance on high-end GPUs like H100/A100.
+ \item Co-authored a paper: "\textit{Exploring Style Transfer with Small Character-Level Transformers}" using Qwen2.5(72B).
+\resumeItemListEnd
+
+\resumeProject
+{• Development of Python Module: XS}
+{Published a pip package to expose inference endpoints for open-source LLMs.}
+{Python, Ngrok, API Creation}
+{\href{https://github.com/xprabhudayal/xs/}{\textcolor{darkblue}{\faGithub}}}
+\resumeItemListStart
+ \item Released a Python package to create accessible endpoints for over 99\% of Hugging Face-hosted LLMs.
+ \item Leveraged Ngrok to tunnel requests from localhost to the cloud securely.
+\resumeItemListEnd
+
+\vspace{2.5mm}
+
+
+%-----------EXPERIENCE-----------------
+
+
+{\small
+\begin{multicols}{2}
+\section{\textbf{technical skills}}
+\vspace{1mm}
+ \resumeHeadingSkillStart
+  \resumeSubItem{Programming Languages:\\}
+    {Python, Next.js, React, JavaScript, C, C++, SQL, Matlab, R}
+  \resumeSubItem{AI and LLM Tools/Frameworks:\\}
+    {LangGraph, LangChain, LlamaIndex, Ollama, HuggingFace Transformers, PyTorch, TensorFlow, Pipecat}
+  % \resumeSubItem{Cloud Platforms:\\}
+  %   {High Performance Cluster (CDAC Paramutkarsh), Amazon Sagemaker, Ola Krutrim, Google Colab}
+  \resumeSubItem{Data Analysis and Visualization Tools:\\}
+    {Pandas, Numpy, Seaborn, Power BI}
+  \resumeSubItem{Miscellaneous Skills:\\}
+    {Linux, MacOS, Competitive Programming}
+  \resumeSubItem{Soft Skills:\\}
+    {Leadership, Communication, Problem Solving}
+ \resumeHeadingSkillEnd
+
+\section{\textbf{relevant coursework}}
+\vspace{1mm}
+\resumeHeadingSkillStart
+  \resumeSubItem{Core Computer Science:\\}
+    {Object Oriented Programming, Database Management System, Computer Architecture Organization, Computer Network, Operating System, Data Structures and Algorithms}
+  \resumeSubItem{Artificial Intelligence and Data Science:\\}
+    {Artificial Intelligence, Data Visualization, Pattern Recognition and Machine Learning, Natural Language Processing}
+  \resumeSubItem{Mathematics and Theoretical Foundations:\\}
+    {Theory of Computation, Cryptography and Network Security}
+\resumeHeadingSkillEnd
+\end{multicols}
+}
+
+
+\vspace{-1mm}
+
+%-----------------ACHIEVEMENTS SECTION--------------------------
+\section{\textbf{achievements}}
+\vspace{-0.4mm}
+% \resumeSubHeadingListStart
+% 
+\vspace{-0.4mm}
+\resumeProject
+  {Indian Institute of Management (Data Analyst) Hackathon Winner, 2024}
+  {8 hour long Hackathon, organized by InFED at Nagpur on 12 November 2024}
+  {2024}
+  {{}\href{https://xpdv.github.io/assets/pdf/win.jpg}{\textcolor{darkblue}{\faIcon{globe}}}}
+\resumeItemListStart
+  \item Won 1st place by presenting a solution to the Startup's Problem: \textbf{AI Product Comparison}.
+  \item Implemented the Deep-Reserach \& generated a report on \textbf{AI Product Comparison (22-page report)} using a Python-based AI Agent with Tavily Search, significantly reducing manual effort and time by 90\%.
+\resumeItemListEnd
+% ---------------------------
+
+\vspace{-1mm}
+
+%-----------EDUCATION-----------
+\section{\textbf{education}}
+\resumeProject
+      {Bachelors of Technology (Hons.) CSE Data Science}
+      {\textbf{(6th Semester)} Chhattisgarh Swami Vivekanand Technical University, Bhilai, 491107}
+      {2022-Present}
+      {CGPA : 7.2/10}
+\resumeItemListStart
+    \item Research Internship at ESIEA Paris, France (Remote) under the project "Complex Human Emotion detection with Ultralytics YOLO11" - Completed June 2025.
+\resumeItemListEnd
+
+\vspace{-5.5mm}
+
+% ---------------------------
+  
+
+\end{document}

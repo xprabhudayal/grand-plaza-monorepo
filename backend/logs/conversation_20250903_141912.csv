@@ -1,0 +1,5 @@
+timestamp,role,content,session_id,room_number,confidence_score,processing_time_ms
+2025-09-03T14:19:35.069572,user,Hello.,6dfa9b71-afd6-4ce8-bd96-42daeac994f2,,,
+2025-09-03T14:19:35.585536,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,6dfa9b71-afd6-4ce8-bd96-42daeac994f2,,,
+2025-09-03T14:19:46.381476,user," Hello, hello.",6dfa9b71-afd6-4ce8-bd96-42daeac994f2,,,
+2025-09-03T14:19:46.892807,assistant,Welcome to our hotel room service! Could you please provide your room number so I can assist you better?,6dfa9b71-afd6-4ce8-bd96-42daeac994f2,,,
